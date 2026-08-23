@@ -9,7 +9,7 @@
 - [x] `npm test -- --run` — 7 файлов, 18 тестов.
 - [x] `npm run build` — TypeScript + Vite production build.
 - [x] `git diff --check` — без whitespace-ошибок.
-- [x] Повторный прогон выполнен после финальных visual polish правок.
+- [x] Повторный прогон выполнен после финальных visual polish правок и ограничения ширины мобильных заголовков.
 
 ## Браузерные доказательства
 
@@ -30,6 +30,7 @@ npm run dev
 - [x] `scrollWidth <= innerWidth` на всех трёх viewport; на 390px `scrollWidth === clientWidth === 375` из-за 15px классического scrollbar, горизонтального overflow нет. На 320px `scrollWidth === innerWidth === 320`.
 - [x] H1, CTA и телефонная ссылка не выходят за viewport; hero bounds проверены через DOM.
 - [x] На 390px About/Locations grids и адресные заголовки сжимаются в 303px column; на 320px — в 256px column, без обрезания телефона или адреса.
+- [x] Заголовок About также не выходит за границы сцены: 390px `right=339 <= sceneRight=359`, 320px `right=288 <= sceneRight=304`.
 - [x] Якоря `#menu`, `#about`, `#events`, `#locations` присутствуют и ведут к одноимённым сценам.
 - [x] Mobile menu открывается с клавиатуры, `Escape` закрывает его, фокус возвращается на кнопку; при открытии фокус на ссылке «Меню».
 - [x] В carousel работают `ArrowLeft`/`ArrowRight`, dots и финальная карточка: active `02` после ArrowRight, затем `05`, next disabled.
