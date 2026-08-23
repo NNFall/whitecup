@@ -1,4 +1,5 @@
 import { StickyNav } from './components/StickyNav'
+import { Footer } from './components/Footer'
 import { AboutSection } from './sections/AboutSection'
 import { EventsSection } from './sections/EventsSection'
 import { HeroSection } from './sections/HeroSection'
@@ -20,6 +21,7 @@ export default function App() {
         <EventsSection />
         <LocationsSection />
       </main>
+      <Footer />
     </div>
   )
 }

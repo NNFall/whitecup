@@ -20,9 +20,9 @@ describe('White Cup story scenes', () => {
 
     expect(screen.getByRole('link', { name: /красноармейская, 15/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /куйбышева, 128\/1/i })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /\+7 \(937\) 235-57-15/i })).toHaveAttribute('href', 'tel:+79372355715')
+    expect(screen.getAllByRole('link', { name: /\+7 \(937\) 235-57-15/i }).every((link) => link.getAttribute('href') === 'tel:+79372355715')).toBe(true)
     expect(screen.getAllByRole('link', { name: /маршрут|яндекс карт/i }).some((link) => link.getAttribute('href')?.includes('yandex.ru'))).toBe(true)
-    expect(screen.getByRole('link', { name: /white cup в vk/i })).toHaveAttribute('href', 'https://vk.ru/white_cup')
+    expect(screen.getAllByRole('link', { name: /white cup.*vk/i }).every((link) => link.getAttribute('href') === 'https://vk.ru/white_cup')).toBe(true)
   })
 
   it('keeps documentary photo alternatives meaningful and doodles decorative', () => {
