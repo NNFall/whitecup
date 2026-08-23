@@ -6,7 +6,7 @@
 
 **Architecture:** A Vite React TypeScript single page with data-driven sections and small presentational components. Global CSS owns paper material, type, masks, responsive art direction and reduced-motion; React owns nav, reveal, carousel and mobile-menu behaviour. Documentary Yandex photos are local WebP assets, while skyline/map/doodle elements are local SVG/CSS.
 
-**Tech Stack:** React 18, TypeScript, Vite, Vitest, Testing Library, native CSS/SVG, no animation or icon dependency. Fixed dev/preview port: `4175`.
+**Tech Stack:** React 19, TypeScript, Vite, Vitest, Testing Library, native CSS/SVG, no animation or icon dependency. Fixed dev/preview port: `4175`.
 
 ---
 
