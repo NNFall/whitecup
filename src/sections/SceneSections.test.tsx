@@ -11,6 +11,8 @@ describe('White Cup story scenes', () => {
     for (const id of ['hero', 'menu', 'about', 'visit', 'events', 'locations']) {
       expect(document.getElementById(id)).toBeInTheDocument()
     }
+
+    expect(screen.getByRole('group', { name: 'Основные действия' })).toBeInTheDocument()
   })
 
   it('uses verified contact, location and source links', () => {

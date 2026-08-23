@@ -65,7 +65,10 @@ export function StickyNav() {
 
     document.addEventListener('keydown', handleKeyDown)
 
-    const firstFocusable = dialogRef.current?.querySelector<HTMLElement>(focusableSelector)
+    // The backdrop is intentionally focusable for mouse/touch dismissal, but
+    // opening the menu should place keyboard users on the first useful page
+    // destination rather than on a close-only affordance.
+    const firstFocusable = dialogRef.current?.querySelector<HTMLElement>('.mobile-nav__panel a[href]')
     firstFocusable?.focus()
 
     return () => {
@@ -142,4 +145,3 @@ export function StickyNav() {
     </header>
   )
 }
-

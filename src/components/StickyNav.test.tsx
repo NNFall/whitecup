@@ -26,6 +26,7 @@ describe('StickyNav', () => {
     expect(trigger).toHaveAttribute('aria-expanded', 'true')
     expect(screen.getByRole('dialog', { name: /меню сайта/i })).toBeVisible()
     expect(document.body.style.overflow).toBe('hidden')
+    expect(document.activeElement).toHaveAttribute('href', '#menu')
 
     fireEvent.keyDown(document, { key: 'Escape' })
 

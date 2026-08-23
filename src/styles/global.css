@@ -14,24 +14,15 @@ body {
   min-width: 320px;
   min-height: 100dvh;
   margin: 0;
-  background:
-    radial-gradient(circle at 20% 10%, rgb(255 255 255 / 0.24), transparent 24rem),
-    var(--paper);
+  background-color: var(--paper);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.13'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 7.5rem 7.5rem;
   color: var(--ink);
 }
 
 body:has(.mobile-nav:not([hidden])) {
   overflow: hidden;
-}
-
-body::before {
-  position: fixed;
-  z-index: -1;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.22;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.13'/%3E%3C/svg%3E");
-  content: '';
 }
 
 button,
@@ -63,9 +54,8 @@ button:focus-visible {
   position: sticky;
   z-index: 20;
   top: 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--line) 82%, transparent);
-  background: color-mix(in srgb, var(--paper-light) 88%, transparent);
-  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+  background: var(--paper-light);
 }
 
 .site-nav__inner {
@@ -192,7 +182,6 @@ button:focus-visible {
   padding: 6rem 2rem 2rem;
   border-left: 1px solid var(--ink);
   background: var(--paper-light);
-  box-shadow: -1rem 0 0 rgb(18 17 15 / 0.06);
 }
 
 .mobile-nav__kicker {
@@ -368,8 +357,7 @@ h2 {
 }
 
 .section-frame__inner,
-.hero-scene__inner,
-.menu-placeholder__inner {
+.hero-scene__inner {
   width: 100%;
   max-width: 107.5rem;
   margin: 0 auto;
@@ -572,7 +560,7 @@ h2 {
   overflow: hidden;
   border: 1.5px solid var(--ink);
   background: var(--paper-light);
-  clip-path: polygon(2% 3%, 98% 0, 100% 93%, 96% 100%, 6% 98%, 0 8%);
+  clip-path: polygon(1.5% 5%, 12% 1%, 32% 2.5%, 55% 0, 81% 1.5%, 98% 0, 100% 17%, 98.5% 46%, 100% 76%, 97% 96%, 78% 99%, 53% 98%, 27% 100%, 5% 97%, 1% 79%, 2% 49%, 0 22%);
   isolation: isolate;
 }
 
@@ -581,7 +569,7 @@ h2 {
   z-index: -1;
   inset: 0.45rem -0.4rem -0.55rem 0.45rem;
   border: 1.5px solid var(--orange);
-  clip-path: polygon(2% 3%, 98% 0, 100% 93%, 96% 100%, 6% 98%, 0 8%);
+  clip-path: polygon(1.5% 5%, 12% 1%, 32% 2.5%, 55% 0, 81% 1.5%, 98% 0, 100% 17%, 98.5% 46%, 100% 76%, 97% 96%, 78% 99%, 53% 98%, 27% 100%, 5% 97%, 1% 79%, 2% 49%, 0 22%);
   content: '';
   pointer-events: none;
 }
@@ -646,7 +634,8 @@ h2 {
   transform: rotate(6deg);
 }
 
-.hero-scene__skyline {
+.hero-scene__skyline,
+.hero-scene__skyline-image {
   position: absolute;
   right: -2.4rem;
   bottom: 0;
@@ -657,6 +646,19 @@ h2 {
   opacity: 0.8;
 }
 
+.hero-scene__skyline-image {
+  z-index: 0;
+  height: auto;
+  opacity: 0.76;
+  pointer-events: none;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+.hero-scene__skyline-fallback[data-fallback-visible='false'] {
+  display: none;
+}
+
 .samara-skyline path {
   fill: none;
   stroke: currentColor;
@@ -665,18 +667,18 @@ h2 {
 }
 
 .samara-skyline__line {
-  stroke-width: 1.2;
+  stroke-width: 1.8;
 }
 
 .samara-skyline__detail {
   stroke: var(--orange);
-  stroke-width: 1.5;
+  stroke-width: 1.8;
 }
 
 .samara-skyline__ground,
 .samara-skyline__river {
   stroke: var(--line);
-  stroke-width: 1;
+  stroke-width: 1.5;
 }
 
 .hero-scene__stamp {
@@ -790,6 +792,11 @@ h2 {
   scroll-padding-inline: 0.25rem;
   scrollbar-color: var(--orange-action) transparent;
   scrollbar-width: thin;
+}
+
+.menu-carousel__viewport:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 0.35rem;
 }
 
 .menu-carousel__track {
@@ -1482,8 +1489,7 @@ h2 {
 
 @media (max-width: 1200px) {
   .section-frame__inner,
-  .hero-scene__inner,
-  .menu-placeholder__inner {
+  .hero-scene__inner {
     width: min(100% - 5rem, 107.5rem);
   }
 
@@ -1507,8 +1513,7 @@ h2 {
   }
 
   .section-frame__inner,
-  .hero-scene__inner,
-  .menu-placeholder__inner {
+  .hero-scene__inner {
     width: min(100% - 2.5rem, 42rem);
   }
 
@@ -1600,14 +1605,6 @@ h2 {
     right: 0.1rem;
     bottom: 2.8rem;
     font-size: 1rem;
-  }
-
-  .menu-placeholder {
-    min-height: 23rem;
-  }
-
-  .menu-placeholder h2 {
-    font-size: clamp(4.4rem, 20vw, 6.8rem);
   }
 
   .about-scene__grid,
@@ -1712,8 +1709,7 @@ h2 {
 @media (max-width: 380px) {
   .scene,
   .section-frame__inner,
-  .hero-scene__inner,
-  .menu-placeholder__inner {
+  .hero-scene__inner {
     width: 100%;
   }
 
@@ -1723,8 +1719,7 @@ h2 {
   }
 
   .section-frame__inner,
-  .hero-scene__inner,
-  .menu-placeholder__inner {
+  .hero-scene__inner {
     width: 100%;
   }
 

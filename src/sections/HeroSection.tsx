@@ -1,5 +1,7 @@
+import { useState } from 'react'
+
 import { siteData } from '../data/site'
-import { documentarySceneMedia } from '../data/media'
+import { documentarySceneMedia, generatedSkyline } from '../data/media'
 import { Doodles } from '../components/Doodles'
 import { OrganicPhoto } from '../components/OrganicPhoto'
 import { Reveal } from '../components/Reveal'
@@ -8,6 +10,7 @@ import { SketchUnderline } from '../components/SketchUnderline'
 
 export function HeroSection() {
   const heroMedia = documentarySceneMedia.hero[0]
+  const [showSkylineFallback, setShowSkylineFallback] = useState(false)
 
   return (
     <section id="hero" className="scene hero-scene" aria-labelledby="hero-title" data-scene="hero">
@@ -25,7 +28,7 @@ export function HeroSection() {
           <p className="hero-scene__lede">
             Место в центре Самары, где день начинается с хорошей чашки, а заканчивается разговором, который не хочется прерывать.
           </p>
-          <div className="hero-scene__actions" aria-label="Основные действия">
+          <div className="hero-scene__actions" role="group" aria-label="Основные действия">
             <a className="button-link button-link--primary" href={siteData.menuUrl} target="_blank" rel="noreferrer">
               Смотреть меню <span aria-hidden="true">↗</span>
             </a>
@@ -47,7 +50,20 @@ export function HeroSection() {
             caption="Тот самый зал White Cup"
           />
           <Doodles variant="hero" className="hero-scene__doodles" />
-          <SamaraSkyline className="hero-scene__skyline" />
+          <img
+            className="hero-scene__skyline-image"
+            src={generatedSkyline.src}
+            alt={generatedSkyline.alt}
+            aria-hidden="true"
+            onError={(event) => {
+              event.currentTarget.hidden = true
+              setShowSkylineFallback(true)
+            }}
+          />
+          <SamaraSkyline
+            className="hero-scene__skyline hero-scene__skyline-fallback"
+            fallbackVisible={showSkylineFallback}
+          />
           <p className="hero-scene__stamp" aria-hidden="true">everyday, but better</p>
         </Reveal>
       </div>

@@ -9,6 +9,8 @@ export interface MediaProvenance {
   sourceUrl?: string
   sourceLabel: string
   provenance: string
+  /** Optional runtime fallback description for decorative artwork. */
+  fallbackDescription?: string
 }
 
 export interface DocumentaryMediaProvenance extends MediaProvenance {
@@ -94,7 +96,19 @@ export const documentarySceneMedia: Record<MediaSceneRole, readonly DocumentaryM
   locations: [mediaAssets['interior-02'], mediaAssets['interior-04']],
 }
 
+export const generatedSkyline: MediaProvenance = {
+  id: 'samara-skyline',
+  src: '/media/samara-skyline-decorative.png',
+  alt: '',
+  kind: 'decorative',
+  sourceLabel: 'Image Generation Skill',
+  provenance:
+    'Сгенерированный прозрачный силуэт Самары для декоративного слоя hero; не является документальной фотографией и не используется как карта.',
+  fallbackDescription: 'При недоступности PNG показывается локальный inline SVG-эскиз силуэта Самары.',
+}
+
 export const decorativeMedia: MediaProvenance[] = [
+  generatedSkyline,
   {
     id: 'paper-sketches',
     src: 'inline-svg-or-css',

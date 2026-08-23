@@ -8,7 +8,9 @@
   --line: #b6aea3;
   --map-water: #d8e2e5;
 
-  --font-display: 'Pangolin', 'Neucha', cursive;
-  --font-script: 'Marck Script', 'Caveat', cursive;
-  --font-body: 'Golos Text', 'Manrope', system-ui, sans-serif;
+  /* The first names mirror the supplied references; local fallbacks keep the
+     landing deterministic offline instead of loading a blocking font request. */
+  --font-display: 'Pangolin', 'Neucha', 'Segoe Print', 'Comic Sans MS', cursive;
+  --font-script: 'Marck Script', 'Caveat', 'Segoe Script', cursive;
+  --font-body: 'Golos Text', 'Manrope', 'Segoe UI', system-ui, sans-serif;
 }

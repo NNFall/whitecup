@@ -1,8 +1,9 @@
 export interface SamaraSkylineProps {
   className?: string
+  fallbackVisible?: boolean
 }
 
-export function SamaraSkyline({ className }: SamaraSkylineProps) {
+export function SamaraSkyline({ className, fallbackVisible = true }: SamaraSkylineProps) {
   return (
     <svg
       className={['samara-skyline', className].filter(Boolean).join(' ')}
@@ -10,6 +11,7 @@ export function SamaraSkyline({ className }: SamaraSkylineProps) {
       aria-hidden="true"
       focusable="false"
       data-doodle
+      data-fallback-visible={fallbackVisible ? 'true' : 'false'}
     >
       <path className="samara-skyline__ground" d="M15 142c121-4 205 2 323-1 137-4 247 3 367-2" />
       <path className="samara-skyline__line" d="M28 141V96h37v45M78 141V73h28v68M112 141V106h46v35M171 141V87h28v54M212 141V61h36v80M261 141v-31h47v31M326 141V77h31v64M369 141V99h50v42M434 141V82h29v59M476 141V101h44v40M535 141V68h37v73M586 141V91h27v50M627 141V54h37v87M679 141V102h26v39" />
