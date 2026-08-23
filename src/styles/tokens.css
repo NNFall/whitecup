@@ -1,0 +1,14 @@
+:root {
+  --paper: #f7f2e9;
+  --paper-light: #fbf7f0;
+  --ink: #12110f;
+  --ink-soft: #34312d;
+  --orange: #e9460d;
+  --orange-action: #c93608;
+  --line: #b6aea3;
+  --map-water: #d8e2e5;
+
+  --font-display: 'Pangolin', 'Neucha', cursive;
+  --font-script: 'Marck Script', 'Caveat', cursive;
+  --font-body: 'Golos Text', 'Manrope', system-ui, sans-serif;
+}
