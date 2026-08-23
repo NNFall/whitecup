@@ -1,9 +1,8 @@
 import { siteData } from '../data/site'
-import { documentarySceneMedia, generatedSkyline } from '../data/media'
+import { documentarySceneMedia, heroCleanPanel, heroFoodCutout, heroReferenceArt, heroSkylineLine } from '../data/media'
 import { Doodles } from '../components/Doodles'
 import { OrganicPhoto } from '../components/OrganicPhoto'
 import { Reveal } from '../components/Reveal'
-import { SamaraSkyline } from '../components/SamaraSkyline'
 import { SketchUnderline } from '../components/SketchUnderline'
 
 export function HeroSection() {
@@ -11,57 +10,92 @@ export function HeroSection() {
 
   return (
     <section id="hero" className="scene hero-scene" aria-labelledby="hero-title" data-scene="hero">
+      <img
+        className="hero-scene__clean-panel"
+        src={heroCleanPanel.src}
+        alt=""
+        aria-hidden="true"
+        data-media-kind="decorative-generated"
+        onError={(event) => {
+          event.currentTarget.hidden = true
+          const section = event.currentTarget.closest<HTMLElement>('.hero-scene')
+          section?.querySelector<HTMLElement>('.hero-scene__reference-fallback')?.style.setProperty('opacity', '1')
+          const foodCutout = section?.querySelector<HTMLImageElement>('.hero-scene__food-cutout')
+          if (foodCutout?.dataset.src) {
+            foodCutout.src = foodCutout.dataset.src
+            foodCutout.removeAttribute('hidden')
+          }
+        }}
+      />
       <div className="hero-scene__inner">
         <Reveal className="hero-scene__copy">
-          <p className="scene-kicker"><span className="scene-kicker__mark">01</span> White Cup / Самара</p>
           <h1 id="hero-title">
-            Завтраки,
+            Завтраки,{' '}
             <br />
-            кофе и <em>свой вайб</em>
+            <span className="hero-scene__accent">кофе</span> и свой{' '}
             <br />
-            в White Cup
+            <span className="hero-scene__last-line">
+              вайб в <em>White Cup</em>
+              <span className="hero-scene__heart" aria-hidden="true">
+                ♡
+              </span>
+            </span>
           </h1>
           <SketchUnderline className="hero-scene__underline" width={280} />
           <p className="hero-scene__lede">
-            Место в центре Самары, где день начинается с хорошей чашки, а заканчивается разговором, который не хочется прерывать.
+            Спешелти кофе, свежие завтраки
+            <br />
+            и уютная атмосфера любимого места
+            <br />
+            в центре <span className="hero-scene__lede-accent">Самары.</span>
           </p>
           <div className="hero-scene__actions" role="group" aria-label="Основные действия">
             <a className="button-link button-link--primary" href={siteData.menuUrl} target="_blank" rel="noreferrer">
-              Смотреть меню <span aria-hidden="true">↗</span>
+              Посмотреть меню <span aria-hidden="true">→</span>
             </a>
             <a className="button-link button-link--quiet" href="#locations">
-              Найти White Cup <span aria-hidden="true">↓</span>
+              Выбрать локацию <span className="hero-scene__pin" aria-hidden="true" />
             </a>
           </div>
-          <p className="hero-scene__note"><span aria-hidden="true">✳</span> кофе, завтраки, свои люди</p>
         </Reveal>
 
         <Reveal className="hero-scene__visual" delay={100}>
+          <div
+            className="hero-scene__reference-art"
+            aria-hidden="true"
+            data-reference-source={heroReferenceArt.id}
+          />
+          <img
+            className="hero-scene__food-cutout"
+            data-src={heroFoodCutout.src}
+            alt=""
+            aria-hidden="true"
+            hidden
+            onError={(event) => {
+              event.currentTarget.hidden = true
+            }}
+          />
           <OrganicPhoto
             media={heroMedia}
-            className="organic-photo--hero"
+            className="organic-photo--hero hero-scene__reference-fallback"
             aspectRatio="1 / 1.06"
-            loading="eager"
+            loading="lazy"
             fetchPriority="high"
             sizes="(max-width: 720px) 92vw, 45vw"
             caption="Тот самый зал White Cup"
           />
           <Doodles variant="hero" className="hero-scene__doodles" />
-          <img
-            className="hero-scene__skyline-image"
-            src={generatedSkyline.src}
-            alt={generatedSkyline.alt}
-            aria-hidden="true"
-            onError={(event) => {
-              event.currentTarget.hidden = true
-            }}
-          />
-          <SamaraSkyline
-            className="hero-scene__skyline hero-scene__skyline-fallback"
-          />
-          <p className="hero-scene__stamp" aria-hidden="true">everyday, but better</p>
         </Reveal>
       </div>
+      <img
+        className="hero-scene__skyline--full"
+        src={heroSkylineLine.src}
+        alt=""
+        aria-hidden="true"
+        onError={(event) => {
+          event.currentTarget.hidden = true
+        }}
+      />
     </section>
   )
 }

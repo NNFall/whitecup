@@ -1,7 +1,22 @@
 import { useId } from 'react'
 
-export function BrandMark() {
+import { heroLogoBadge } from '../data/media'
+
+interface BrandMarkProps {
+  variant?: 'default' | 'badge'
+}
+
+export function BrandMark({ variant = 'default' }: BrandMarkProps) {
   const titleId = useId()
+  const isBadge = variant === 'badge'
+
+  if (isBadge) {
+    return (
+      <span className="brand-mark brand-mark--badge" data-media-kind="decorative-generated">
+        <img className="brand-mark__icon" src={heroLogoBadge.src} alt={heroLogoBadge.alt} draggable="false" />
+      </span>
+    )
+  }
 
   return (
     <span className="brand-mark">
@@ -47,8 +62,7 @@ export function BrandMark() {
           strokeWidth="2.2"
         />
       </svg>
-      <span className="brand-mark__word">White Cup</span>
+      {!isBadge && <span className="brand-mark__word">White Cup</span>}
     </span>
   )
 }
-

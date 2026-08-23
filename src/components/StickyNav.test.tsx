@@ -11,9 +11,9 @@ describe('StickyNav', () => {
     render(<StickyNav />)
 
     expect(screen.getAllByRole('link', { name: /меню/i }).some((link) => link.getAttribute('href') === '#menu')).toBe(true)
-    expect(screen.getAllByRole('link', { name: /о white cup/i }).some((link) => link.getAttribute('href') === '#about')).toBe(true)
-    expect(screen.getAllByRole('link', { name: /события/i }).some((link) => link.getAttribute('href') === '#events')).toBe(true)
-    expect(screen.getAllByRole('link', { name: /адреса/i }).some((link) => link.getAttribute('href') === '#locations')).toBe(true)
+    expect(screen.getAllByRole('link', { name: /^о нас$/i }).some((link) => link.getAttribute('href') === '#about')).toBe(true)
+    expect(screen.getAllByRole('link', { name: /мероприятия/i }).some((link) => link.getAttribute('href') === '#events')).toBe(true)
+    expect(screen.getAllByRole('link', { name: /локации/i }).some((link) => link.getAttribute('href') === '#locations')).toBe(true)
   })
 
   it('opens the mobile overlay, locks the body and returns focus on Escape', () => {
@@ -41,7 +41,7 @@ describe('StickyNav', () => {
     const trigger = screen.getByRole('button', { name: /открыть меню/i })
     fireEvent.click(trigger)
     const mobileMenu = screen.getByRole('dialog', { name: /меню сайта/i })
-    fireEvent.click(within(mobileMenu).getByRole('link', { name: /адреса/i }))
+    fireEvent.click(within(mobileMenu).getByRole('link', { name: /локации/i }))
 
     expect(mobileMenu).toHaveAttribute('hidden')
     expect(trigger).toHaveAttribute('aria-expanded', 'false')

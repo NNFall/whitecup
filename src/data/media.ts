@@ -107,8 +107,65 @@ export const generatedSkyline: MediaProvenance = {
   fallbackDescription: 'При недоступности PNG показывается локальный inline SVG-эскиз силуэта Самары.',
 }
 
+export const heroReferenceArt: MediaProvenance = {
+  id: 'hero-reference-art',
+  src: 'reference-only://hero-reference-art',
+  alt: '',
+  kind: 'decorative',
+  sourceLabel: 'Supplied local visual reference',
+  provenance:
+    'Локальный PNG-референс первого экрана использован только для арт-дирекции и не хранится/не запрашивается runtime-страницей; текст и CTA остаются семантическим DOM, а документальные фотографии хранятся отдельно.',
+  fallbackDescription: 'Не загружается в live UI; runtime использует отдельную сгенерированную декоративную панель и документальный fallback.',
+}
+
+export const heroFoodCutout: MediaProvenance = {
+  id: 'hero-food-cutout',
+  src: '/media/hero-food-cutout.png',
+  alt: '',
+  kind: 'decorative',
+  sourceLabel: 'Image Generation Skill + Remove Background Local',
+  provenance:
+    'Сгенерированный food-cutout для декоративной композиции первого экрана; фон удалён локальным Remove Background, ассет не выдаётся за документальную фотографию меню.',
+}
+
+export const heroCleanPanel: MediaProvenance = {
+  id: 'hero-clean-panel',
+  src: '/media/hero-clean-panel.png',
+  alt: '',
+  kind: 'decorative',
+  sourceLabel: 'Image Generation Skill',
+  provenance:
+    'Сгенерированная декоративная панель по локальному референсу первого экрана: интерьер, красный потолок, бублик и кофе без текста и интерфейсных элементов; не является документальной фотографией White Cup.',
+  fallbackDescription: 'При недоступности панели используется проверенный документальный интерьер White Cup.',
+}
+
+export const heroLogoBadge: MediaProvenance = {
+  id: 'hero-logo-badge',
+  src: '/media/hero-logo-badge.png',
+  alt: 'White Cup',
+  kind: 'decorative',
+  sourceLabel: 'Image Generation Skill from supplied logo reference',
+  provenance:
+    'Изолированный декоративный знак White Cup сгенерирован по локальному референсу; используется только как логотип в шапке и не является документальной фотографией.',
+}
+
+export const heroSkylineLine: MediaProvenance = {
+  id: 'hero-skyline-line',
+  src: '/media/hero-skyline-line.png',
+  alt: '',
+  kind: 'decorative',
+  sourceLabel: 'Image Generation Skill',
+  provenance:
+    'Сгенерированная прозрачная линейная иллюстрация горизонта Самары с собором и солнцем для декоративного слоя hero; не является картой или документальной фотографией.',
+}
+
 export const decorativeMedia: MediaProvenance[] = [
   generatedSkyline,
+  heroReferenceArt,
+  heroFoodCutout,
+  heroCleanPanel,
+  heroLogoBadge,
+  heroSkylineLine,
   {
     id: 'paper-sketches',
     src: 'inline-svg-or-css',

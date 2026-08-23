@@ -9,15 +9,17 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { href: '#menu', label: 'Меню' },
-  { href: '#about', label: 'О White Cup' },
-  { href: '#events', label: 'События' },
-  { href: '#locations', label: 'Адреса' },
+  { href: '#locations', label: 'Локации' },
+  { href: '#about', label: 'О нас' },
+  { href: '#events', label: 'Мероприятия' },
+  { href: '#contact', label: 'Контакты' },
 ]
 
 const focusableSelector = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
 export function StickyNav() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const dialogRef = useRef<HTMLDivElement>(null)
 
@@ -77,15 +79,22 @@ export function StickyNav() {
     }
   }, [closeMenu, isOpen])
 
+  useEffect(() => {
+    const updateScrollState = () => setIsScrolled(window.scrollY > 24)
+    updateScrollState()
+    window.addEventListener('scroll', updateScrollState, { passive: true })
+    return () => window.removeEventListener('scroll', updateScrollState)
+  }, [])
+
   const handleMobileLinkClick = () => {
     closeMenu()
   }
 
   return (
-    <header className="site-nav" data-menu-open={isOpen}>
+    <header className={`site-nav${isScrolled ? ' site-nav--scrolled' : ' site-nav--hero'}`} data-menu-open={isOpen}>
       <div className="site-nav__inner">
         <a className="site-nav__brand" href="#hero" aria-label="White Cup — на главную">
-          <BrandMark />
+          <BrandMark variant="badge" />
         </a>
 
         <nav className="site-nav__desktop" aria-label="Основная навигация">

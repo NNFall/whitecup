@@ -10,7 +10,7 @@ import { BrandMark } from './BrandMark'
  */
 export function Footer() {
   return (
-    <footer className="site-footer" aria-labelledby="site-footer-title">
+    <footer id="contact" className="site-footer" aria-labelledby="site-footer-title">
       <div className="site-footer__inner">
         <div className="site-footer__lead">
           <p className="scene-kicker">White Cup / До встречи</p>

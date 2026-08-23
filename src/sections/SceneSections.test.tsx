@@ -15,6 +15,23 @@ describe('White Cup story scenes', () => {
     expect(screen.getByRole('group', { name: 'Основные действия' })).toBeInTheDocument()
   })
 
+  it('matches the supplied first-screen hero contract', () => {
+    render(<App />)
+
+    const hero = screen.getByRole('region', { name: /завтраки, кофе и свой вайб/i })
+    expect(within(hero).getByRole('heading', { level: 1 })).toHaveTextContent(/Завтраки.*кофе.*White Cup/i)
+    expect(within(hero).getByText('кофе')).toHaveClass('hero-scene__accent')
+    expect(within(hero).getByRole('link', { name: /посмотреть меню/i })).toBeInTheDocument()
+    expect(within(hero).getByRole('link', { name: /выбрать локацию/i })).toBeInTheDocument()
+    expect(within(hero).getByRole('img', { name: /white cup/i })).toBeInTheDocument()
+    expect(hero.querySelector('.hero-scene__reference-art')).toHaveAttribute('aria-hidden', 'true')
+    expect(hero.querySelector('.hero-scene__clean-panel')).toHaveAttribute('data-media-kind', 'decorative-generated')
+    expect(hero.querySelector('.hero-scene__food-cutout')).toHaveAttribute('data-src', '/media/hero-food-cutout.png')
+    expect(hero.querySelector('.hero-scene__food-cutout')).not.toHaveAttribute('src')
+    expect(hero.querySelector('.hero-scene__heart')).toHaveAttribute('aria-hidden', 'true')
+    expect(hero.querySelector('.hero-scene__pin')).toHaveAttribute('aria-hidden', 'true')
+  })
+
   it('uses verified contact, location and source links', () => {
     render(<App />)
 
