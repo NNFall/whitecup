@@ -4,12 +4,12 @@
 
 ## Автоматические проверки
 
-Последний локальный прогон перед добавлением release-документации (23 августа 2026):
+Последний локальный прогон после визуальной полировки и release-документации (23 августа 2026):
 
 - [x] `npm test -- --run` — 7 файлов, 18 тестов.
 - [x] `npm run build` — TypeScript + Vite production build.
 - [x] `git diff --check` — без whitespace-ошибок.
-- [ ] Повторить все три пункта после финальных визуальных правок и перед push.
+- [x] Повторный прогон выполнен после финальных visual polish правок.
 
 ## Браузерные доказательства
 
@@ -21,20 +21,20 @@ npm run dev
 
 | Viewport | Скриншот | Проверить | Статус |
 | --- | --- | --- | --- |
-| 1920×1080 | `docs/evidence/desktop-1920x1080.png` | hero above the fold, шесть сцен, CTA, фото и мягкие границы | [ ] pending |
-| 390×844 | `docs/evidence/mobile-390x844.png` | отдельная мобильная композиция, меню snap, full-width CTA, адреса до карты | [ ] pending |
-| 320×568 | `docs/evidence/mobile-320x568.png` | нет горизонтального overflow, читаемые заголовки, последний слайд достижим | [ ] pending |
+| 1920×1080 | `docs/evidence/desktop-1920-hero.png`, `desktop-1920-full-reduced-motion.png` | hero above the fold и full-page сцены с immediately-visible reduced-motion content | [x] verified |
+| 390×844 | `docs/evidence/mobile-390-hero.png`, `mobile-390-menu.png` | отдельная мобильная композиция, menu snap, full-width CTA | [x] verified |
+| 320×568 | `docs/evidence/mobile-320-hero.png`, `mobile-320-menu.png` | нет горизонтального overflow, читаемые заголовки, карточка 260px | [x] verified |
 
 Для каждого viewport зафиксировать:
 
-- [ ] `document.documentElement.scrollWidth === window.innerWidth`.
-- [ ] Нет обрезанных заголовков, CTA и телефонной ссылки.
-- [ ] Якоря `#menu`, `#about`, `#events`, `#locations` приводят к нужным сценам.
-- [ ] Меню открывается с клавиатуры, `Escape` закрывает его, фокус возвращается на кнопку.
-- [ ] В carousel работают `ArrowLeft`/`ArrowRight`, dots и финальная карточка.
-- [ ] Телефон, VK и Yandex Maps открывают правильные ссылки.
-- [ ] При `prefers-reduced-motion: reduce` reveal показывается без движения; scroll-behavior и transitions не мешают чтению.
-- [ ] Сняты доказательные скриншоты, а их пути записаны в таблице выше.
+- [x] `scrollWidth <= innerWidth` на всех трёх viewport; на 390px `scrollWidth === clientWidth === 375` из-за 15px классического scrollbar, горизонтального overflow нет. На 320px `scrollWidth === innerWidth === 320`.
+- [x] H1, CTA и телефонная ссылка не выходят за viewport; hero bounds проверены через DOM.
+- [x] Якоря `#menu`, `#about`, `#events`, `#locations` присутствуют и ведут к одноимённым сценам.
+- [x] Mobile menu открывается с клавиатуры, `Escape` закрывает его, фокус возвращается на кнопку; при открытии фокус на ссылке «Меню».
+- [x] В carousel работают `ArrowLeft`/`ArrowRight`, dots и финальная карточка: active `02` после ArrowRight, затем `05`, next disabled.
+- [x] Телефон (`tel:+79372355715`), VK и Yandex Maps имеют обычные anchors с проверенными href.
+- [x] При `prefers-reduced-motion: reduce` browser emulation дала `opacity: 1`, `transform: none`, `scroll-behavior: auto`; full-page evidence снят в этом режиме.
+- [x] Сняты доказательные скриншоты, пути записаны в таблице выше.
 
 ## Ограничения доказательств
 

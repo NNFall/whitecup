@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 import { siteData } from '../data/site'
 import { documentarySceneMedia, generatedSkyline } from '../data/media'
 import { Doodles } from '../components/Doodles'
@@ -10,7 +8,6 @@ import { SketchUnderline } from '../components/SketchUnderline'
 
 export function HeroSection() {
   const heroMedia = documentarySceneMedia.hero[0]
-  const [showSkylineFallback, setShowSkylineFallback] = useState(false)
 
   return (
     <section id="hero" className="scene hero-scene" aria-labelledby="hero-title" data-scene="hero">
@@ -57,12 +54,10 @@ export function HeroSection() {
             aria-hidden="true"
             onError={(event) => {
               event.currentTarget.hidden = true
-              setShowSkylineFallback(true)
             }}
           />
           <SamaraSkyline
             className="hero-scene__skyline hero-scene__skyline-fallback"
-            fallbackVisible={showSkylineFallback}
           />
           <p className="hero-scene__stamp" aria-hidden="true">everyday, but better</p>
         </Reveal>
