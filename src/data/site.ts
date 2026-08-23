@@ -101,19 +101,16 @@ export const siteData: SiteData = {
       id: 'syrniki',
       name: 'Сырники',
       description: 'Тёплый завтрак без спешки.',
-      price: '320 ₽',
     },
     {
       id: 'waffle',
       name: 'Вафля с красной рыбой',
       description: 'Сытный вариант для долгого завтрака.',
-      price: '590 ₽',
     },
     {
       id: 'shakshuka',
       name: 'Шакшука',
       description: 'Завтрак, ради которого стоит задержаться.',
-      price: '550 ₽',
     },
     {
       id: 'seasonal-dessert',
