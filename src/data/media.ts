@@ -385,6 +385,17 @@ const aboutCoffeeReferenceEdit: DecorativeMediaProvenance = {
     'Независимый декоративный слой с латте, блюдцем и ложкой, восстановленный по предоставленному About-референсу; прозрачность сохранена в responsive WebP. Это reference-art, не документальная фотография напитка White Cup.',
 }
 
+const aboutDoodlesReferenceEdit: DecorativeMediaProvenance = {
+  id: 'about-doodles-reference-edit',
+  src: '/media/about-doodles-reference-edit-1672.webp',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Image Generation Skill edit of supplied About reference + Remove Background Local',
+  provenance:
+    'Независимый полноэкранный прозрачный слой с облаками, птицами, сердцем и пунктирными линиями, восстановленный по предоставленному About-референсу через Image Generation Skill и Remove Background Local. Исходный authoring PNG не публикуется; production использует alpha-preserving lossless WebP. Это декоративный reference-art, не документальная фотография или карта.',
+}
+
 const defineAboutBenefitReferenceEdit = (
   id: string,
   filename: string,
@@ -434,12 +445,12 @@ export const aboutSceneLayerManifest = {
     defineSceneLayer('foreground', aboutPastryReferenceEdit, {
       srcSet:
         '/media/about-pastry-cutout-720.webp 720w, /media/about-pastry-cutout-1200.webp 1200w',
-      sizes: '(max-width: 720px) 70vw, 34vw',
+      sizes: '(max-width: 1023px) 128vw, 63vw',
     }),
     defineSceneLayer('foreground', aboutCoffeeReferenceEdit, {
       srcSet:
         '/media/about-coffee-cutout-720.webp 720w, /media/about-coffee-cutout-1200.webp 1200w',
-      sizes: '(max-width: 720px) 62vw, 30vw',
+      sizes: '(max-width: 1023px) 88vw, 32vw',
     }),
   ],
   benefits: Object.fromEntries(
@@ -448,6 +459,9 @@ export const aboutSceneLayerManifest = {
       defineSceneLayer('decoration', asset, { sizes: '(max-width: 720px) 34vw, 9vw' }),
     ]),
   ) as Record<AboutBenefitMediaId, SceneLayerManifestEntry>,
+  decoration: defineSceneLayer('decoration', aboutDoodlesReferenceEdit, {
+    sizes: '100vw',
+  }),
 } as const
 
 export const heroFoodCutout: DecorativeMediaProvenance = {
@@ -511,6 +525,7 @@ export const decorativeMedia: DecorativeMediaProvenance[] = [
   aboutCleanBaseReferenceEdit,
   aboutPastryReferenceEdit,
   aboutCoffeeReferenceEdit,
+  aboutDoodlesReferenceEdit,
   ...Object.values(aboutBenefitReferenceEdits),
   {
     id: 'paper-sketches',

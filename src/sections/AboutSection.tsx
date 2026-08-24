@@ -36,6 +36,12 @@ export function AboutSection() {
         loading="lazy"
         decoding="async"
       />
+      <SceneLayer
+        {...aboutSceneLayerManifest.decoration}
+        className="about-scene__doodles"
+        loading="lazy"
+        decoding="async"
+      />
 
       <Reveal className="about-scene__intro">
         <p>

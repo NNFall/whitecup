@@ -228,7 +228,22 @@ describe('White Cup story scenes', () => {
       'src',
       '/media/about-coffee-cutout-1200.webp',
     )
-    expect(about.innerHTML).not.toMatch(/about-clean-base\.png|ChatGPT Image|01_44_53 \(1\)/i)
+    expect(about.querySelector('.about-scene__doodles')).toHaveAttribute(
+      'src',
+      '/media/about-doodles-reference-edit-1672.webp',
+    )
+    expect(about.querySelector('.about-scene__doodles')).toHaveAttribute(
+      'data-layer',
+      'decoration',
+    )
+    expect(about.querySelector('.about-scene__doodles')).toHaveAttribute(
+      'data-media-kind',
+      'decorative-reference-edit',
+    )
+    expect(about.querySelector('.about-scene__doodles')).toHaveAttribute('aria-hidden', 'true')
+    expect(about.innerHTML).not.toMatch(
+      /about-(?:clean-base|doodles-reference-edit)\.png|ChatGPT Image|01_44_53 \(1\)/i,
+    )
     expect(about.querySelector('.organic-photo--about')).not.toBeInTheDocument()
   })
 
@@ -239,6 +254,7 @@ describe('White Cup story scenes', () => {
           backdrop: { src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }
           foregrounds: Array<{ src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }>
           benefits: Record<string, { src: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }>
+          decoration: { src: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }
         }
       }
     ).aboutSceneLayerManifest
@@ -251,15 +267,31 @@ describe('White Cup story scenes', () => {
     expect(manifest?.foregrounds).toHaveLength(2)
     expect(manifest?.foregrounds.every((entry) => entry.src.endsWith('-1200.webp'))).toBe(true)
     expect(manifest?.foregrounds.every((entry) => entry.srcSet?.split(',').length === 2)).toBe(true)
+    expect(manifest?.foregrounds.map((entry) => entry.sizes)).toEqual([
+      '(max-width: 1023px) 128vw, 63vw',
+      '(max-width: 1023px) 88vw, 32vw',
+    ])
     expect(Object.values(manifest?.benefits ?? {})).toHaveLength(4)
     expect(Object.values(manifest?.benefits ?? {}).every((entry) => entry.src.endsWith('-480.webp'))).toBe(true)
+    expect(manifest?.decoration.src).toBe('/media/about-doodles-reference-edit-1672.webp')
+    expect(manifest?.decoration.asset.provenanceKind).toBe('decorative-reference-edit')
     expect(
       [
         manifest?.backdrop,
         ...(manifest?.foregrounds ?? []),
         ...Object.values(manifest?.benefits ?? {}),
+        manifest?.decoration,
       ].every((entry) => entry?.asset.sourceArtifactSrc === undefined),
     ).toBe(true)
+  })
+
+  it('places the About doodle canvas exactly on desktop and omits it from mobile layout', () => {
+    expect(globalCss).toMatch(
+      /\.about-scene__doodles\s*{[^}]*position:\s*absolute;[^}]*inset:\s*0;[^}]*width:\s*100%;[^}]*height:\s*100%;[^}]*object-fit:\s*cover;/,
+    )
+    expect(globalCss).toMatch(
+      /@media \(max-width: 1023px\)[\s\S]*?\.about-scene__doodles\s*{[^}]*display:\s*none;/,
+    )
   })
 
   it('keeps every mobile About title line inside the authored gutters', () => {
