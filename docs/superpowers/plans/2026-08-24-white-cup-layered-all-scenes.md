@@ -169,11 +169,11 @@ Outcome: commits `7cf6251` and `9d1ed98`; 8 files / 30 tests and production buil
 - Create: `public/media/about-benefit-chair.png`
 - Create: `public/media/about-benefit-samara.png`
 
-- [ ] **Step 1: Edit the About reference into a clean interior base, pastry/cup foregrounds and benefit illustration pack**
+- [x] **Step 1: Edit the About reference into a clean interior base, pastry/cup foregrounds and benefit illustration pack**
 
 Preserve the reference seam and interior composition; remove all semantic text before saving the base.
 
-- [ ] **Step 2: Add failing tests for two paragraphs, four benefits and independent visual layers**
+- [x] **Step 2: Add failing tests for two paragraphs, four benefits and independent visual layers**
 
 ```tsx
 expect(within(about).getAllByRole('listitem')).toHaveLength(4)
@@ -181,15 +181,17 @@ expect(about.querySelector('[data-layer="backdrop"]')).toBeInTheDocument()
 expect(about.querySelectorAll('[data-layer="foreground"]')).toHaveLength(2)
 ```
 
-- [ ] **Step 3: Run RED, implement the measured desktop/mobile grids, and run GREEN**
+- [x] **Step 3: Run RED, implement the measured desktop/mobile grids, and run GREEN**
 
 Run: `npm.cmd test -- --run src/sections/SceneSections.test.tsx`
 
 Expected before implementation: new assertions fail. Expected afterward: pass.
 
-- [ ] **Step 4: Commit the About scene**
+- [x] **Step 4: Commit the About scene**
 
 Run: `git add src/sections/AboutSection.tsx src/sections/SceneSections.test.tsx src/styles/global.css src/data/media.ts public/media/about-*.png && git commit -m "feat: reconstruct reference about scene"`
+
+Outcome: commits `d615920`, `578d7f4`, and `1098bf1`; full suite reached 8 files / 36 tests and build passed. Fresh Codex in-app Browser checks confirmed exact 1920×1080 one-viewport bounds, zero horizontal overflow, four semantic benefit cards, a separate 14 KB alpha doodle layer, and unclipped 390px title lines. The persistent global navigation versus the reference's scene-local logo remains queued for the dedicated cross-scene navigation pass.
 
 ### Task 5: Reconstruct Visit formats
 
