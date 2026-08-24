@@ -137,4 +137,4 @@ Dispatch visual and provenance audits. The non-hero subagent review passed after
 
 - [x] **Step 5: Commit and publish**
 
-Stage only intended source/assets/evidence/docs, commit `feat: reconstruct White Cup reference hero` (`3066e4e`), record the final evidence update in `1f36e52`, push `master` to `https://github.com/NNFall/whitecup.git`, verify local/remote SHA `1f36e5277858783a2ef2f26b01b6851ec702310a`, and leave the fixed local server available.
+Stage only intended source/assets/evidence/docs, commit `feat: reconstruct White Cup reference hero` (`3066e4e`), record final evidence updates in follow-up documentation commits, push `master` to `https://github.com/NNFall/whitecup.git`, verify that local and remote SHA match after the final push, and leave the fixed local server available.
