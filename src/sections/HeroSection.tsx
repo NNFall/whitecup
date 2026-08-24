@@ -15,11 +15,14 @@ function hideBrokenDecorativeLayer(event: SyntheticEvent<HTMLImageElement>) {
   event.currentTarget.hidden = true
 }
 
+const transparentPixel =
+  'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='
+
 export function HeroSection() {
   const heroMedia = documentarySceneMedia.hero[0]
   const [fallbackVisible, setFallbackVisible] = useState(false)
   const [bagelLayer, coffeeLayer] = heroSceneLayerManifest.foregrounds
-  const [doodleLayer, skylineLayer] = heroSceneLayerManifest.decorations
+  const [doodleLayer, routeLayer, skylineLayer] = heroSceneLayerManifest.decorations
 
   return (
     <section id="hero" className="scene hero-scene" aria-labelledby="hero-title" data-scene="hero">
@@ -34,6 +37,8 @@ export function HeroSection() {
           asset={heroSceneLayerManifest.backdrop.asset}
           layer={heroSceneLayerManifest.backdrop.layer}
           src={heroSceneLayerManifest.backdrop.src}
+          srcSet={heroSceneLayerManifest.backdrop.srcSet}
+          sizes={heroSceneLayerManifest.backdrop.sizes}
           decoding="async"
           fetchPriority="high"
           onError={(event) => {
@@ -101,6 +106,8 @@ export function HeroSection() {
           asset={bagelLayer.asset}
           layer={bagelLayer.layer}
           src={bagelLayer.src}
+          srcSet={bagelLayer.srcSet}
+          sizes={bagelLayer.sizes}
           decoding="async"
           draggable="false"
           onError={hideBrokenDecorativeLayer}
@@ -111,20 +118,38 @@ export function HeroSection() {
           asset={coffeeLayer.asset}
           layer={coffeeLayer.layer}
           src={coffeeLayer.src}
+          srcSet={coffeeLayer.srcSet}
+          sizes={coffeeLayer.sizes}
           decoding="async"
           draggable="false"
           onError={hideBrokenDecorativeLayer}
         />
 
-        <SceneLayer
-          className="hero-doodle-layer"
-          asset={doodleLayer.asset}
-          layer={doodleLayer.layer}
-          src={doodleLayer.src}
-          decoding="async"
-          draggable="false"
-          onError={hideBrokenDecorativeLayer}
-        />
+        <picture data-conditional-layer="doodles" aria-hidden="true">
+          <source media="(min-width: 721px)" srcSet={doodleLayer.src} />
+          <SceneLayer
+            className="hero-doodle-layer"
+            asset={doodleLayer.asset}
+            layer={doodleLayer.layer}
+            src={transparentPixel}
+            decoding="async"
+            draggable="false"
+            onError={hideBrokenDecorativeLayer}
+          />
+        </picture>
+
+        <picture data-conditional-layer="route" aria-hidden="true">
+          <source media="(min-width: 721px)" srcSet={routeLayer.src} />
+          <SceneLayer
+            className="hero-route-layer"
+            asset={routeLayer.asset}
+            layer={routeLayer.layer}
+            src={transparentPixel}
+            decoding="async"
+            draggable="false"
+            onError={hideBrokenDecorativeLayer}
+          />
+        </picture>
 
         <SceneLayer
           className="hero-skyline-layer"

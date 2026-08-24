@@ -2,6 +2,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react'
 
 import App from '../App'
 import { heroSceneLayerManifest } from '../data/media'
+import globalCss from '../styles/global.css?raw'
 
 describe('White Cup story scenes', () => {
   it('keeps the complete six-scene story contract and a single main heading', () => {
@@ -24,6 +25,19 @@ describe('White Cup story scenes', () => {
     expect(manifest.foregrounds).toHaveLength(2)
     expect(manifest.foregrounds.every((entry) => entry.layer === 'foreground')).toBe(true)
 
+    const responsiveLayers = [manifest.backdrop, ...manifest.foregrounds]
+    expect(responsiveLayers.every((entry) => entry.src.endsWith('.webp'))).toBe(true)
+    expect(responsiveLayers.every((entry) => (entry.srcSet?.split(',').length ?? 0) >= 2)).toBe(true)
+    expect(responsiveLayers.every((entry) => Boolean(entry.sizes))).toBe(true)
+    expect(
+      responsiveLayers.every(
+        (entry) =>
+          'sourceArtifactSrc' in entry.asset &&
+          typeof entry.asset.sourceArtifactSrc === 'string' &&
+          entry.asset.sourceArtifactSrc.endsWith('.png'),
+      ),
+    ).toBe(true)
+
     const runtimeSources = [
       manifest.backdrop,
       ...manifest.foregrounds,
@@ -32,7 +46,7 @@ describe('White Cup story scenes', () => {
 
     expect(runtimeSources.every((entry) => entry.src === entry.asset.src)).toBe(true)
 
-    const filenames = runtimeSources.map((entry) => entry.src)
+    const filenames = runtimeSources.flatMap((entry) => [entry.src, entry.srcSet ?? ''])
     expect(filenames).not.toContain('/media/hero-reference-cafe-crop.png')
     expect(filenames.join(' ')).not.toMatch(/3679ac8b|ChatGPT Image/i)
   })
@@ -51,10 +65,9 @@ describe('White Cup story scenes', () => {
     expect(screen.getAllByRole('img', { name: /white cup/i }).some((image) => image.getAttribute('src') === '/media/hero-logo-reference.png')).toBe(true)
 
     const decorativeLayers = [
-      ['.hero-backdrop', '/media/hero-clean-base-edit-poc.png', 'backdrop', 'decorative-reference-edit'],
-      ['.hero-bagel', '/media/hero-bagel-cutout-poc.png', 'foreground', 'decorative-reference-edit'],
-      ['.hero-coffee', '/media/hero-coffee-cutout-poc.png', 'foreground', 'decorative-reference-edit'],
-      ['.hero-doodle-layer', '/media/hero-doodles-exact.png', 'decoration', 'decorative-reference-extract'],
+      ['.hero-backdrop', '/media/hero-clean-base-edit-1672.webp', 'backdrop', 'decorative-reference-edit'],
+      ['.hero-bagel', '/media/hero-bagel-cutout-1200.webp', 'foreground', 'decorative-reference-edit'],
+      ['.hero-coffee', '/media/hero-coffee-cutout-1200.webp', 'foreground', 'decorative-reference-edit'],
       ['.hero-skyline-layer', '/media/hero-skyline-exact.png', 'decoration', 'decorative-reference-extract'],
     ] as const
 
@@ -67,7 +80,39 @@ describe('White Cup story scenes', () => {
       expect(layer).toHaveAttribute('src', src)
     })
 
-    expect(hero.querySelector('[src="/media/hero-reference-cafe-crop.png"]')).not.toBeInTheDocument()
+    expect(hero.querySelector('.hero-backdrop')).toHaveAttribute(
+      'srcset',
+      '/media/hero-clean-base-edit-960.webp 960w, /media/hero-clean-base-edit-1672.webp 1672w',
+    )
+    expect(hero.querySelector('.hero-backdrop')).toHaveAttribute('sizes', '100vw')
+    expect(hero.querySelector('.hero-backdrop')).toHaveAttribute('fetchpriority', 'high')
+    expect(hero.querySelector('.hero-bagel')).not.toHaveAttribute('fetchpriority')
+    expect(hero.querySelector('.hero-coffee')).not.toHaveAttribute('fetchpriority')
+
+    const doodlePicture = hero.querySelector('[data-conditional-layer="doodles"]')
+    expect(doodlePicture?.querySelector('source')).toHaveAttribute('media', '(min-width: 721px)')
+    expect(doodlePicture?.querySelector('source')).toHaveAttribute('srcset', '/media/hero-doodles-exact.png')
+    expect(doodlePicture?.querySelector('.hero-doodle-layer')).toHaveAttribute('src', expect.stringContaining('data:image/'))
+
+    const routePicture = hero.querySelector('[data-conditional-layer="route"]')
+    expect(routePicture?.querySelector('source')).toHaveAttribute('media', '(min-width: 721px)')
+    expect(routePicture?.querySelector('source')).toHaveAttribute(
+      'srcset',
+      '/media/hero-route-cup-1672.webp',
+    )
+    expect(routePicture?.querySelector('.hero-route-layer')).toHaveAttribute('data-layer', 'decoration')
+    expect(routePicture?.querySelector('.hero-route-layer')).toHaveAttribute(
+      'data-media-kind',
+      'decorative-reference-edit',
+    )
+    expect(heroSceneLayerManifest.decorations[1].asset.sourceArtifactSrc).toBe(
+      '/media/hero-route-cup.png',
+    )
+
+    expect(hero.innerHTML).not.toContain('/media/hero-reference-cafe-crop.png')
+    expect(hero.innerHTML).not.toMatch(
+      /hero-(?:clean-base-edit-poc|bagel-cutout-poc|coffee-cutout-poc)\.png/,
+    )
 
     expect(hero.querySelector('.hero-scene__documentary-fallback img')).not.toBeInTheDocument()
 
@@ -88,6 +133,11 @@ describe('White Cup story scenes', () => {
 
     expect(hero.querySelector('.hero-scene__documentary-fallback')).toHaveAttribute('data-fallback-visible', 'true')
     expect(hero.querySelector('.hero-scene__documentary-fallback img')).toHaveAttribute('src', '/media/interior-01.webp')
+  })
+
+  it('does not use viewport-width full bleed that creates a narrow-screen scrollbar', () => {
+    expect(globalCss).not.toContain('width: 100vw')
+    expect(globalCss).not.toContain('calc((100% - 100vw) / 2)')
   })
 
   it('uses verified contact, location and source links', () => {

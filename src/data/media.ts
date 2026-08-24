@@ -10,6 +10,8 @@ export type SceneLayerRole = 'backdrop' | 'foreground' | 'decoration'
 interface MediaProvenanceBase {
   id: string
   src: string
+  /** Original high-resolution authoring artifact; production may use derivatives. */
+  sourceArtifactSrc?: string
   alt: string
   sourceUrl?: string
   sourceLabel: string
@@ -34,6 +36,8 @@ export interface SceneLayerManifestEntry {
   asset: DecorativeMediaProvenance
   layer: SceneLayerRole
   src: string
+  srcSet?: string
+  sizes?: string
 }
 
 const yandexGallerySource = 'Yandex Maps public gallery photo'
@@ -198,50 +202,79 @@ export const heroGeneratedLayers = [
 
 export const heroCleanBaseEdit: DecorativeMediaProvenance = {
   id: 'hero-clean-base-edit',
-  src: '/media/hero-clean-base-edit-poc.png',
+  src: '/media/hero-clean-base-edit-1672.webp',
+  sourceArtifactSrc: '/media/hero-clean-base-edit-poc.png',
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
   sourceLabel: 'Image Generation Skill edit of supplied reference',
   provenance:
-    'Отредактированный по предоставленному референсу чистый фон hero без навигации, текста, логотипа, doodles, бублика и чашки; reference-art, не документальная фотография White Cup.',
+    'Отредактированный по предоставленному референсу чистый фон hero без навигации, текста, логотипа, doodles, бублика и чашки; исходный PNG сохранён как authoring artifact, production использует responsive WebP. Reference-art, не документальная фотография White Cup.',
 }
 
 export const heroBagelReferenceEdit: DecorativeMediaProvenance = {
   id: 'hero-bagel-reference-edit',
-  src: '/media/hero-bagel-cutout-poc.png',
+  src: '/media/hero-bagel-cutout-1200.webp',
+  sourceArtifactSrc: '/media/hero-bagel-cutout-poc.png',
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
   sourceLabel: 'Image Generation Skill edit + Remove Background Local',
   provenance:
-    'Изолированный по предоставленному hero-референсу декоративный бублик с тарелкой; прозрачность создана локальным Remove Background, ассет не является документальной фотографией меню.',
+    'Изолированный по предоставленному hero-референсу декоративный бублик с тарелкой; прозрачность создана локальным Remove Background и сохранена в responsive WebP, исходный PNG оставлен как authoring artifact. Ассет не является документальной фотографией меню.',
 }
 
 export const heroCoffeeReferenceEdit: DecorativeMediaProvenance = {
   id: 'hero-coffee-reference-edit',
-  src: '/media/hero-coffee-cutout-poc.png',
+  src: '/media/hero-coffee-cutout-1200.webp',
+  sourceArtifactSrc: '/media/hero-coffee-cutout-poc.png',
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
   sourceLabel: 'Image Generation Skill edit + Remove Background Local',
   provenance:
-    'Изолированная по предоставленному hero-референсу декоративная чашка латте с блюдцем и ложкой; прозрачность создана локальным Remove Background, ассет не является документальной фотографией меню.',
+    'Изолированная по предоставленному hero-референсу декоративная чашка латте с блюдцем и ложкой; прозрачность создана локальным Remove Background и сохранена в responsive WebP, исходный PNG оставлен как authoring artifact. Ассет не является документальной фотографией меню.',
+}
+
+export const heroRouteCupReferenceEdit: DecorativeMediaProvenance = {
+  id: 'hero-route-cup-reference-edit',
+  src: '/media/hero-route-cup-1672.webp',
+  sourceArtifactSrc: '/media/hero-route-cup.png',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Image Generation Skill edit of supplied reference + Remove Background Local',
+  provenance:
+    'Независимый прозрачный слой с тонким пунктирным маршрутом и маленькой чашкой, восстановленный по геометрии предоставленного hero-референса; декоративный reference-edit, не документальная фотография.',
 }
 
 const defineSceneLayer = (
   layer: SceneLayerRole,
   asset: DecorativeMediaProvenance,
-): SceneLayerManifestEntry => ({ asset, layer, src: asset.src })
+  responsive?: Pick<SceneLayerManifestEntry, 'sizes' | 'srcSet'>,
+): SceneLayerManifestEntry => ({ asset, layer, src: asset.src, ...responsive })
 
 export const heroSceneLayerManifest = {
-  backdrop: defineSceneLayer('backdrop', heroCleanBaseEdit),
+  backdrop: defineSceneLayer('backdrop', heroCleanBaseEdit, {
+    srcSet:
+      '/media/hero-clean-base-edit-960.webp 960w, /media/hero-clean-base-edit-1672.webp 1672w',
+    sizes: '100vw',
+  }),
   foregrounds: [
-    defineSceneLayer('foreground', heroBagelReferenceEdit),
-    defineSceneLayer('foreground', heroCoffeeReferenceEdit),
+    defineSceneLayer('foreground', heroBagelReferenceEdit, {
+      srcSet:
+        '/media/hero-bagel-cutout-720.webp 720w, /media/hero-bagel-cutout-1200.webp 1200w',
+      sizes: '(max-width: 480px) 130vw, (max-width: 720px) 125vw, 40vw',
+    }),
+    defineSceneLayer('foreground', heroCoffeeReferenceEdit, {
+      srcSet:
+        '/media/hero-coffee-cutout-720.webp 720w, /media/hero-coffee-cutout-1200.webp 1200w',
+      sizes: '(max-width: 480px) 102vw, (max-width: 720px) 98vw, 30vw',
+    }),
   ],
   decorations: [
     defineSceneLayer('decoration', heroDoodlesReference),
+    defineSceneLayer('decoration', heroRouteCupReferenceEdit),
     defineSceneLayer('decoration', heroSkylineReference),
   ],
 } as const
@@ -297,6 +330,7 @@ export const decorativeMedia: DecorativeMediaProvenance[] = [
   heroCleanBaseEdit,
   heroBagelReferenceEdit,
   heroCoffeeReferenceEdit,
+  heroRouteCupReferenceEdit,
   heroFoodCutout,
   heroCleanPanel,
   heroLogoBadge,
