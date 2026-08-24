@@ -474,6 +474,12 @@ describe('White Cup story scenes', () => {
     const articles = within(events).getAllByRole('article')
 
     expect(heading).toHaveTextContent('Завтраки, встречи и тёплые события')
+    expect(heading.querySelector('.events-scene__title-line--first')).toHaveTextContent(
+      'Завтраки, встречи',
+    )
+    expect(heading.querySelector('.events-scene__title-line--second')).toHaveTextContent(
+      'и тёплые события',
+    )
     expect(heading.querySelector('.events-scene__accent')).toHaveTextContent('события')
     expect(events.querySelector('.scene-kicker')).not.toBeInTheDocument()
     expect(events.querySelector('.events-scene__intro p')).toHaveTextContent(
@@ -507,8 +513,8 @@ describe('White Cup story scenes', () => {
       ['.events-scene__backdrop', '/media/events-clean-base-1672w.webp', 'backdrop'],
       ['.events-scene__doodles', '/media/events-doodles-reference-edit-1672.webp', 'decoration'],
       ['.events-scene__chalkboard', '/media/events-chalkboard-reference-edit-480w.webp', 'decoration'],
-      ['.events-scene__cake', '/media/events-cake-plate-reference-edit-1200w.webp', 'foreground'],
-      ['.events-scene__coffee', '/media/events-coffee-cutout-1200w.webp', 'foreground'],
+      ['.events-scene__cake', '/media/events-cake-plate-clean-1200w.webp', 'foreground'],
+      ['.events-scene__coffee', '/media/events-coffee-clean-800w.webp', 'foreground'],
     ] as const
 
     expectedLayers.forEach(([selector, src, layer]) => {
@@ -527,7 +533,10 @@ describe('White Cup story scenes', () => {
     ).toHaveAttribute('href', 'https://vk.ru/white_cup')
     expect(events.querySelector('.organic-photo')).not.toBeInTheDocument()
     expect(events.innerHTML).not.toMatch(
-      /interior-03|ChatGPT Image|01_44_54 \(4\)|events-(?:clean-base|cake-plate-reference-edit|coffee-cutout|chalkboard-reference-edit|doodles-reference-edit)\.png/i,
+      /events-cake-plate-reference-edit|events-coffee-cutout/i,
+    )
+    expect(events.innerHTML).not.toMatch(
+      /interior-03|ChatGPT Image|01_44_54 \(4\)|events-(?:clean-base|cake-plate-clean|coffee-clean|chalkboard-reference-edit|doodles-reference-edit)\.png/i,
     )
   })
 
@@ -563,8 +572,16 @@ describe('White Cup story scenes', () => {
     expect(layers.every((entry) => Boolean(entry?.srcSet) && Boolean(entry?.sizes))).toBe(true)
     expect(layers.every((entry) => entry?.asset.sourceArtifactSrc === undefined)).toBe(true)
     expect(manifest?.foregrounds.map((entry) => entry.src)).toEqual([
-      '/media/events-cake-plate-reference-edit-1200w.webp',
-      '/media/events-coffee-cutout-1200w.webp',
+      '/media/events-cake-plate-clean-1200w.webp',
+      '/media/events-coffee-clean-800w.webp',
+    ])
+    expect(manifest?.foregrounds.map((entry) => entry.srcSet)).toEqual([
+      '/media/events-cake-plate-clean-720w.webp 720w, /media/events-cake-plate-clean-1200w.webp 1200w',
+      '/media/events-coffee-clean-480w.webp 480w, /media/events-coffee-clean-800w.webp 800w',
+    ])
+    expect(manifest?.foregrounds.map((entry) => entry.sizes)).toEqual([
+      '(max-width: 1023px) 80vw, 26.5vw',
+      '(max-width: 1023px) 65vw, 22.5vw',
     ])
     expect(manifest?.chalkboard.srcSet?.split(',')).toHaveLength(2)
     expect(manifest?.decoration.srcSet?.split(',')).toHaveLength(2)
@@ -587,18 +604,30 @@ describe('White Cup story scenes', () => {
     expect(globalCss).toMatch(
       /@media \(max-width: 1023px\)[\s\S]*?\.events-scene__cards\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\);/,
     )
+    expect(globalCss).toMatch(
+      /\.events-card__copy h3\s*\{[^}]*position:\s*relative;/,
+    )
+    expect(globalCss).toMatch(
+      /\.events-card__title-link\s*\{[^}]*display:\s*inline;[^}]*text-decoration:\s*none;/,
+    )
+    expect(globalCss).toMatch(
+      /\.events-card__title-link::after\s*\{[^}]*position:\s*absolute;[^}]*height:\s*2\.75rem;[^}]*content:\s*'';/,
+    )
     expect(globalCss).toMatch(/\.events-card__title-link:focus-visible\s*\{[^}]*outline:/)
     expect(globalCss).toMatch(
-      /\.events-scene__title-line:first-child\s*\{[^}]*transform:\s*scaleX\(1\.23\);/,
+      /\.events-scene__title-line--first\s*\{[^}]*transform:\s*scaleX\(1\.36\);/,
     )
     expect(globalCss).toMatch(
-      /\.events-scene__title-line:last-child\s*\{[^}]*transform:\s*scaleX\(1\.43\);/,
+      /\.events-scene__title-line--second\s*\{[^}]*margin-left:\s*0\.2vw;[^}]*transform:\s*scaleX\(1\.34\);/,
     )
     expect(globalCss).toMatch(
-      /\.events-scene__cake\s*\{[^}]*left:\s*49\.8%;[^}]*width:\s*36%;/,
+      /\.events-scene__cake\s*\{[^}]*top:\s*68\.4%;[^}]*left:\s*59\.2%;[^}]*width:\s*26\.5%;/,
     )
     expect(globalCss).toMatch(
-      /@media \(max-width: 1023px\)[\s\S]*?\.events-scene__title-line:first-child,\s*\.events-scene__title-line:last-child\s*\{[^}]*transform:\s*none;/,
+      /\.events-scene__coffee\s*\{[^}]*top:\s*68\.2%;[^}]*left:\s*78%;[^}]*width:\s*22\.5%;/,
+    )
+    expect(globalCss).toMatch(
+      /@media \(max-width: 1023px\)[\s\S]*?\.events-scene__title-line--first,\s*\.events-scene__title-line--second\s*\{[^}]*margin-left:\s*0;[^}]*transform:\s*none;/,
     )
   })
 

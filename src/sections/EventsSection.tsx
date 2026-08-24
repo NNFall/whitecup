@@ -15,8 +15,10 @@ export function EventsSection() {
       id="events"
       title={
         <>
-          <span className="events-scene__title-line">Завтраки, встречи</span>{' '}
-          <span className="events-scene__title-line">
+          <span className="events-scene__title-line events-scene__title-line--first">
+            Завтраки, встречи
+          </span>{' '}
+          <span className="events-scene__title-line events-scene__title-line--second">
             и тёплые <span className="events-scene__accent">события</span>
           </span>
         </>

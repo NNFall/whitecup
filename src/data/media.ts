@@ -602,26 +602,26 @@ const eventsCardReferenceEdits = {
 
 export type EventsCardMediaId = keyof typeof eventsCardReferenceEdits
 
-const eventsCakePlateReferenceEdit: DecorativeMediaProvenance = {
-  id: 'events-cake-plate-reference-edit',
-  src: '/media/events-cake-plate-reference-edit-1200w.webp',
+const eventsCakePlateCleanReferenceEdit: DecorativeMediaProvenance = {
+  id: 'events-cake-plate-clean-reference-edit',
+  src: '/media/events-cake-plate-clean-1200w.webp',
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
   sourceLabel: 'Image Generation Skill edit + Remove Background Local',
   provenance:
-    'Отдельный прозрачный слой торта вместе с тарелкой, восстановленный по нижнему правому foreground предоставленного Events-референса. Production использует alpha-preserving responsive WebP; это decorative reference-art, не документальная фотография блюда White Cup.',
+    'Отдельный чисто обрезанный прозрачный слой торта вместе с полной тарелкой, восстановленный по нижнему правому foreground предоставленного Events-референса. Production использует alpha-preserving responsive WebP без загрязнённого края исходного cutout; это decorative reference-art, не документальная фотография блюда White Cup.',
 }
 
-const eventsCoffeeReferenceEdit: DecorativeMediaProvenance = {
-  id: 'events-coffee-reference-edit',
-  src: '/media/events-coffee-cutout-1200w.webp',
+const eventsCoffeeCleanReferenceEdit: DecorativeMediaProvenance = {
+  id: 'events-coffee-clean-reference-edit',
+  src: '/media/events-coffee-clean-800w.webp',
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
   sourceLabel: 'Image Generation Skill edit + Remove Background Local',
   provenance:
-    'Отдельный прозрачный слой чашки латте с блюдцем, восстановленный по нижнему правому foreground предоставленного Events-референса. Production использует alpha-preserving responsive WebP; это decorative reference-art, не документальная фотография White Cup.',
+    'Отдельный чисто обрезанный прозрачный слой чашки латте с блюдцем и ложкой, восстановленный по нижнему правому foreground предоставленного Events-референса. Production использует alpha-preserving responsive WebP без лишнего прозрачного поля; это decorative reference-art, не документальная фотография White Cup.',
 }
 
 const eventsDoodlesReferenceEdit: DecorativeMediaProvenance = {
@@ -662,15 +662,15 @@ export const eventsSceneLayerManifest = {
     ]),
   ) as Record<EventsCardMediaId, SceneLayerManifestEntry>,
   foregrounds: [
-    defineSceneLayer('foreground', eventsCakePlateReferenceEdit, {
+    defineSceneLayer('foreground', eventsCakePlateCleanReferenceEdit, {
       srcSet:
-        '/media/events-cake-plate-reference-edit-720w.webp 720w, /media/events-cake-plate-reference-edit-1200w.webp 1200w',
-      sizes: '(max-width: 1023px) 76vw, 31vw',
+        '/media/events-cake-plate-clean-720w.webp 720w, /media/events-cake-plate-clean-1200w.webp 1200w',
+      sizes: '(max-width: 1023px) 80vw, 26.5vw',
     }),
-    defineSceneLayer('foreground', eventsCoffeeReferenceEdit, {
+    defineSceneLayer('foreground', eventsCoffeeCleanReferenceEdit, {
       srcSet:
-        '/media/events-coffee-cutout-720w.webp 720w, /media/events-coffee-cutout-1200w.webp 1200w',
-      sizes: '(max-width: 1023px) 92vw, 43vw',
+        '/media/events-coffee-clean-480w.webp 480w, /media/events-coffee-clean-800w.webp 800w',
+      sizes: '(max-width: 1023px) 65vw, 22.5vw',
     }),
   ],
   decoration: defineSceneLayer('decoration', eventsDoodlesReferenceEdit, {
@@ -821,8 +821,8 @@ export const decorativeMedia: DecorativeMediaProvenance[] = [
   visitSkylineReferenceEdit,
   eventsCleanBaseReferenceEdit,
   ...Object.values(eventsCardReferenceEdits),
-  eventsCakePlateReferenceEdit,
-  eventsCoffeeReferenceEdit,
+  eventsCakePlateCleanReferenceEdit,
+  eventsCoffeeCleanReferenceEdit,
   eventsDoodlesReferenceEdit,
   eventsChalkboardReferenceEdit,
   locationsMapReferenceEdit,
