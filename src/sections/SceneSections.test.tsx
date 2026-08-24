@@ -1,6 +1,35 @@
 import { fireEvent, render, screen, within } from '@testing-library/react'
 
 import App from '../App'
+import { SceneLayer } from '../components/SceneLayer'
+
+function LayeredHeroContractFixture() {
+  return (
+    <section aria-label="Layered hero contract">
+      <SceneLayer
+        layer="backdrop"
+        mediaKind="decorative-reference-edit"
+        src="/media/hero-clean-base-edit-poc.png"
+      />
+      <SceneLayer
+        layer="foreground"
+        mediaKind="decorative-reference-edit"
+        src="/media/hero-bagel-cutout-poc.png"
+      />
+      <SceneLayer
+        layer="foreground"
+        mediaKind="decorative-reference-edit"
+        src="/media/hero-coffee-cutout-poc.png"
+      />
+      <SceneLayer
+        layer="decoration"
+        mediaKind="decorative-reference-extract"
+        src="/media/hero-doodles-exact.png"
+      />
+      <h1>Завтраки, кофе и свой вайб в White Cup</h1>
+    </section>
+  )
+}
 
 describe('White Cup story scenes', () => {
   it('keeps the complete six-scene story contract and a single main heading', () => {
@@ -13,6 +42,20 @@ describe('White Cup story scenes', () => {
     }
 
     expect(screen.getByRole('group', { name: 'Основные действия' })).toBeInTheDocument()
+  })
+
+  it('defines the layered hero contract without mounting a supplied full-screen reference', () => {
+    render(<LayeredHeroContractFixture />)
+
+    const hero = screen.getByRole('region', { name: 'Layered hero contract' })
+    expect(hero.querySelector('[data-layer="backdrop"]')).toHaveAttribute(
+      'data-media-kind',
+      'decorative-reference-edit',
+    )
+    expect(hero.querySelectorAll('[data-layer="foreground"]')).toHaveLength(2)
+    expect(hero.querySelector('[src*="3679ac8b"]')).not.toBeInTheDocument()
+    expect(hero.querySelector('[src*="ChatGPT Image"]')).not.toBeInTheDocument()
+    expect(within(hero).getByRole('heading', { level: 1 })).toHaveTextContent('Завтраки')
   })
 
   it('matches the supplied first-screen hero contract', () => {

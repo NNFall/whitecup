@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest'
 
-import { documentarySceneMedia, mediaAssets, mediaSource } from './media'
+import {
+  documentarySceneMedia,
+  generatedSkyline,
+  heroCleanPanel,
+  heroDoodlesReference,
+  media,
+  mediaAssets,
+  mediaSource,
+} from './media'
 import { siteData } from './site'
 
 describe('White Cup site data', () => {
@@ -30,5 +38,14 @@ describe('White Cup site data', () => {
     expect(mediaSource.vk.url).toBe('https://vk.ru/white_cup')
     expect(mediaSource.vk.status).toBe('unverified-blocked')
     expect(mediaSource.vk.verified).toBe(false)
+  })
+
+  it('distinguishes reference edits, reference extracts and generated decoration', () => {
+    expect(heroCleanPanel.kind).toBe('decorative-reference-edit')
+    expect(heroDoodlesReference.kind).toBe('decorative-reference-extract')
+    expect(generatedSkyline.kind).toBe('decorative-generated')
+
+    expect(media.documentary.every((asset) => asset.kind === 'documentary')).toBe(true)
+    expect(media.decorative.every((asset) => asset.kind !== 'documentary')).toBe(true)
   })
 })
