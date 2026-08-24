@@ -12,8 +12,14 @@ export function BrandMark({ variant = 'default' }: BrandMarkProps) {
 
   if (isBadge) {
     return (
-      <span className="brand-mark brand-mark--badge" data-media-kind="decorative-generated">
-        <img className="brand-mark__icon" src={heroLogoBadge.src} alt={heroLogoBadge.alt} draggable="false" />
+      <span className="brand-mark brand-mark--badge" data-media-kind="decorative-reference">
+        <img
+          className="brand-mark__icon"
+          src={heroLogoBadge.src}
+          alt={heroLogoBadge.alt}
+          data-media-kind="decorative-reference"
+          draggable="false"
+        />
       </span>
     )
   }

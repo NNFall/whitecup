@@ -18,7 +18,16 @@ export function Reveal({ children, className, delay = 0, style, ...rest }: Revea
     const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
     const element = elementRef.current
 
-    if (reducedMotion || !element || typeof IntersectionObserver === 'undefined') {
+    if (!element) {
+      setState('visible')
+      return
+    }
+
+    // Progressive enhancement: CSS keeps content visible until this marker is
+    // present, so a no-JS render never leaves the story hidden.
+    element.dataset.revealEnhanced = 'true'
+
+    if (reducedMotion || typeof IntersectionObserver === 'undefined') {
       setState('visible')
       return
     }

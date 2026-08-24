@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 
 import App from '../App'
 
@@ -19,17 +19,48 @@ describe('White Cup story scenes', () => {
     render(<App />)
 
     const hero = screen.getByRole('region', { name: /завтраки, кофе и свой вайб/i })
-    expect(within(hero).getByRole('heading', { level: 1 })).toHaveTextContent(/Завтраки.*кофе.*White Cup/i)
+    expect(hero.querySelector('.hero-reference-frame')).toBeInTheDocument()
+    expect(within(hero).getByRole('heading', { level: 1 })).toHaveTextContent(
+      'Завтраки, кофе и свой вайб в White Cup',
+    )
     expect(within(hero).getByText('кофе')).toHaveClass('hero-scene__accent')
     expect(within(hero).getByRole('link', { name: /посмотреть меню/i })).toBeInTheDocument()
     expect(within(hero).getByRole('link', { name: /выбрать локацию/i })).toBeInTheDocument()
-    expect(within(hero).getByRole('img', { name: /white cup/i })).toBeInTheDocument()
-    expect(hero.querySelector('.hero-scene__reference-art')).toHaveAttribute('aria-hidden', 'true')
-    expect(hero.querySelector('.hero-scene__clean-panel')).toHaveAttribute('data-media-kind', 'decorative-generated')
-    expect(hero.querySelector('.hero-scene__food-cutout')).toHaveAttribute('data-src', '/media/hero-food-cutout.png')
-    expect(hero.querySelector('.hero-scene__food-cutout')).not.toHaveAttribute('src')
+    expect(screen.getAllByRole('img', { name: /white cup/i }).some((image) => image.getAttribute('src') === '/media/hero-logo-reference.png')).toBe(true)
+
+    const decorativeLayers = [
+      ['.hero-cafe-backdrop', '/media/hero-reference-cafe-crop.png', 'decorative-reference'],
+      ['.hero-doodle-layer', '/media/hero-doodles-exact.png', 'decorative-reference'],
+      ['.hero-skyline-layer', '/media/hero-skyline-exact.png', 'decorative-reference'],
+    ] as const
+
+    decorativeLayers.forEach(([selector, src, mediaKind]) => {
+      const layer = hero.querySelector(selector)
+      expect(layer).toBeInTheDocument()
+      expect(layer).toHaveAttribute('aria-hidden', 'true')
+      expect(layer).toHaveAttribute('data-media-kind', mediaKind)
+      expect(layer).toHaveAttribute('src', src)
+    })
+
+    expect(hero.querySelector('.hero-scene__documentary-fallback img')).not.toBeInTheDocument()
+
     expect(hero.querySelector('.hero-scene__heart')).toHaveAttribute('aria-hidden', 'true')
     expect(hero.querySelector('.hero-scene__pin')).toHaveAttribute('aria-hidden', 'true')
+  })
+
+  it('defers the documentary hero fallback until the reference crop fails', () => {
+    render(<App />)
+
+    const hero = screen.getByRole('region', { name: /завтраки, кофе и свой вайб/i })
+    const backdrop = hero.querySelector<HTMLImageElement>('.hero-cafe-backdrop')
+    expect(backdrop).toBeInTheDocument()
+    expect(hero.querySelector('.hero-scene__documentary-fallback img')).not.toBeInTheDocument()
+    expect(hero.querySelector('[src="/media/hero-food-cutout.png"]')).not.toBeInTheDocument()
+
+    fireEvent.error(backdrop as HTMLImageElement)
+
+    expect(hero.querySelector('.hero-scene__documentary-fallback')).toHaveAttribute('data-fallback-visible', 'true')
+    expect(hero.querySelector('.hero-scene__documentary-fallback img')).toHaveAttribute('src', '/media/interior-01.webp')
   })
 
   it('uses verified contact, location and source links', () => {

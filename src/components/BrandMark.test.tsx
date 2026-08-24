@@ -9,10 +9,11 @@ describe('BrandMark', () => {
     expect(screen.getByRole('img', { name: /white cup/i })).toBeInTheDocument()
   })
 
-  it('uses the generated badge asset for the hero header mark', () => {
+  it('uses the supplied-reference badge asset for the hero header mark', () => {
     render(<BrandMark variant="badge" />)
 
-    expect(screen.getByRole('img', { name: /white cup/i })).toHaveAttribute('src', '/media/hero-logo-badge.png')
-    expect(screen.getByRole('img', { name: /white cup/i }).parentElement).toHaveAttribute('data-media-kind', 'decorative-generated')
+    expect(screen.getByRole('img', { name: /white cup/i })).toHaveAttribute('src', '/media/hero-logo-reference.png')
+    expect(screen.getByRole('img', { name: /white cup/i })).toHaveAttribute('data-media-kind', 'decorative-reference')
+    expect(screen.getByRole('img', { name: /white cup/i }).parentElement).toHaveAttribute('data-media-kind', 'decorative-reference')
   })
 })

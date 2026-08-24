@@ -28,7 +28,7 @@ npm run preview
 - [GitHub NNFall/whitecup](https://github.com/NNFall/whitecup) — репозиторий проекта.
 - Локальные визуальные референсы пользователя: `C:\Users\User\Downloads\3679ac8b-1f0d-40be-b73d-d5246178ba35.png` и пять файлов `ChatGPT Image ... (1–5).png` из той же папки. Они не копируются в репозиторий без необходимости.
 
-Документальные кадры в `public/media/` — только визуально проверенные публичные WebP из галереи Yandex Maps, с описанием источника и роли в `src/data/media.ts`. Hero-панель, badge-логотип и skyline — отдельная сгенерированная декоративная арт-дирекция; они не выдаются за фотографию, карту или документальный вид. `hero-food-cutout.png` загружается только как условный fallback и прошёл локальное удаление фона. Все provenance-метки собраны в `src/data/media.ts` и `docs/visual-deviations.md`.
+Документальные кадры в `public/media/` — только визуально проверенные публичные WebP из галереи Yandex Maps, с описанием источника и роли в `src/data/media.ts`. Видимый hero-panel, logo, doodles и skyline — отдельные механические/alpha-extracted decorative reference-art из supplied PNG; они не выдаются за фотографию, карту или документальный вид. Сгенерированные food/interior эксперименты и Remove Background cutouts сохранены как provenance pack, но не загружаются в нормальном hero-пути. Все provenance-метки собраны в `src/data/media.ts` и `docs/visual-deviations.md`.
 
 ## Фактические оговорки
 

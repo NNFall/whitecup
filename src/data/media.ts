@@ -107,16 +107,70 @@ export const generatedSkyline: MediaProvenance = {
   fallbackDescription: 'При недоступности PNG показывается локальный inline SVG-эскиз силуэта Самары.',
 }
 
-export const heroReferenceArt: MediaProvenance = {
-  id: 'hero-reference-art',
-  src: 'reference-only://hero-reference-art',
+/**
+ * The reference hero is intentionally assembled from independent decorative
+ * layers. Keeping each file in the provenance registry makes it explicit that
+ * these are reference-art or synthetic art-direction assets, not documentary
+ * venue evidence.
+ */
+export const heroCafeBackdrop: MediaProvenance = {
+  id: 'hero-cafe-backdrop',
+  src: '/media/hero-reference-cafe-crop.png',
   alt: '',
   kind: 'decorative',
-  sourceLabel: 'Supplied local visual reference',
+  sourceLabel: 'Supplied reference crop',
   provenance:
-    'Локальный PNG-референс первого экрана использован только для арт-дирекции и не хранится/не запрашивается runtime-страницей; текст и CTA остаются семантическим DOM, а документальные фотографии хранятся отдельно.',
-  fallbackDescription: 'Не загружается в live UI; runtime использует отдельную сгенерированную декоративную панель и документальный fallback.',
+    'Изолированный правый фотопанельный crop из предоставленного 1672×941 референса; из crop удалены baked-навигация и текстовые фрагменты, DOM-типографика остаётся семантической. Это декоративный reference-art, не документальная фотография White Cup.',
+  fallbackDescription: 'При недоступности reference crop показывается проверенный документальный интерьер White Cup как визуальный fallback.',
 }
+
+export const heroFoodBurger: MediaProvenance = {
+  id: 'hero-food-burger',
+  src: '/media/hero-food-burger.png',
+  alt: '',
+  kind: 'decorative',
+  sourceLabel: 'Image Generation Skill + Remove Background Local',
+  provenance:
+    'Синтетический декоративный breakfast-бургер/бублик для арт-дирекции первого экрана; фон удалён локальным Remove Background и ассет не выдаётся за документальную фотографию меню.',
+}
+
+export const heroFoodLatte: MediaProvenance = {
+  id: 'hero-food-latte',
+  src: '/media/hero-food-latte.png',
+  alt: '',
+  kind: 'decorative',
+  sourceLabel: 'Image Generation Skill + Remove Background Local',
+  provenance:
+    'Синтетический декоративный латте в чашке для арт-дирекции первого экрана; фон удалён локальным Remove Background и ассет не выдаётся за документальную фотографию White Cup.',
+}
+
+export const heroDoodlesReference: MediaProvenance = {
+  id: 'hero-doodles-reference',
+  src: '/media/hero-doodles-exact.png',
+  alt: '',
+  kind: 'decorative',
+  sourceLabel: 'Supplied reference crop + local alpha extraction',
+  provenance:
+    'Точечно извлечённые из предоставленного референса облака, птица, сердце и маленькие marks на прозрачный холст; baked-типографика и навигация не входят в ассет.',
+}
+
+export const heroSkylineReference: MediaProvenance = {
+  id: 'hero-skyline-reference',
+  src: '/media/hero-skyline-exact.png',
+  alt: '',
+  kind: 'decorative',
+  sourceLabel: 'Supplied reference crop + local alpha extraction',
+  provenance:
+    'Точно извлечённая из нижней части предоставленного референса прозрачная линейная иллюстрация с orange sun; не является картой или документальной фотографией.',
+}
+
+export const heroGeneratedLayers = [
+  heroCafeBackdrop,
+  heroFoodBurger,
+  heroFoodLatte,
+  heroDoodlesReference,
+  heroSkylineReference,
+] as const
 
 export const heroFoodCutout: MediaProvenance = {
   id: 'hero-food-cutout',
@@ -141,12 +195,12 @@ export const heroCleanPanel: MediaProvenance = {
 
 export const heroLogoBadge: MediaProvenance = {
   id: 'hero-logo-badge',
-  src: '/media/hero-logo-badge.png',
+  src: '/media/hero-logo-reference.png',
   alt: 'White Cup',
   kind: 'decorative',
-  sourceLabel: 'Image Generation Skill from supplied logo reference',
+  sourceLabel: 'Supplied reference crop + local alpha extraction',
   provenance:
-    'Изолированный декоративный знак White Cup сгенерирован по локальному референсу; используется только как логотип в шапке и не является документальной фотографией.',
+    'Точно извлечённый знак White Cup из предоставленного первого экранного референса с прозрачным paper-background; используется как декоративный header-asset, не является документальной фотографией.',
 }
 
 export const heroSkylineLine: MediaProvenance = {
@@ -161,7 +215,7 @@ export const heroSkylineLine: MediaProvenance = {
 
 export const decorativeMedia: MediaProvenance[] = [
   generatedSkyline,
-  heroReferenceArt,
+  ...heroGeneratedLayers,
   heroFoodCutout,
   heroCleanPanel,
   heroLogoBadge,

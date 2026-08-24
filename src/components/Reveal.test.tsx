@@ -25,6 +25,7 @@ describe('Reveal', () => {
     expect(screen.getByText('first child')).toBeVisible()
     expect(screen.getByText('second child')).toBeVisible()
     expect(screen.getByTestId('reveal')).toHaveAttribute('data-reveal-state', 'visible')
+    expect(screen.getByTestId('reveal')).toHaveAttribute('data-reveal-enhanced', 'true')
   })
 
   it('reveals immediately when IntersectionObserver is unavailable', () => {
@@ -41,5 +42,6 @@ describe('Reveal', () => {
     )
 
     expect(screen.getByTestId('reveal')).toHaveAttribute('data-reveal-state', 'visible')
+    expect(screen.getByTestId('reveal')).toHaveAttribute('data-reveal-enhanced', 'true')
   })
 })
