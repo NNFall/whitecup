@@ -18,6 +18,7 @@ const prefersReducedMotion = () =>
 export function MenuCarousel({ items }: MenuCarouselProps) {
   const viewportRef = useRef<HTMLDivElement>(null)
   const cardRefs = useRef<Array<HTMLLIElement | null>>([])
+  const requestedIndexRef = useRef<number | null>(null)
   const [activeIndex, setActiveIndex] = useState(0)
 
   useEffect(() => {
@@ -29,6 +30,7 @@ export function MenuCarousel({ items }: MenuCarouselProps) {
       if (items.length === 0) return
 
       const nextIndex = Math.max(0, Math.min(index, items.length - 1))
+      requestedIndexRef.current = nextIndex
       setActiveIndex(nextIndex)
 
       const card = cardRefs.current[nextIndex]
@@ -59,24 +61,24 @@ export function MenuCarousel({ items }: MenuCarouselProps) {
     const viewport = viewportRef.current
     if (!viewport || viewport.clientWidth === 0) return
 
-    // Snap points align cards to the leading edge. Tracking that edge keeps
-    // arrow navigation sequential even when desktop shows several cards at
-    // once (a center-distance calculation could skip an item in that layout).
-    const viewportStart = viewport.scrollLeft
-    let closestIndex = activeIndex
-    let closestDistance = Number.POSITIVE_INFINITY
+    // Wide desktop layouts can expose almost the entire track: the final card
+    // then reaches max-scroll without ever aligning to the leading edge. Keep
+    // explicit arrow/dot choices stable, and reconcile manual scrolling by
+    // normalized track progress so both boundaries remain reachable.
+    if (requestedIndexRef.current !== null) {
+      setActiveIndex(requestedIndexRef.current)
+      return
+    }
 
-    cardRefs.current.forEach((card, index) => {
-      if (!card || card.clientWidth === 0) return
+    const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth)
+    if (maxScroll <= 1) return
 
-      const distance = Math.abs(card.offsetLeft - viewportStart)
-      if (distance < closestDistance) {
-        closestDistance = distance
-        closestIndex = index
-      }
-    })
+    const progress = Math.max(0, Math.min(viewport.scrollLeft / maxScroll, 1))
+    setActiveIndex(Math.round(progress * (items.length - 1)))
+  }
 
-    setActiveIndex(closestIndex)
+  const handleManualScrollIntent = () => {
+    requestedIndexRef.current = null
   }
 
   if (items.length === 0) {
@@ -118,6 +120,9 @@ export function MenuCarousel({ items }: MenuCarouselProps) {
         tabIndex={0}
         onKeyDown={handleViewportKeyDown}
         onScroll={handleViewportScroll}
+        onWheel={handleManualScrollIntent}
+        onPointerDown={handleManualScrollIntent}
+        onTouchStart={handleManualScrollIntent}
         aria-label="Позиции меню, используйте стрелки для навигации"
       >
         <ul className="menu-carousel__track" aria-label="Позиции меню">

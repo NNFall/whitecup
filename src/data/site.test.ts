@@ -66,10 +66,18 @@ describe('White Cup site data', () => {
     const manifest = (
       mediaRegistry as unknown as {
         menuSceneLayerManifest?: {
-          backdrop: { asset: { kind: string; provenanceKind: string }; src: string; srcSet?: string }
+          backdrop: {
+            asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string }
+            src: string
+            srcSet?: string
+          }
           cards: Record<
             string,
-            { asset: { kind: string; provenanceKind: string }; src: string; srcSet?: string }
+            {
+              asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string }
+              src: string
+              srcSet?: string
+            }
           >
         }
       }
@@ -87,6 +95,8 @@ describe('White Cup site data', () => {
     expect(cards.every((entry) => entry.asset.provenanceKind === 'decorative-reference-edit')).toBe(true)
     expect(cards.every((entry) => entry.src.endsWith('-768.webp'))).toBe(true)
     expect(cards.every((entry) => entry.srcSet?.split(',').length === 2)).toBe(true)
+    expect(manifest?.backdrop.asset.sourceArtifactSrc).toBeUndefined()
+    expect(cards.every((entry) => entry.asset.sourceArtifactSrc === undefined)).toBe(true)
     expect(siteData.menuItems.every((item) => item.imageId === undefined)).toBe(true)
   })
 })

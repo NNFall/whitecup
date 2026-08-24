@@ -156,6 +156,21 @@ describe('White Cup story scenes', () => {
     expect(menu.innerHTML).not.toMatch(/ChatGPT Image|01_44_54 \(2\)|menu-clean-base\.png/i)
   })
 
+  it('keeps a measured desktop menu height without a later legacy intro grid', () => {
+    expect(globalCss).toMatch(
+      /@media \(min-width: 1024px\)[\s\S]*\.scene\.menu-scene\s*{[^}]*height:\s*100dvh;[^}]*max-height:\s*100dvh;/,
+    )
+    expect(globalCss).toMatch(
+      /@media \(min-width: 1024px\)[\s\S]*\.menu-scene \.section-frame__inner\s*{[^}]*height:\s*100%;[^}]*min-height:\s*0;/,
+    )
+    expect(globalCss).toMatch(
+      /@media \(min-width: 1024px\)[\s\S]*\.menu-scene \.menu-scene__intro\s*{[^}]*display:\s*block;[^}]*grid-template-columns:\s*none;/,
+    )
+    expect(globalCss).not.toMatch(
+      /\.menu-scene__intro\s*{[^}]*display:\s*grid;/,
+    )
+  })
+
   it('defers the documentary hero fallback until the clean backdrop fails', () => {
     render(<App />)
 

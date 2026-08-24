@@ -81,4 +81,31 @@ describe('MenuCarousel', () => {
     fireEvent.click(previous)
     expect(previous).toBeDisabled()
   })
+
+  it('keeps the final item active at the real desktop maximum scroll boundary', () => {
+    render(<MenuCarousel items={siteData.menuItems} />)
+
+    const region = screen.getByRole('region', { name: /избранное меню white cup/i })
+    const viewport = within(region).getByTestId('menu-carousel-viewport')
+    const dots = within(region).getAllByRole('button', { name: /перейти к/i })
+    const next = within(region).getByRole('button', { name: /следующая позиция/i })
+
+    Object.defineProperties(viewport, {
+      clientWidth: { configurable: true, value: 1905 },
+      scrollWidth: { configurable: true, value: 1971 },
+      scrollLeft: { configurable: true, writable: true, value: 66 },
+    })
+
+    fireEvent.wheel(viewport)
+    fireEvent.scroll(viewport)
+
+    expect(dots.at(-1)).toHaveAttribute('aria-current', 'true')
+    expect(next).toBeDisabled()
+
+    fireEvent.click(dots.at(-1) as HTMLButtonElement)
+    fireEvent.scroll(viewport)
+
+    expect(dots.at(-1)).toHaveAttribute('aria-current', 'true')
+    expect(next).toBeDisabled()
+  })
 })

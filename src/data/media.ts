@@ -282,13 +282,12 @@ export const heroSceneLayerManifest = {
 const menuCleanBaseReferenceEdit: DecorativeMediaProvenance = {
   id: 'menu-clean-base-reference-edit',
   src: '/media/menu-clean-base-1672.webp',
-  sourceArtifactSrc: '/media/menu-clean-base.png',
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
   sourceLabel: 'Image Generation Skill edit of supplied menu reference',
   provenance:
-    'Чистый бумажный фон с правой линейной иллюстрацией кафе, восстановленный редактированием предоставленного menu-референса без baked-текста, карточек и интерфейса. Production использует responsive WebP; это decorative reference-art, не документальная фотография White Cup.',
+    'Чистый бумажный фон с правой линейной иллюстрацией кафе, восстановленный редактированием предоставленного menu-референса без baked-текста, карточек и интерфейса. Локальный authoring PNG не публикуется; production использует только responsive WebP. Это decorative reference-art, не документальная фотография White Cup.',
 }
 
 const defineMenuCardReferenceEdit = (
@@ -298,12 +297,11 @@ const defineMenuCardReferenceEdit = (
 ): DecorativeMediaProvenance => ({
   id: `menu-${id}-reference-edit`,
   src: `/media/menu-${filename}-768.webp`,
-  sourceArtifactSrc: `/media/menu-${filename}-reference-edit.png`,
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
   sourceLabel: 'Image Generation Skill edit of supplied menu reference',
-  provenance: `${description} Создано как отдельный decorative reference-edit и оптимизировано в responsive WebP; ассет не является документальной фотографией блюда White Cup.`,
+  provenance: `${description} Создано как отдельный decorative reference-edit и оптимизировано в responsive WebP; локальный authoring PNG не публикуется. Ассет не является документальной фотографией блюда White Cup.`,
 })
 
 const menuCardReferenceEdits = {
