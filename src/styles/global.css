@@ -1452,8 +1452,7 @@ h2 {
   text-transform: uppercase;
 }
 
-.hero-scene__doodles,
-.locations-scene__doodles {
+.hero-scene__doodles {
   position: absolute;
   color: var(--orange);
 }
@@ -1572,265 +1571,6 @@ h2 {
 
 .text-link--arrow:hover span {
   transform: translate(0.12rem, -0.12rem);
-}
-
-.location-card__index {
-  color: var(--orange-action);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-}
-
-.location-card h3 {
-  margin: 1.1rem 0 0.55rem;
-  font-family: var(--font-display);
-  font-size: clamp(1.45rem, 2.2vw, 2.2rem);
-  font-weight: 400;
-  line-height: 1.02;
-}
-
-.location-card p {
-  margin: 0;
-  color: var(--ink-soft);
-  font-size: 0.95rem;
-  line-height: 1.48;
-}
-
-.locations-scene__intro {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 14rem;
-  gap: 1rem;
-  align-items: end;
-}
-
-.locations-scene {
-  background: var(--paper-light);
-}
-
-.locations-scene__intro {
-  grid-template-columns: minmax(0, 1fr) 13rem;
-}
-
-.locations-scene__doodles {
-  position: relative;
-  width: 11rem;
-  height: 8.5rem;
-  justify-self: end;
-  transform: rotate(-6deg);
-}
-
-.locations-scene__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.12fr) minmax(20rem, 0.88fr);
-  gap: clamp(2rem, 6vw, 6rem);
-  align-items: start;
-}
-
-.locations-list {
-  display: grid;
-  gap: 1rem;
-}
-
-.location-card {
-  display: grid;
-  gap: 0.9rem;
-  padding: clamp(1.2rem, 2.2vw, 2rem);
-  border: 1.5px solid var(--ink);
-  background: var(--paper);
-  clip-path: polygon(0 2%, 99% 0, 100% 97%, 2% 100%);
-}
-
-.location-card__topline {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.location-card__city {
-  color: var(--orange-action);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.location-card h3 {
-  margin: 0;
-  font-size: clamp(2rem, 3.8vw, 3.8rem);
-}
-
-.location-card h3 a {
-  color: inherit;
-  text-decoration: none;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.22rem;
-}
-
-.location-card h3 a:hover {
-  text-decoration: underline;
-}
-
-.location-card__context {
-  font-family: var(--font-script);
-  font-size: 1.35rem !important;
-  transform: rotate(-2deg);
-}
-
-.location-card__meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.8rem 1.5rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--line);
-}
-
-.location-card__meta p {
-  display: flex;
-  gap: 0.6rem;
-  align-items: baseline;
-}
-
-.location-card__meta p span {
-  color: var(--orange-action);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.location-card__meta strong {
-  color: var(--ink);
-  font-size: 1.1rem;
-}
-
-.location-card__meta small,
-.location-card__note {
-  color: var(--ink-soft);
-  font-size: 0.82rem;
-  line-height: 1.4;
-}
-
-.location-card__note {
-  margin: 0;
-  padding: 0.8rem 0.9rem;
-  border-left: 2px solid var(--orange);
-  background: color-mix(in srgb, var(--orange) 7%, var(--paper));
-}
-
-.organic-photo--location {
-  margin-top: 0.2rem;
-  clip-path: polygon(1% 7%, 97% 0, 100% 93%, 94% 100%, 3% 97%, 0 15%);
-}
-
-.locations-scene__aside {
-  display: grid;
-  gap: 1.5rem;
-}
-
-.static-map-card {
-  border: 1.5px solid var(--ink);
-  background: var(--map-water);
-  overflow: hidden;
-}
-
-.static-map-card__art {
-  aspect-ratio: 1.1 / 1;
-  overflow: hidden;
-}
-
-.static-map-card__art svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.static-map-card__water {
-  fill: color-mix(in srgb, var(--map-water) 74%, var(--paper));
-}
-
-.static-map-card__street {
-  fill: none;
-  stroke: var(--paper-light);
-  stroke-linecap: round;
-  stroke-width: 20;
-}
-
-.static-map-card__street--fine {
-  stroke: color-mix(in srgb, var(--paper-light) 82%, var(--ink));
-  stroke-width: 6;
-}
-
-.static-map-card__route {
-  fill: none;
-  stroke: var(--orange);
-  stroke-dasharray: 2 5;
-  stroke-linecap: round;
-  stroke-width: 5;
-}
-
-.static-map-card__pin-ring {
-  fill: var(--paper-light);
-  stroke: var(--orange);
-  stroke-width: 4;
-}
-
-.static-map-card__pin {
-  fill: var(--orange);
-}
-
-.static-map-card__footer {
-  display: grid;
-  gap: 0.8rem;
-  padding: 1.1rem 1.2rem 1.25rem;
-  background: var(--paper-light);
-}
-
-.static-map-card__footer p {
-  display: grid;
-  gap: 0.2rem;
-  margin: 0;
-}
-
-.static-map-card__footer p span {
-  color: var(--orange-action);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.static-map-card__footer strong {
-  font-family: var(--font-display);
-  font-size: 1.65rem;
-  font-weight: 400;
-}
-
-.contact-note {
-  display: grid;
-  gap: 0.75rem;
-  padding-top: 1.2rem;
-  border-top: 1px solid var(--line);
-}
-
-.contact-note > p:not(.scene-kicker) {
-  max-width: 28ch;
-  margin: 0;
-  color: var(--ink-soft);
-  line-height: 1.45;
-}
-
-.contact-note__phone {
-  color: var(--ink);
-  font-family: var(--font-display);
-  font-size: clamp(1.8rem, 3vw, 3rem);
-  line-height: 1;
-  text-decoration: none;
-}
-
-.contact-note__phone:hover {
-  color: var(--orange-action);
 }
 
 @media (max-width: 1200px) {
@@ -1957,62 +1697,6 @@ h2 {
     font-size: 1rem;
   }
 
-  .locations-scene__grid {
-    grid-template-columns: minmax(0, 1fr);
-    min-width: 0;
-    gap: 2.8rem;
-  }
-
-  .locations-scene__grid > *,
-  .locations-list,
-  .location-card {
-    min-width: 0;
-  }
-
-  .locations-list,
-  .location-card {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .location-card > * {
-    min-width: 0;
-  }
-
-  .location-card h3,
-  .contact-note__phone {
-    overflow-wrap: break-word;
-  }
-
-  .locations-scene__intro {
-    grid-template-columns: 1fr;
-  }
-
-  .locations-scene__doodles {
-    justify-self: start;
-    width: 8rem;
-    height: 6rem;
-    margin-top: -1.8rem;
-  }
-
-  .location-card {
-    padding: 1.15rem;
-  }
-
-  .location-card h3 {
-    font-size: clamp(2.15rem, 11vw, 3.7rem);
-  }
-
-  .locations-scene__aside {
-    order: 2;
-  }
-
-  .static-map-card__art {
-    aspect-ratio: 1.35 / 1;
-  }
-
-  .contact-note__phone {
-    font-size: 2.35rem;
-  }
 }
 
 @media (max-width: 380px) {
@@ -2041,8 +1725,7 @@ h2 {
   }
 
   .hero-scene__note,
-  .hero-scene__stamp,
-  .locations-scene__doodles {
+  .hero-scene__stamp {
     display: none;
   }
 
@@ -4320,6 +4003,671 @@ h2 {
 @media (prefers-reduced-motion: reduce) {
   .events-card,
   .events-card__image {
+    transition: none;
+  }
+}
+
+/* Supplied Locations reference reconstruction. ------------------------- */
+
+.scene.locations-scene {
+  min-height: 100dvh;
+  padding: 0;
+  background: var(--paper-light);
+  isolation: isolate;
+  overflow: hidden;
+  scroll-margin-top: 0;
+}
+
+.locations-scene .section-frame__inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: none;
+  min-height: 100dvh;
+  margin: 0;
+}
+
+.locations-scene__art {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.static-map-card {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 44.48%;
+  width: 55.52%;
+  height: 55.7%;
+  overflow: hidden;
+}
+
+.locations-scene__map-image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  object-fit: cover;
+  object-position: center;
+}
+
+.locations-scene__map-copy {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+}
+
+.locations-scene__map-city {
+  position: absolute;
+  top: 28.6%;
+  left: 51.5%;
+  font-family: var(--font-body);
+  font-size: clamp(1.35rem, 1.62vw, 1.95rem);
+  letter-spacing: 0.42em;
+}
+
+.locations-scene__map-label {
+  position: absolute;
+  display: grid;
+  max-width: 18rem;
+  gap: 0.08rem;
+  font-size: clamp(0.98rem, 1.05vw, 1.26rem);
+  line-height: 1.08;
+}
+
+.locations-scene__map-label strong {
+  font-weight: 400;
+}
+
+.locations-scene__map-label small {
+  color: var(--ink-soft);
+  font-family: var(--font-body);
+  font-size: 0.64em;
+  line-height: 1.2;
+}
+
+.locations-scene__map-label[data-map-location='modern-museum'] {
+  top: 21.8%;
+  left: 69.2%;
+}
+
+.locations-scene__map-label[data-map-location='tsekh'] {
+  top: 38.5%;
+  left: 71.1%;
+  max-width: 15rem;
+}
+
+.locations-scene__interior {
+  position: absolute;
+  z-index: 2;
+  top: 45%;
+  left: 44.9%;
+  display: block;
+  width: 55.1%;
+  height: 55%;
+  clip-path: polygon(64% 0, 53% 8%, 42% 17%, 32% 27%, 24% 39%, 18% 52%, 15% 64%, 16% 76%, 19% 87%, 27% 100%, 100% 100%, 100% 0);
+  pointer-events: none;
+  object-fit: cover;
+  object-position: center;
+}
+
+.locations-scene__doodles,
+.locations-scene__card-icons,
+.locations-scene__action-icons,
+.locations-scene__contact-icons {
+  position: absolute;
+  z-index: 8;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  object-fit: cover;
+  object-position: center;
+}
+
+.locations-scene__card-icons {
+  z-index: 9;
+  top: 48.7%;
+  right: auto;
+  bottom: auto;
+  left: 2.8%;
+  width: 43.7%;
+  height: 38.5%;
+  clip-path: inset(0 0 44% 0);
+  object-fit: fill;
+}
+
+.locations-scene__action-icons {
+  z-index: 9;
+  top: 48.7%;
+  right: auto;
+  bottom: auto;
+  left: 0.65%;
+  width: 50.6%;
+  height: 38.5%;
+  clip-path: inset(57% 0 25% 0);
+  object-fit: fill;
+}
+
+.locations-scene__contact-icons {
+  z-index: 9;
+  top: 48.7%;
+  right: auto;
+  bottom: auto;
+  left: 14.65%;
+  width: 49.3%;
+  height: 38.5%;
+  clip-path: inset(70% 0 0 0);
+  object-fit: fill;
+}
+
+.locations-scene .section-frame__heading {
+  position: absolute;
+  z-index: 5;
+  top: 24.35%;
+  left: 4.92%;
+  display: block;
+  width: 43%;
+  max-width: none;
+}
+
+.locations-scene .section-frame__heading h2 {
+  width: max-content;
+  max-width: 100%;
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 5.75vw, 7rem);
+  font-weight: 400;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+  white-space: nowrap;
+  transform: scaleX(1.42);
+  transform-origin: left center;
+}
+
+.locations-scene__title-accent {
+  position: relative;
+  display: inline-block;
+}
+
+.locations-scene__title-accent::after {
+  position: absolute;
+  right: -0.04em;
+  bottom: -0.17em;
+  left: -0.04em;
+  height: clamp(0.12rem, 0.15vw, 0.18rem);
+  border-radius: 50%;
+  background: var(--orange-action);
+  content: '';
+  transform: rotate(-1.3deg);
+  transform-origin: left center;
+}
+
+.locations-scene__intro {
+  position: absolute;
+  z-index: 5;
+  top: 37.85%;
+  left: 5.02%;
+  width: 33.2%;
+}
+
+.locations-scene__intro p {
+  max-width: 49ch;
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1rem, 1.28vw, 1.55rem);
+  line-height: 1.34;
+}
+
+.locations-scene__intro-accent {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.locations-scene__intro-accent::after {
+  position: absolute;
+  right: 0;
+  bottom: -0.1em;
+  left: 0;
+  height: 0.08rem;
+  background: var(--orange-action);
+  content: '';
+  transform: rotate(-0.6deg);
+}
+
+.locations-scene__cards {
+  position: absolute;
+  z-index: 6;
+  top: 53.3%;
+  left: 5.02%;
+  display: grid;
+  width: 44.65%;
+  grid-template-columns: minmax(0, 0.96fr) minmax(0, 1fr);
+  gap: 2.4vw;
+  align-items: start;
+}
+
+.locations-card-reveal,
+.location-card {
+  min-width: 0;
+}
+
+.location-card {
+  display: flex;
+  min-height: 33vh;
+  flex-direction: column;
+  padding: 2.55vh 1.58vw 1.65vh;
+  overflow: hidden;
+  border: clamp(1px, 0.08vw, 1.5px) solid var(--ink);
+  border-radius: clamp(0.62rem, 0.7vw, 0.84rem);
+  background: rgb(251 247 240 / 0.74);
+  color: var(--ink);
+  transition: border-color 240ms cubic-bezier(0.16, 1, 0.3, 1), transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.location-card[data-location-card='tsekh'] {
+  min-height: 35.7vh;
+}
+
+.location-card:hover {
+  border-color: rgb(201 54 8 / 0.72);
+  transform: translateY(-2px);
+}
+
+.location-card__address {
+  display: grid;
+  min-width: 0;
+  gap: 0.28rem;
+  padding-left: 2.15vw;
+  color: inherit;
+  font-style: normal;
+}
+
+.location-card__address address {
+  font-style: normal;
+}
+
+.location-card__address h3 {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.12rem, 1.25vw, 1.5rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+}
+
+.location-card__address h3 span {
+  display: block;
+}
+
+.location-card__address p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: clamp(0.58rem, 0.59vw, 0.71rem);
+  line-height: 1.2;
+}
+
+.location-card__details {
+  display: grid;
+  gap: clamp(0.55rem, 0.72vh, 0.78rem);
+  padding: clamp(0.55rem, 0.74vh, 0.8rem) 0 0 2.15vw;
+}
+
+.location-card__hours {
+  margin: 0;
+}
+
+.location-card__hours strong,
+.location-card__phone {
+  color: var(--ink);
+  font-size: clamp(0.82rem, 0.93vw, 1.12rem);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.location-card__phone {
+  width: max-content;
+  max-width: 100%;
+  text-decoration: none;
+}
+
+.location-card__phone:hover {
+  color: var(--orange-action);
+}
+
+.location-card__meta-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.location-card__note {
+  max-width: 35ch;
+  margin: clamp(0.35rem, 0.55vh, 0.6rem) 0 0;
+  color: var(--ink-soft);
+  font-size: clamp(0.54rem, 0.54vw, 0.65rem);
+  line-height: 1.28;
+}
+
+.location-card__actions {
+  display: grid;
+  gap: clamp(0.5rem, 0.72vh, 0.78rem);
+  margin-top: auto;
+  padding-top: clamp(0.58rem, 0.8vh, 0.86rem);
+}
+
+.location-card__action {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0.62rem clamp(1rem, 1.25vw, 1.5rem);
+  border: 1px solid var(--ink);
+  border-radius: clamp(0.55rem, 0.62vw, 0.74rem);
+  color: var(--ink);
+  font-size: clamp(0.78rem, 0.9vw, 1.08rem);
+  line-height: 1.1;
+  text-decoration: none;
+  transition: background-color 220ms cubic-bezier(0.16, 1, 0.3, 1), color 220ms cubic-bezier(0.16, 1, 0.3, 1), transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.location-card__action--route {
+  border-color: var(--orange-action);
+  background: var(--orange-action);
+  color: var(--paper-light);
+}
+
+.location-card__action:hover {
+  background: var(--ink);
+  color: var(--paper-light);
+}
+
+.location-card__action:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.location-card__action:focus-visible {
+  outline: 3px solid var(--orange-action);
+  outline-offset: 3px;
+}
+
+@media (min-width: 1024px) {
+  .scene.locations-scene {
+    height: 100dvh;
+    max-height: 100dvh;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .locations-scene .section-frame__heading h2 {
+    font-size: 5.75vw;
+  }
+
+  .locations-scene__intro p {
+    font-size: 1.17vw;
+  }
+
+  .location-card {
+    min-height: 37.5vh;
+    padding: 2.25vh 1.35vw 1.4vh;
+  }
+
+  .location-card[data-location-card='tsekh'] {
+    min-height: 40vh;
+  }
+
+  .location-card__address h3 {
+    font-size: max(1rem, 1.16vw);
+  }
+
+  .location-card__hours strong,
+  .location-card__phone {
+    font-size: max(0.88rem, 0.86vw);
+  }
+
+  .location-card__note {
+    font-size: 0.64rem;
+  }
+
+  .location-card__action {
+    min-height: 3rem;
+    font-size: max(0.82rem, 0.82vw);
+  }
+}
+
+@media (max-width: 1023px) {
+  .scene.locations-scene {
+    min-height: auto;
+  }
+
+  .locations-scene .section-frame__inner {
+    display: grid;
+    width: min(100%, 48rem);
+    min-height: auto;
+    margin: 0 auto;
+    padding: 6rem 1.25rem 2.75rem;
+    grid-template-areas:
+      'heading'
+      'intro'
+      'cards'
+      'stage';
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.55rem;
+  }
+
+  .locations-scene .section-frame__heading {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    grid-area: heading;
+  }
+
+  .locations-scene .section-frame__heading h2 {
+    width: 100%;
+    max-width: 100%;
+    font-size: clamp(2.75rem, 12.5vw, 5rem);
+    line-height: 0.96;
+    white-space: normal;
+    transform: none;
+  }
+
+  .locations-scene__intro {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    grid-area: intro;
+  }
+
+  .locations-scene__intro p {
+    max-width: 62ch;
+    font-size: clamp(0.95rem, 2.9vw, 1.14rem);
+    line-height: 1.48;
+  }
+
+  .locations-scene__desktop-break {
+    display: none;
+  }
+
+  .locations-scene__cards {
+    position: relative;
+    inset: auto;
+    display: grid;
+    width: 100%;
+    grid-area: cards;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .location-card,
+  .location-card[data-location-card='tsekh'] {
+    min-height: 21.5rem;
+    padding: 1.2rem;
+    border-radius: 0.78rem;
+  }
+
+  .location-card__address,
+  .location-card__details {
+    padding-left: 0;
+  }
+
+  .location-card__address {
+    gap: 0.38rem;
+  }
+
+  .location-card__address h3 {
+    font-size: clamp(1.55rem, 6.5vw, 2.1rem);
+  }
+
+  .location-card__address p {
+    font-size: clamp(0.78rem, 3.1vw, 0.94rem);
+  }
+
+  .location-card__details {
+    gap: 0.7rem;
+    padding-top: 1rem;
+  }
+
+  .location-card__hours strong,
+  .location-card__phone {
+    font-size: clamp(1rem, 4.1vw, 1.18rem);
+  }
+
+  .location-card__note {
+    max-width: 54ch;
+    margin-top: 0.75rem;
+    font-size: clamp(0.72rem, 2.85vw, 0.86rem);
+    line-height: 1.36;
+  }
+
+  .location-card__actions {
+    gap: 0.7rem;
+    padding-top: 1rem;
+  }
+
+  .location-card__action {
+    width: 100%;
+    min-height: 3rem;
+    justify-content: center;
+    font-size: 1rem;
+  }
+
+  .locations-scene__art {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    min-height: clamp(39rem, 174vw, 50rem);
+    grid-area: stage;
+    overflow: hidden;
+    border-radius: 0.9rem;
+    background: var(--paper);
+  }
+
+  .static-map-card {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+  }
+
+  .locations-scene__map-image {
+    position: absolute;
+    inset: 0;
+    object-position: 58% center;
+  }
+
+  .locations-scene__map-city {
+    top: 29%;
+    left: 44%;
+    font-size: clamp(0.85rem, 4vw, 1.25rem);
+  }
+
+  .locations-scene__map-label {
+    max-width: 10.5rem;
+    font-size: clamp(0.72rem, 3.2vw, 0.95rem);
+  }
+
+  .locations-scene__map-label[data-map-location='modern-museum'] {
+    top: 20%;
+    left: 58%;
+  }
+
+  .locations-scene__map-label[data-map-location='tsekh'] {
+    top: 57%;
+    left: 55%;
+    max-width: 9rem;
+  }
+
+  .locations-scene__interior {
+    top: 37%;
+    left: 0;
+    width: 100%;
+    height: 63%;
+    clip-path: polygon(0 15%, 10% 9%, 24% 4%, 39% 2%, 54% 4%, 69% 1%, 84% 4%, 100% 0, 100% 100%, 0 100%);
+    object-position: 60% center;
+  }
+
+  .locations-scene__doodles,
+  .locations-scene__card-icons,
+  .locations-scene__action-icons,
+  .locations-scene__contact-icons {
+    display: none;
+  }
+}
+
+@media (max-width: 380px) {
+  .locations-scene .section-frame__inner {
+    padding: 5.4rem 1rem 2.25rem;
+    gap: 1.25rem;
+  }
+
+  .locations-scene .section-frame__heading h2 {
+    font-size: clamp(2.35rem, 12vw, 2.85rem);
+  }
+
+  .locations-scene__intro p {
+    font-size: 0.9rem;
+  }
+
+  .location-card,
+  .location-card[data-location-card='tsekh'] {
+    min-height: 22.5rem;
+    padding: 1rem;
+  }
+
+  .location-card__address h3 {
+    font-size: 1.48rem;
+  }
+
+  .location-card__address p,
+  .location-card__note {
+    font-size: 0.76rem;
+  }
+
+  .locations-scene__art {
+    min-height: 37rem;
+  }
+
+  .locations-scene__map-label {
+    font-size: 0.68rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .location-card,
+  .location-card__action {
     transition: none;
   }
 }

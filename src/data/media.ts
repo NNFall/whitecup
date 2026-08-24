@@ -685,6 +685,73 @@ export const eventsSceneLayerManifest = {
   }),
 } as const
 
+const locationsMapReferenceEdit: DecorativeMediaProvenance = {
+  id: 'locations-map-reference-edit',
+  src: '/media/locations-map-reference-1672w.webp',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Image Generation Skill edit of supplied Locations reference',
+  provenance:
+    'Отдельный чистый акварельный слой Самары без baked-подписей и интерфейса, восстановленный по предоставленному Locations-референсу и оптимизированный в responsive WebP. Это декоративная схема, не интерактивная или географически точная карта.',
+}
+
+const locationsInteriorReferenceEdit: DecorativeMediaProvenance = {
+  id: 'locations-interior-reference-edit',
+  src: '/media/locations-interior-base-1672w.webp',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Image Generation Skill edit of supplied Locations reference',
+  provenance:
+    'Отдельный интерьерный foreground, восстановленный по правой нижней фотопанели предоставленного Locations-референса и оптимизированный в responsive WebP. Ассет служит reference-art и не выдаётся за документальную фотографию White Cup.',
+}
+
+const locationsDoodlesReferenceEdit: DecorativeMediaProvenance = {
+  id: 'locations-doodles-reference-edit',
+  src: '/media/locations-doodles-reference-edit-1672.webp',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Supplied Locations reference + Remove Background Local',
+  provenance:
+    'Прозрачный полноэкранный слой с пинами, птицами, облаками, чашками, маршрутом и самарским skyline из предоставленного Locations-референса. Production использует alpha-preserving responsive WebP; слой декоративный.',
+}
+
+const locationsCardIconsReferenceEdit: DecorativeMediaProvenance = {
+  id: 'locations-card-icons-reference-edit',
+  src: '/media/locations-card-icons-reference-edit-1672.webp',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Supplied Locations reference + Remove Background Local',
+  provenance:
+    'Прозрачный полноэкранный слой карточных пинов, часов, телефонов, стрелок и контактных знаков из предоставленного Locations-референса. Production использует alpha-preserving responsive WebP; слой декоративный.',
+}
+
+export const locationsSceneLayerManifest = {
+  map: defineSceneLayer('backdrop', locationsMapReferenceEdit, {
+    srcSet:
+      '/media/locations-map-reference-960w.webp 960w, /media/locations-map-reference-1672w.webp 1672w',
+    sizes: '(max-width: 1023px) 100vw, 56vw',
+  }),
+  interior: defineSceneLayer('foreground', locationsInteriorReferenceEdit, {
+    srcSet:
+      '/media/locations-interior-base-960w.webp 960w, /media/locations-interior-base-1672w.webp 1672w',
+    sizes: '(max-width: 1023px) 100vw, 56vw',
+  }),
+  decoration: defineSceneLayer('decoration', locationsDoodlesReferenceEdit, {
+    srcSet:
+      '/media/locations-doodles-reference-edit-960.webp 960w, /media/locations-doodles-reference-edit-1672.webp 1672w',
+    sizes: '100vw',
+  }),
+  cardIcons: defineSceneLayer('decoration', locationsCardIconsReferenceEdit, {
+    srcSet:
+      '/media/locations-card-icons-reference-edit-960.webp 960w, /media/locations-card-icons-reference-edit-1672.webp 1672w',
+    sizes: '100vw',
+  }),
+} as const
+
 export const heroFoodCutout: DecorativeMediaProvenance = {
   id: 'hero-food-cutout',
   src: '/media/hero-food-cutout.png',
@@ -758,6 +825,10 @@ export const decorativeMedia: DecorativeMediaProvenance[] = [
   eventsCoffeeReferenceEdit,
   eventsDoodlesReferenceEdit,
   eventsChalkboardReferenceEdit,
+  locationsMapReferenceEdit,
+  locationsInteriorReferenceEdit,
+  locationsDoodlesReferenceEdit,
+  locationsCardIconsReferenceEdit,
   {
     id: 'paper-sketches',
     src: 'inline-svg-or-css',

@@ -602,6 +602,146 @@ describe('White Cup story scenes', () => {
     )
   })
 
+  it('matches the supplied Locations scene while preserving verified visit facts', () => {
+    render(<App />)
+
+    const locations = screen.getByRole('region', { name: 'Как нас найти' })
+    const heading = within(locations).getByRole('heading', { level: 2 })
+    const articles = within(locations).getAllByRole('article')
+
+    expect(heading).toHaveTextContent('Как нас найти')
+    expect(locations.querySelector('.scene-kicker')).not.toBeInTheDocument()
+    expect(locations.querySelector('.locations-scene__intro p')).toHaveTextContent(
+      'Мы в самом сердце Самары. Две уютные кофейни с ароматным кофе, свежими завтраками и тёплой атмосферой каждый день.',
+    )
+
+    expect(articles).toHaveLength(2)
+    expect(within(locations).getByRole('article', { name: 'Красноармейская, 15' })).toBeInTheDocument()
+    expect(
+      within(locations).getByRole('article', {
+        name: 'Станкозавод, Куйбышева, 128/1',
+      }),
+    ).toBeInTheDocument()
+    expect(articles[0]).toContainHTML('<address')
+    expect(articles[1]).toContainHTML('<address')
+    expect(articles[0].querySelector('address h3')).not.toBeInTheDocument()
+    expect(articles[1].querySelector('address h3')).not.toBeInTheDocument()
+    expect(within(articles[0]).getByRole('heading', { level: 3 })).toHaveTextContent(
+      'Красноармейская, 15',
+    )
+    expect(within(articles[1]).getByRole('heading', { level: 3 })).toHaveTextContent(
+      'Станкозавод, Куйбышева, 128/1',
+    )
+    expect(within(articles[0]).getByText('08:00–23:00')).toBeInTheDocument()
+    expect(within(articles[1]).getByText('10:00–21:00')).toBeInTheDocument()
+    expect(within(articles[0]).getByText(/вход через двор музея модерна/i)).toBeInTheDocument()
+    expect(within(articles[0]).getByText(/яндекс.*17/i)).toBeInTheDocument()
+    expect(within(articles[1]).getByText(/уточняйте актуальный график/i)).toBeInTheDocument()
+
+    const routeLinks = within(locations).getAllByRole('link', {
+      name: /построить маршрут до White Cup/i,
+    })
+    const contactLinks = within(locations).getAllByRole('link', {
+      name: /связаться с White Cup/i,
+    })
+
+    expect(routeLinks).toHaveLength(2)
+    expect(routeLinks.every((link) => link.textContent?.trim() === 'Построить маршрут')).toBe(true)
+    expect(routeLinks.every((link) => link.getAttribute('href')?.includes('yandex.ru'))).toBe(true)
+    expect(contactLinks).toHaveLength(2)
+    expect(contactLinks.every((link) => link.textContent?.trim() === 'Связаться')).toBe(true)
+    expect(contactLinks.every((link) => link.getAttribute('href') === 'tel:+79372355715')).toBe(true)
+    expect(within(locations).getAllByText('+7 (937) 235-57-15')).toHaveLength(2)
+
+    const map = locations.querySelector('.static-map-card')
+    expect(map).toHaveAttribute('aria-hidden', 'true')
+    expect(map).toHaveAttribute('data-decorative-map', 'true')
+    expect(map).not.toHaveAttribute('role')
+    expect(map?.querySelector('svg')).not.toBeInTheDocument()
+
+    const expectedLayers = [
+      ['.locations-scene__map-image', '/media/locations-map-reference-1672w.webp', 'backdrop'],
+      ['.locations-scene__interior', '/media/locations-interior-base-1672w.webp', 'foreground'],
+      ['.locations-scene__doodles', '/media/locations-doodles-reference-edit-1672.webp', 'decoration'],
+      ['.locations-scene__card-icons', '/media/locations-card-icons-reference-edit-1672.webp', 'decoration'],
+      ['.locations-scene__action-icons', '/media/locations-card-icons-reference-edit-1672.webp', 'decoration'],
+      ['.locations-scene__contact-icons', '/media/locations-card-icons-reference-edit-1672.webp', 'decoration'],
+    ] as const
+
+    expectedLayers.forEach(([selector, src, layer]) => {
+      const image = locations.querySelector(selector)
+      expect(image).toHaveAttribute('src', src)
+      expect(image).toHaveAttribute('aria-hidden', 'true')
+      expect(image).toHaveAttribute('alt', '')
+      expect(image).toHaveAttribute('data-layer', layer)
+      expect(image).toHaveAttribute('data-media-kind', 'decorative-reference-edit')
+      expect(image).toHaveAttribute('srcset')
+      expect(image).toHaveAttribute('sizes')
+    })
+
+    expect(locations.querySelector('.organic-photo')).not.toBeInTheDocument()
+    expect(locations.innerHTML).not.toMatch(
+      /interior-0[24]|ChatGPT Image|01_44_55 \(5\)|locations-(?:clean-base|map-reference|interior-base|doodles-reference-edit|card-icons-reference-edit)\.png/i,
+    )
+  })
+
+  it('publishes Locations artwork as responsive decorative production layers', () => {
+    const manifest = (
+      mediaRegistry as unknown as {
+        locationsSceneLayerManifest?: {
+          map: { src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }
+          interior: { src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }
+          decoration: { src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }
+          cardIcons: { src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }
+        }
+      }
+    ).locationsSceneLayerManifest
+
+    expect(manifest).toBeDefined()
+    const layers = [
+      manifest?.map,
+      manifest?.interior,
+      manifest?.decoration,
+      manifest?.cardIcons,
+    ].filter(Boolean)
+
+    expect(layers).toHaveLength(4)
+    expect(layers.every((entry) => entry?.asset.kind === 'decorative')).toBe(true)
+    expect(layers.every((entry) => entry?.asset.provenanceKind === 'decorative-reference-edit')).toBe(true)
+    expect(layers.every((entry) => entry?.src.endsWith('.webp'))).toBe(true)
+    expect(layers.every((entry) => entry?.srcSet?.split(',').length === 2)).toBe(true)
+    expect(layers.every((entry) => Boolean(entry?.sizes))).toBe(true)
+    expect(layers.every((entry) => entry?.asset.sourceArtifactSrc === undefined)).toBe(true)
+    expect(manifest?.map.src).toBe('/media/locations-map-reference-1672w.webp')
+    expect(manifest?.interior.src).toBe('/media/locations-interior-base-1672w.webp')
+  })
+
+  it('keeps Locations in one desktop viewport and authors a separate mobile flow', () => {
+    expect(globalCss).toMatch(
+      /@media \(min-width: 1024px\)[\s\S]*?\.scene\.locations-scene\s*{[^}]*height:\s*100dvh;[^}]*max-height:\s*100dvh;/,
+    )
+    expect(globalCss).toMatch(/\.scene\.locations-scene\s*{[^}]*scroll-margin-top:\s*0;/)
+    expect(globalCss).toMatch(
+      /\.locations-scene__art\s*{[^}]*position:\s*absolute;[^}]*inset:\s*0;/,
+    )
+    expect(globalCss).toMatch(
+      /\.locations-scene__interior\s*{[^}]*clip-path:\s*polygon\(/,
+    )
+    expect(globalCss).toMatch(
+      /\.location-card__action\s*{[^}]*min-height:\s*3rem;/,
+    )
+    expect(globalCss).toMatch(/\.location-card__action:focus-visible\s*{[^}]*outline:/)
+    expect(globalCss).toMatch(
+      /@media \(max-width: 1023px\)[\s\S]*?\.locations-scene \.section-frame__inner\s*{[^}]*grid-template-areas:/,
+    )
+    expect(globalCss).toMatch(
+      /@media \(max-width: 1023px\)[\s\S]*?\.locations-scene__cards\s*{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\);/,
+    )
+    expect(globalCss).toMatch(
+      /@media \(max-width: 1023px\)[\s\S]*?\.locations-scene__map-image\s*{[^}]*position:\s*absolute;/,
+    )
+  })
+
   it('defers the documentary hero fallback until the clean backdrop fails', () => {
     render(<App />)
 
@@ -625,8 +765,8 @@ describe('White Cup story scenes', () => {
   it('uses verified contact, location and source links', () => {
     render(<App />)
 
-    expect(screen.getByRole('link', { name: /красноармейская, 15/i })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /куйбышева, 128\/1/i })).toBeInTheDocument()
+    expect(screen.getAllByRole('link', { name: /красноармейская, 15/i }).length).toBeGreaterThan(0)
+    expect(screen.getAllByRole('link', { name: /куйбышева, 128\/1/i }).length).toBeGreaterThan(0)
     expect(screen.getAllByRole('link', { name: /\+7 \(937\) 235-57-15/i }).every((link) => link.getAttribute('href') === 'tel:+79372355715')).toBe(true)
     expect(screen.getAllByRole('link', { name: /маршрут|яндекс карт/i }).some((link) => link.getAttribute('href')?.includes('yandex.ru'))).toBe(true)
     expect(screen.getAllByRole('link', { name: /white cup.*vk/i }).every((link) => link.getAttribute('href') === 'https://vk.ru/white_cup')).toBe(true)
@@ -636,7 +776,6 @@ describe('White Cup story scenes', () => {
     render(<App />)
 
     const images = document.querySelectorAll('.organic-photo img')
-    expect(images.length).toBeGreaterThanOrEqual(2)
     expect(Array.from(images).every((image) => (image.getAttribute('alt') ?? '').trim().length > 12)).toBe(true)
 
     const doodleContainers = document.querySelectorAll('[data-doodle]')
@@ -647,8 +786,8 @@ describe('White Cup story scenes', () => {
   it('keeps the entrance clarification with both factual address variants', () => {
     render(<App />)
 
-    const locations = screen.getByRole('region', { name: /адреса/i })
+    const locations = screen.getByRole('region', { name: /как нас найти/i })
     expect(within(locations).getAllByText(/Красноармейская, 15/i).length).toBeGreaterThan(0)
-    expect(within(locations).getByText(/Яндекс.*17|17.*Яндекс/i)).toBeInTheDocument()
+    expect(within(locations).getAllByText(/Яндекс.*17|17.*Яндекс/i).length).toBeGreaterThan(0)
   })
 })
