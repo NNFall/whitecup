@@ -4,12 +4,11 @@ import { useState } from 'react'
 import { siteData } from '../data/site'
 import {
   documentarySceneMedia,
-  heroCafeBackdrop,
-  heroDoodlesReference,
-  heroSkylineReference,
+  heroSceneLayerManifest,
 } from '../data/media'
 import { OrganicPhoto } from '../components/OrganicPhoto'
 import { Reveal } from '../components/Reveal'
+import { SceneLayer } from '../components/SceneLayer'
 import { SketchUnderline } from '../components/SketchUnderline'
 
 function hideBrokenDecorativeLayer(event: SyntheticEvent<HTMLImageElement>) {
@@ -19,6 +18,8 @@ function hideBrokenDecorativeLayer(event: SyntheticEvent<HTMLImageElement>) {
 export function HeroSection() {
   const heroMedia = documentarySceneMedia.hero[0]
   const [fallbackVisible, setFallbackVisible] = useState(false)
+  const [bagelLayer, coffeeLayer] = heroSceneLayerManifest.foregrounds
+  const [doodleLayer, skylineLayer] = heroSceneLayerManifest.decorations
 
   return (
     <section id="hero" className="scene hero-scene" aria-labelledby="hero-title" data-scene="hero">
@@ -28,12 +29,13 @@ export function HeroSection() {
         data-reference-height="941"
         aria-describedby="hero-title"
       >
-        <img
-          className="hero-cafe-backdrop"
-          src={heroCafeBackdrop.src}
-          alt=""
-          aria-hidden="true"
-          data-media-kind="decorative-reference"
+        <SceneLayer
+          className="hero-backdrop"
+          asset={heroSceneLayerManifest.backdrop.asset}
+          layer={heroSceneLayerManifest.backdrop.layer}
+          src={heroSceneLayerManifest.backdrop.src}
+          decoding="async"
+          fetchPriority="high"
           onError={(event) => {
             event.currentTarget.hidden = true
             setFallbackVisible(true)
@@ -94,21 +96,43 @@ export function HeroSection() {
           </Reveal>
         </div>
 
-        <img
-          className="hero-doodle-layer"
-          src={heroDoodlesReference.src}
-          alt=""
-          aria-hidden="true"
-          data-media-kind="decorative-reference"
+        <SceneLayer
+          className="hero-bagel"
+          asset={bagelLayer.asset}
+          layer={bagelLayer.layer}
+          src={bagelLayer.src}
+          decoding="async"
+          draggable="false"
           onError={hideBrokenDecorativeLayer}
         />
 
-        <img
+        <SceneLayer
+          className="hero-coffee"
+          asset={coffeeLayer.asset}
+          layer={coffeeLayer.layer}
+          src={coffeeLayer.src}
+          decoding="async"
+          draggable="false"
+          onError={hideBrokenDecorativeLayer}
+        />
+
+        <SceneLayer
+          className="hero-doodle-layer"
+          asset={doodleLayer.asset}
+          layer={doodleLayer.layer}
+          src={doodleLayer.src}
+          decoding="async"
+          draggable="false"
+          onError={hideBrokenDecorativeLayer}
+        />
+
+        <SceneLayer
           className="hero-skyline-layer"
-          src={heroSkylineReference.src}
-          alt=""
-          aria-hidden="true"
-          data-media-kind="decorative-reference"
+          asset={skylineLayer.asset}
+          layer={skylineLayer.layer}
+          src={skylineLayer.src}
+          decoding="async"
+          draggable="false"
           onError={hideBrokenDecorativeLayer}
         />
       </div>

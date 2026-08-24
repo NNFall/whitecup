@@ -51,18 +51,23 @@ describe('White Cup story scenes', () => {
     expect(screen.getAllByRole('img', { name: /white cup/i }).some((image) => image.getAttribute('src') === '/media/hero-logo-reference.png')).toBe(true)
 
     const decorativeLayers = [
-      ['.hero-cafe-backdrop', '/media/hero-reference-cafe-crop.png', 'decorative-reference'],
-      ['.hero-doodle-layer', '/media/hero-doodles-exact.png', 'decorative-reference'],
-      ['.hero-skyline-layer', '/media/hero-skyline-exact.png', 'decorative-reference'],
+      ['.hero-backdrop', '/media/hero-clean-base-edit-poc.png', 'backdrop', 'decorative-reference-edit'],
+      ['.hero-bagel', '/media/hero-bagel-cutout-poc.png', 'foreground', 'decorative-reference-edit'],
+      ['.hero-coffee', '/media/hero-coffee-cutout-poc.png', 'foreground', 'decorative-reference-edit'],
+      ['.hero-doodle-layer', '/media/hero-doodles-exact.png', 'decoration', 'decorative-reference-extract'],
+      ['.hero-skyline-layer', '/media/hero-skyline-exact.png', 'decoration', 'decorative-reference-extract'],
     ] as const
 
-    decorativeLayers.forEach(([selector, src, mediaKind]) => {
+    decorativeLayers.forEach(([selector, src, layerRole, mediaKind]) => {
       const layer = hero.querySelector(selector)
       expect(layer).toBeInTheDocument()
       expect(layer).toHaveAttribute('aria-hidden', 'true')
+      expect(layer).toHaveAttribute('data-layer', layerRole)
       expect(layer).toHaveAttribute('data-media-kind', mediaKind)
       expect(layer).toHaveAttribute('src', src)
     })
+
+    expect(hero.querySelector('[src="/media/hero-reference-cafe-crop.png"]')).not.toBeInTheDocument()
 
     expect(hero.querySelector('.hero-scene__documentary-fallback img')).not.toBeInTheDocument()
 
@@ -70,11 +75,11 @@ describe('White Cup story scenes', () => {
     expect(hero.querySelector('.hero-scene__pin')).toHaveAttribute('aria-hidden', 'true')
   })
 
-  it('defers the documentary hero fallback until the reference crop fails', () => {
+  it('defers the documentary hero fallback until the clean backdrop fails', () => {
     render(<App />)
 
     const hero = screen.getByRole('region', { name: /завтраки, кофе и свой вайб/i })
-    const backdrop = hero.querySelector<HTMLImageElement>('.hero-cafe-backdrop')
+    const backdrop = hero.querySelector<HTMLImageElement>('.hero-backdrop')
     expect(backdrop).toBeInTheDocument()
     expect(hero.querySelector('.hero-scene__documentary-fallback img')).not.toBeInTheDocument()
     expect(hero.querySelector('[src="/media/hero-food-cutout.png"]')).not.toBeInTheDocument()

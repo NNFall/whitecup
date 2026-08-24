@@ -1937,6 +1937,12 @@ h2 {
   --hero-ref-skyline-left: 4.5vw; /* 75 / 1672 */
   --hero-ref-skyline-bottom: 1.4dvh; /* 13 / 941 */
   --hero-ref-skyline-width: 41.87vw; /* 700 / 1672 */
+  --hero-bagel-left: 37.4%;
+  --hero-bagel-top: 50.9%;
+  --hero-bagel-width: 40%;
+  --hero-coffee-left: 67.2%;
+  --hero-coffee-top: 61.5%;
+  --hero-coffee-width: 30%;
   position: relative;
   display: grid;
   min-height: 100dvh;
@@ -1957,16 +1963,37 @@ h2 {
   mix-blend-mode: multiply;
 }
 
-.hero-cafe-backdrop {
+.hero-backdrop {
   position: absolute;
   z-index: 0;
-  top: 0;
-  right: 0;
-  width: calc(100% - var(--hero-ref-cafe-x));
+  inset: 0;
+  width: 100%;
   height: 100%;
-  object-fit: fill;
+  object-fit: cover;
   object-position: center;
-  clip-path: none;
+}
+
+.hero-bagel,
+.hero-coffee {
+  position: absolute;
+  display: block;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+.hero-bagel {
+  z-index: 4;
+  top: var(--hero-bagel-top);
+  left: var(--hero-bagel-left);
+  width: var(--hero-bagel-width);
+}
+
+.hero-coffee {
+  z-index: 5;
+  top: var(--hero-coffee-top);
+  left: var(--hero-coffee-left);
+  width: var(--hero-coffee-width);
 }
 
 .hero-scene__inner {
@@ -2144,11 +2171,12 @@ h2 {
 }
 
 .hero-doodle-layer {
-  z-index: 2;
+  z-index: 6;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: fill;
+  object-fit: contain;
+  object-position: center;
   opacity: 1;
   mix-blend-mode: multiply;
   clip-path: none;
@@ -2186,7 +2214,7 @@ h2 {
 
 .hero-skyline-layer {
   position: absolute;
-  z-index: 5;
+  z-index: 6;
   bottom: var(--hero-ref-skyline-bottom);
   left: var(--hero-ref-skyline-left);
   width: var(--hero-ref-skyline-width);
@@ -2196,6 +2224,28 @@ h2 {
   mix-blend-mode: multiply;
   transform: none;
   transform-origin: bottom center;
+}
+
+@media (min-width: 1680px) {
+  .hero-reference-frame {
+    --hero-bagel-left: 37.4%;
+    --hero-bagel-top: 50.9%;
+    --hero-bagel-width: 40%;
+    --hero-coffee-left: 67.2%;
+    --hero-coffee-top: 61.5%;
+    --hero-coffee-width: 30%;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1679px) {
+  .hero-reference-frame {
+    --hero-bagel-left: 37.1%;
+    --hero-bagel-top: 50.4%;
+    --hero-bagel-width: 40.5%;
+    --hero-coffee-left: 66.8%;
+    --hero-coffee-top: 60.9%;
+    --hero-coffee-width: 30.5%;
+  }
 }
 
 @media (max-width: 1200px) {
@@ -2239,16 +2289,15 @@ h2 {
     padding-bottom: 2.5rem;
   }
 
-  .hero-cafe-backdrop {
+  .hero-backdrop {
     top: auto;
     right: 0;
     bottom: 0;
     left: 0;
     width: 100%;
     height: 44%;
-    object-fit: fill;
-    object-position: center;
-    clip-path: none;
+    object-fit: cover;
+    object-position: 72% center;
   }
 
   .hero-scene__inner {
@@ -2314,6 +2363,21 @@ h2 {
     display: none;
   }
 
+  .hero-bagel {
+    top: auto;
+    bottom: -4rem;
+    left: -24vw;
+    width: min(125vw, 47rem);
+  }
+
+  .hero-coffee {
+    top: auto;
+    right: -20vw;
+    bottom: -1.8rem;
+    left: auto;
+    width: min(98vw, 38rem);
+  }
+
   .hero-scene__documentary-fallback .organic-photo {
     clip-path: polygon(10% 0, 100% 0, 100% 100%, 8% 100%, 13% 90%, 5% 79%, 12% 67%, 4% 56%, 13% 44%, 6% 32%, 15% 20%);
   }
@@ -2323,6 +2387,31 @@ h2 {
     left: 1.1rem;
     width: min(19rem, 70vw);
     transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-backdrop {
+    height: 36%;
+    object-position: 76% center;
+  }
+
+  .hero-bagel {
+    bottom: -4rem;
+    left: -30vw;
+    width: 130vw;
+  }
+
+  .hero-coffee {
+    right: -24vw;
+    bottom: -1.8rem;
+    width: 102vw;
+  }
+
+  .hero-skyline-layer {
+    bottom: 0.3rem;
+    left: 1rem;
+    width: min(17rem, 68vw);
   }
 }
 
@@ -2353,8 +2442,20 @@ h2 {
     margin-inline: -1rem;
   }
 
-  .hero-cafe-backdrop {
-    height: 42%;
+  .hero-backdrop {
+    height: 34%;
+  }
+
+  .hero-bagel {
+    bottom: -3.2rem;
+    left: -33vw;
+    width: 136vw;
+  }
+
+  .hero-coffee {
+    right: -28vw;
+    bottom: -1.2rem;
+    width: 108vw;
   }
 
   .hero-doodle-layer {
@@ -2363,6 +2464,30 @@ h2 {
 
   .hero-skyline-layer {
     width: 15.5rem;
+  }
+}
+
+@media (max-width: 340px) {
+  .hero-backdrop {
+    height: 33%;
+    object-position: 78% center;
+  }
+
+  .hero-bagel {
+    bottom: -2.9rem;
+    left: -35vw;
+    width: 140vw;
+  }
+
+  .hero-coffee {
+    right: -31vw;
+    bottom: -0.9rem;
+    width: 112vw;
+  }
+
+  .hero-skyline-layer {
+    left: 0.75rem;
+    width: 14.25rem;
   }
 }
 
