@@ -2,9 +2,6 @@ import { describe, expect, it } from 'vitest'
 
 import {
   documentarySceneMedia,
-  generatedSkyline,
-  heroCleanPanel,
-  heroDoodlesReference,
   media,
   mediaAssets,
   mediaSource,
@@ -40,12 +37,26 @@ describe('White Cup site data', () => {
     expect(mediaSource.vk.verified).toBe(false)
   })
 
-  it('distinguishes reference edits, reference extracts and generated decoration', () => {
-    expect(heroCleanPanel.kind).toBe('decorative-reference-edit')
-    expect(heroDoodlesReference.kind).toBe('decorative-reference-extract')
-    expect(generatedSkyline.kind).toBe('decorative-generated')
+  it('keeps stable media kinds and classifies every decorative asset granularly', () => {
+    const allowedProvenanceKinds = [
+      'decorative-reference-edit',
+      'decorative-reference-extract',
+      'decorative-generated',
+    ]
 
-    expect(media.documentary.every((asset) => asset.kind === 'documentary')).toBe(true)
-    expect(media.decorative.every((asset) => asset.kind !== 'documentary')).toBe(true)
+    expect(
+      media.documentary.every(
+        (asset) => asset.kind === 'documentary' && !('provenanceKind' in asset),
+      ),
+    ).toBe(true)
+    expect(media.decorative.every((asset) => asset.kind === 'decorative')).toBe(true)
+    expect(
+      media.decorative.every((asset) =>
+        allowedProvenanceKinds.includes(asset.provenanceKind),
+      ),
+    ).toBe(true)
+    expect(new Set(media.decorative.map((asset) => asset.provenanceKind))).toEqual(
+      new Set(allowedProvenanceKinds),
+    )
   })
 })

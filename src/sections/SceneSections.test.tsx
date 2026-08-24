@@ -1,35 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react'
 
 import App from '../App'
-import { SceneLayer } from '../components/SceneLayer'
-
-function LayeredHeroContractFixture() {
-  return (
-    <section aria-label="Layered hero contract">
-      <SceneLayer
-        layer="backdrop"
-        mediaKind="decorative-reference-edit"
-        src="/media/hero-clean-base-edit-poc.png"
-      />
-      <SceneLayer
-        layer="foreground"
-        mediaKind="decorative-reference-edit"
-        src="/media/hero-bagel-cutout-poc.png"
-      />
-      <SceneLayer
-        layer="foreground"
-        mediaKind="decorative-reference-edit"
-        src="/media/hero-coffee-cutout-poc.png"
-      />
-      <SceneLayer
-        layer="decoration"
-        mediaKind="decorative-reference-extract"
-        src="/media/hero-doodles-exact.png"
-      />
-      <h1>Завтраки, кофе и свой вайб в White Cup</h1>
-    </section>
-  )
-}
+import { heroSceneLayerManifest } from '../data/media'
 
 describe('White Cup story scenes', () => {
   it('keeps the complete six-scene story contract and a single main heading', () => {
@@ -44,18 +16,25 @@ describe('White Cup story scenes', () => {
     expect(screen.getByRole('group', { name: 'Основные действия' })).toBeInTheDocument()
   })
 
-  it('defines the layered hero contract without mounting a supplied full-screen reference', () => {
-    render(<LayeredHeroContractFixture />)
+  it('publishes a production hero manifest without a supplied full-screen reference', () => {
+    const manifest = heroSceneLayerManifest
 
-    const hero = screen.getByRole('region', { name: 'Layered hero contract' })
-    expect(hero.querySelector('[data-layer="backdrop"]')).toHaveAttribute(
-      'data-media-kind',
-      'decorative-reference-edit',
-    )
-    expect(hero.querySelectorAll('[data-layer="foreground"]')).toHaveLength(2)
-    expect(hero.querySelector('[src*="3679ac8b"]')).not.toBeInTheDocument()
-    expect(hero.querySelector('[src*="ChatGPT Image"]')).not.toBeInTheDocument()
-    expect(within(hero).getByRole('heading', { level: 1 })).toHaveTextContent('Завтраки')
+    expect(manifest.backdrop.layer).toBe('backdrop')
+    expect(manifest.backdrop.asset.provenanceKind).toBe('decorative-reference-edit')
+    expect(manifest.foregrounds).toHaveLength(2)
+    expect(manifest.foregrounds.every((entry) => entry.layer === 'foreground')).toBe(true)
+
+    const runtimeSources = [
+      manifest.backdrop,
+      ...manifest.foregrounds,
+      ...manifest.decorations,
+    ]
+
+    expect(runtimeSources.every((entry) => entry.src === entry.asset.src)).toBe(true)
+
+    const filenames = runtimeSources.map((entry) => entry.src)
+    expect(filenames).not.toContain('/media/hero-reference-cafe-crop.png')
+    expect(filenames.join(' ')).not.toMatch(/3679ac8b|ChatGPT Image/i)
   })
 
   it('matches the supplied first-screen hero contract', () => {
