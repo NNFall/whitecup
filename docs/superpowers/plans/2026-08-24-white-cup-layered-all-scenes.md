@@ -113,10 +113,15 @@ Run: `git add src/sections/HeroSection.tsx src/styles/global.css src/data/media.
 - Modify: `src/sections/MenuSection.tsx`
 - Modify: `src/components/MenuCarousel.tsx`
 - Modify: `src/components/MenuCarousel.test.tsx`
+- Modify: `src/components/SectionFrame.tsx`
 - Modify: `src/styles/global.css`
 - Modify: `src/data/media.ts`
-- Create: `public/media/menu-window-sketch.png`
-- Create: `public/media/menu-item-01.png` through `public/media/menu-item-05.png`
+- Create: `public/media/menu-clean-base.png`
+- Create: `public/media/menu-cappuccino-reference-edit.png`
+- Create: `public/media/menu-bagel-reference-edit.png`
+- Create: `public/media/menu-waffle-reference-edit.png`
+- Create: `public/media/menu-syrniki-reference-edit.png`
+- Create: `public/media/menu-cheesecake-reference-edit.png`
 
 - [ ] **Step 1: Generate/edit the reference-backed window illustration and five distinct food-card images**
 
@@ -125,11 +130,13 @@ Use one built-in ImageGen call per asset. Save every selected output in `public/
 - [ ] **Step 2: Write a failing carousel test for five photo cards, arrows, dots and final-card reachability**
 
 ```tsx
-expect(screen.getAllByRole('img', { name: '' })).toHaveLength(5)
+expect(document.querySelectorAll('[data-scene-card-image]')).toHaveLength(5)
 expect(screen.getByRole('button', { name: 'Следующая позиция' })).toBeEnabled()
-await user.click(screen.getByRole('button', { name: 'Позиция 5' }))
-expect(screen.getByRole('button', { name: 'Позиция 5' })).toHaveAttribute('aria-current', 'true')
+await user.click(screen.getByRole('button', { name: 'Перейти к Малиновый чизкейк' }))
+expect(screen.getByRole('button', { name: 'Перейти к Малиновый чизкейк' })).toHaveAttribute('aria-current', 'true')
 ```
+
+Keep food imagery in a dedicated decorative scene manifest rather than weakening the existing test that forbids documentary `imageId` values on unverified menu items. Extend `SectionFrame.title` from `string` to `ReactNode` once so colored words and underlines remain inside one semantic heading.
 
 - [ ] **Step 3: Run the test and confirm RED**
 
@@ -155,7 +162,10 @@ Run: `git add src/sections/MenuSection.tsx src/components/MenuCarousel.tsx src/c
 - Create: `public/media/about-clean-base.png`
 - Create: `public/media/about-pastry-cutout.png`
 - Create: `public/media/about-coffee-cutout.png`
-- Create: `public/media/about-benefits-art.png`
+- Create: `public/media/about-benefit-coffee.png`
+- Create: `public/media/about-benefit-breakfast.png`
+- Create: `public/media/about-benefit-chair.png`
+- Create: `public/media/about-benefit-samara.png`
 
 - [ ] **Step 1: Edit the About reference into a clean interior base, pastry/cup foregrounds and benefit illustration pack**
 
@@ -186,10 +196,10 @@ Run: `git add src/sections/AboutSection.tsx src/sections/SceneSections.test.tsx 
 - Modify: `src/sections/SceneSections.test.tsx`
 - Modify: `src/styles/global.css`
 - Modify: `src/data/media.ts`
-- Create: `public/media/visit-window-sketch.png`
-- Create: `public/media/visit-card-morning.png`
-- Create: `public/media/visit-card-meeting.png`
-- Create: `public/media/visit-card-pause.png`
+- Create: `public/media/rhythm-clean-base.png`
+- Create: `public/media/rhythm-coffee-reference-edit.png`
+- Create: `public/media/rhythm-table-reference-edit.png`
+- Create: `public/media/rhythm-waffle-reference-edit.png`
 
 - [ ] **Step 1: Produce the upper-right sketch and three card images from the supplied reference**
 
@@ -253,7 +263,7 @@ Run: `git add src/sections/EventsSection.tsx src/sections/SceneSections.test.tsx
 
 - [ ] **Step 1: Extract the decorative reference map and edit the lower-right interior without baked semantic addresses**
 
-Keep map labels decorative; the two actual addresses and route/contact actions must be DOM content.
+Remove map labels and pins from the decorative art. The supplied artwork says `Красноармейская, 17`, while the verified public contract is `Красноармейская, 15` with the existing `15/17` entrance clarification; therefore both actual addresses, that clarification and all route/contact actions must remain factual DOM content.
 
 - [ ] **Step 2: Write failing tests for two address cards, route/contact links and map provenance**
 
