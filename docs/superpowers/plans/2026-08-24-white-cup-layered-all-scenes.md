@@ -123,11 +123,11 @@ Run: `git add src/sections/HeroSection.tsx src/styles/global.css src/data/media.
 - Create: `public/media/menu-syrniki-reference-edit.png`
 - Create: `public/media/menu-cheesecake-reference-edit.png`
 
-- [ ] **Step 1: Generate/edit the reference-backed window illustration and five distinct food-card images**
+- [x] **Step 1: Generate/edit the reference-backed window illustration and five distinct food-card images**
 
 Use one built-in ImageGen call per asset. Save every selected output in `public/media`; label food images `decorative-reference-edit`, not documentary.
 
-- [ ] **Step 2: Write a failing carousel test for five photo cards, arrows, dots and final-card reachability**
+- [x] **Step 2: Write a failing carousel test for five photo cards, arrows, dots and final-card reachability**
 
 ```tsx
 expect(document.querySelectorAll('[data-scene-card-image]')).toHaveLength(5)
@@ -138,19 +138,21 @@ expect(screen.getByRole('button', { name: 'Перейти к Малиновый 
 
 Keep food imagery in a dedicated decorative scene manifest rather than weakening the existing test that forbids documentary `imageId` values on unverified menu items. Extend `SectionFrame.title` from `string` to `ReactNode` once so colored words and underlines remain inside one semantic heading.
 
-- [ ] **Step 3: Run the test and confirm RED**
+- [x] **Step 3: Run the test and confirm RED**
 
 Run: `npm.cmd test -- --run src/components/MenuCarousel.test.tsx`
 
-- [ ] **Step 4: Implement the reference composition and preserve keyboard scrolling**
+- [x] **Step 4: Implement the reference composition and preserve keyboard scrolling**
 
 Match the supplied headline, intro, upper-right sketch, photo card proportions, arrows, dots, note and bottom skyline. Keep native horizontal scroll-snap and arrow-key behavior.
 
-- [ ] **Step 5: Run tests/build and commit**
+- [x] **Step 5: Run tests/build and commit**
 
 Run: `npm.cmd test -- --run src/components/MenuCarousel.test.tsx src/sections/SceneSections.test.tsx && npm.cmd run build`
 
 Run: `git add src/sections/MenuSection.tsx src/components/MenuCarousel.tsx src/components/MenuCarousel.test.tsx src/styles/global.css src/data/media.ts public/media/menu-*.png && git commit -m "feat: reconstruct reference menu scene"`
+
+Outcome: commits `7cf6251` and `9d1ed98`; 8 files / 30 tests and production build passed. A fresh Codex in-app Browser pass at CSS 1920×1080 confirmed one-viewport scene height, zero horizontal overflow and stable final-card selection at real max scroll. Sticky-nav overlap and the visually prominent source disclosure remain explicitly queued for the final cross-scene navigation/typography polish rather than being misreported as pixel-identical.
 
 ### Task 4: Reconstruct the About scene
 
