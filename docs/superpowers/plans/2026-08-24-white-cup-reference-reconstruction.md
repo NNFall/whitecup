@@ -135,6 +135,6 @@ Run `npm test -- --run`, `npm run build`, and `git diff --check` after the final
 
 Dispatch visual and provenance audits. The non-hero subagent review passed after the mobile anchor/word-wrap fixes; an Antigravity audit was attempted but its worker terminated before producing a result. Resolve every actionable P1/P2 before staging; do not claim “one-to-one” while a measured comparison still shows drift.
 
-- [ ] **Step 5: Commit and publish**
+- [x] **Step 5: Commit and publish**
 
-Stage only intended source/assets/evidence/docs, commit `feat: reconstruct White Cup reference hero`, push `master` to `https://github.com/NNFall/whitecup.git`, verify remote SHA, and leave the fixed local server available.
+Stage only intended source/assets/evidence/docs, commit `feat: reconstruct White Cup reference hero` (`3066e4e`), push `master` to `https://github.com/NNFall/whitecup.git`, verify local/remote SHA `3066e4e95c9313ffd95e286c22b109959dd1524b`, and leave the fixed local server available.
