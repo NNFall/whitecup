@@ -492,8 +492,8 @@ const defineVisitCardReferenceEdit = (
 const visitCardReferenceEdits = {
   'morning-coffee': defineVisitCardReferenceEdit(
     'morning-coffee',
-    'coffee',
-    'Крупный кадр латте на деревянном столе, восстановленный по первой карточке предоставленного Visit-референса.',
+    'coffee-badged',
+    'Крупный кадр латте с аккуратно восстановленным знаком White Cup на чашке, собранный по первой карточке предоставленного Visit-референса.',
   ),
   'meeting-in-centre': defineVisitCardReferenceEdit(
     'meeting-in-centre',
@@ -509,6 +509,28 @@ const visitCardReferenceEdits = {
 
 export type VisitCardMediaId = keyof typeof visitCardReferenceEdits
 
+const visitDoodlesReferenceEdit: DecorativeMediaProvenance = {
+  id: 'visit-doodles-reference-edit',
+  src: '/media/rhythm-doodles-reference-edit-1672.webp',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Supplied Visit reference + Remove Background Local',
+  provenance:
+    'Полноэкранный прозрачный слой с точными облаками, птицами, солнцем, маршрутом, стаканчиком, карточными иконками и маленькими штрихами из предоставленного Visit-референса. Фон удалён локально, production использует alpha-preserving WebP; это декоративный reference-art.',
+}
+
+const visitSkylineReferenceEdit: DecorativeMediaProvenance = {
+  id: 'visit-skyline-reference-edit',
+  src: '/media/rhythm-skyline-reference-edit-1200w.webp',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Supplied Visit reference + Remove Background Local',
+  provenance:
+    'Отдельный прозрачный городской skyline, извлечённый из нижней части предоставленного Visit-референса и оптимизированный в responsive WebP. Это декоративная иллюстрация, не карта и не документальная фотография.',
+}
+
 export const visitSceneLayerManifest = {
   backdrop: defineSceneLayer('backdrop', visitCleanBaseReferenceEdit, {
     srcSet:
@@ -523,7 +545,14 @@ export const visitSceneLayerManifest = {
       }),
     ]),
   ) as Record<VisitCardMediaId, SceneLayerManifestEntry>,
-  skyline: defineSceneLayer('decoration', heroSkylineReference, {
+  decoration: defineSceneLayer('decoration', visitDoodlesReferenceEdit, {
+    srcSet:
+      '/media/rhythm-doodles-reference-edit-960.webp 960w, /media/rhythm-doodles-reference-edit-1672.webp 1672w',
+    sizes: '100vw',
+  }),
+  skyline: defineSceneLayer('decoration', visitSkylineReferenceEdit, {
+    srcSet:
+      '/media/rhythm-skyline-reference-edit-720w.webp 720w, /media/rhythm-skyline-reference-edit-1200w.webp 1200w',
     sizes: '(max-width: 1023px) 92vw, 47vw',
   }),
 } as const
@@ -593,6 +622,8 @@ export const decorativeMedia: DecorativeMediaProvenance[] = [
   ...Object.values(aboutBenefitReferenceEdits),
   visitCleanBaseReferenceEdit,
   ...Object.values(visitCardReferenceEdits),
+  visitDoodlesReferenceEdit,
+  visitSkylineReferenceEdit,
   {
     id: 'paper-sketches',
     src: 'inline-svg-or-css',

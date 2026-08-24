@@ -22,8 +22,8 @@ export function VisitSection() {
       id="visit"
       title={
         <>
-          <span className="visit-scene__title-line">У нас есть место</span>{' '}
-          <span className="visit-scene__title-line">
+          <span className="visit-scene__title-line visit-scene__title-line--first">У нас есть место</span>{' '}
+          <span className="visit-scene__title-line visit-scene__title-line--second">
             для вашего <span className="visit-scene__accent">ритма</span>
           </span>
         </>
@@ -38,23 +38,12 @@ export function VisitSection() {
         decoding="async"
       />
 
-      <div className="visit-scene__doodle-layer">
-        <span className="visit-scene__doodle visit-scene__doodle--cloud" aria-hidden="true" data-layer="decoration" data-visit-doodle="cloud">
-          <i />
-          <i />
-          <i />
-        </span>
-        <span className="visit-scene__doodle visit-scene__doodle--bird" aria-hidden="true" data-layer="decoration" data-visit-doodle="bird">
-          <i />
-          <i />
-        </span>
-        <span className="visit-scene__doodle visit-scene__doodle--sun" aria-hidden="true" data-layer="decoration" data-visit-doodle="sun">
-          {Array.from({ length: 8 }, (_, index) => <i key={index} />)}
-        </span>
-        <span className="visit-scene__doodle visit-scene__doodle--cup" aria-hidden="true" data-layer="decoration" data-visit-doodle="cup">
-          <i />
-        </span>
-      </div>
+      <SceneLayer
+        {...visitSceneLayerManifest.decoration}
+        className="visit-scene__doodles"
+        loading="lazy"
+        decoding="async"
+      />
 
       <Reveal className="visit-scene__intro">
         <p>

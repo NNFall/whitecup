@@ -366,7 +366,11 @@ describe('White Cup story scenes', () => {
     )
     expect(visit.querySelector('.visit-scene__skyline')).toHaveAttribute(
       'src',
-      '/media/hero-skyline-exact.png',
+      '/media/rhythm-skyline-reference-edit-1200w.webp',
+    )
+    expect(visit.querySelector('.visit-scene__skyline')).toHaveAttribute(
+      'srcset',
+      '/media/rhythm-skyline-reference-edit-720w.webp 720w, /media/rhythm-skyline-reference-edit-1200w.webp 1200w',
     )
     expect(visit.querySelectorAll('[data-scene-card-image]')).toHaveLength(3)
     visit.querySelectorAll('[data-scene-card-image]').forEach((image) => {
@@ -375,11 +379,25 @@ describe('White Cup story scenes', () => {
       expect(image).toHaveAttribute('data-media-kind', 'decorative-reference-edit')
       expect(image).toHaveAttribute('alt', '')
     })
-    expect(visit.querySelectorAll('[data-visit-doodle]')).toHaveLength(4)
-    visit.querySelectorAll('[data-visit-doodle]').forEach((doodle) => {
-      expect(doodle).toHaveAttribute('aria-hidden', 'true')
-      expect(doodle).toHaveAttribute('data-layer', 'decoration')
-    })
+    expect(visit.querySelector('[data-scene-card-image="morning-coffee"]')).toHaveAttribute(
+      'src',
+      '/media/rhythm-coffee-badged-reference-edit-800.webp',
+    )
+    expect(visit.querySelector('.visit-scene__doodles')).toHaveAttribute(
+      'src',
+      '/media/rhythm-doodles-reference-edit-1672.webp',
+    )
+    expect(visit.querySelector('.visit-scene__doodles')).toHaveAttribute(
+      'srcset',
+      '/media/rhythm-doodles-reference-edit-960.webp 960w, /media/rhythm-doodles-reference-edit-1672.webp 1672w',
+    )
+    expect(visit.querySelector('.visit-scene__doodles')).toHaveAttribute('aria-hidden', 'true')
+    expect(visit.querySelector('.visit-scene__doodles')).toHaveAttribute('data-layer', 'decoration')
+    expect(visit.querySelector('.visit-scene__doodles')).toHaveAttribute(
+      'data-media-kind',
+      'decorative-reference-edit',
+    )
+    expect(visit.querySelectorAll('[data-visit-doodle]')).toHaveLength(0)
     expect(visit.innerHTML).not.toMatch(/ChatGPT Image|01_44_54 \(3\)|rhythm-(?:clean-base|coffee-reference-edit|table-reference-edit|waffle-reference-edit)\.png/i)
   })
 
@@ -389,7 +407,8 @@ describe('White Cup story scenes', () => {
         visitSceneLayerManifest?: {
           backdrop: { src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }
           cards: Record<string, { src: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }>
-          skyline: { src: string; asset: { kind: string; provenanceKind: string } }
+          decoration: { src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }
+          skyline: { src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }
         }
       }
     ).visitSceneLayerManifest
@@ -404,7 +423,15 @@ describe('White Cup story scenes', () => {
     expect(Object.values(manifest?.cards ?? {}).every((entry) => entry.asset.provenanceKind === 'decorative-reference-edit')).toBe(true)
     expect(Object.values(manifest?.cards ?? {}).every((entry) => entry.src.endsWith('-800.webp'))).toBe(true)
     expect(Object.values(manifest?.cards ?? {}).every((entry) => entry.asset.sourceArtifactSrc === undefined)).toBe(true)
-    expect(manifest?.skyline.src).toBe('/media/hero-skyline-exact.png')
+    expect(manifest?.cards['morning-coffee'].src).toBe(
+      '/media/rhythm-coffee-badged-reference-edit-800.webp',
+    )
+    expect(manifest?.decoration.src).toBe('/media/rhythm-doodles-reference-edit-1672.webp')
+    expect(manifest?.decoration.srcSet?.split(',')).toHaveLength(2)
+    expect(manifest?.decoration.sizes).toBe('100vw')
+    expect(manifest?.skyline.src).toBe('/media/rhythm-skyline-reference-edit-1200w.webp')
+    expect(manifest?.skyline.srcSet?.split(',')).toHaveLength(2)
+    expect(manifest?.skyline.asset.provenanceKind).toBe('decorative-reference-edit')
   })
 
   it('keeps the desktop Visit composition in one viewport and gives mobile its own flow', () => {
@@ -416,6 +443,24 @@ describe('White Cup story scenes', () => {
     )
     expect(globalCss).toMatch(
       /\.scene\.visit-scene\s*{[^}]*scroll-margin-top:\s*0;/,
+    )
+    expect(globalCss).toMatch(
+      /\.visit-scene__title-line--first\s*{[^}]*transform:\s*scaleX\(1\.4\);/,
+    )
+    expect(globalCss).toMatch(
+      /\.visit-scene__title-line--second\s*{[^}]*transform:\s*scaleX\(1\.39\);/,
+    )
+    expect(globalCss).toMatch(
+      /@media \(min-width: 1024px\) and \(max-width: 1439px\)[\s\S]*?\.visit-scene__cards\s*{[^}]*top:/,
+    )
+    expect(globalCss).toMatch(
+      /\.visit-card\[data-visit-card='morning-coffee'\] \.visit-card__media\s*{[^}]*clip-path:\s*polygon\(/,
+    )
+    expect(globalCss).toMatch(
+      /\.visit-card\[data-visit-card='meeting-in-centre'\] \.visit-card__media\s*{[^}]*clip-path:\s*polygon\(/,
+    )
+    expect(globalCss).toMatch(
+      /\.visit-card\[data-visit-card='quiet-pause'\] \.visit-card__media\s*{[^}]*clip-path:\s*polygon\(/,
     )
   })
 
