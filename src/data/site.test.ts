@@ -124,4 +124,27 @@ describe('White Cup site data', () => {
       },
     ])
   })
+
+  it('keeps the supplied Visit scenario copy in reference order', () => {
+    expect(siteData.visitScenarios).toEqual([
+      {
+        id: 'morning-coffee',
+        title: 'Утро с кофе',
+        description:
+          'Ароматный кофе с собой, свежая выпечка и бодрое начало дня. Быстро, вкусно и рядом с вашими планами.',
+      },
+      {
+        id: 'meeting-in-centre',
+        title: 'Встреча в центре',
+        description:
+          'Удобное расположение, комфортная атмосфера и вкусные блюда — идеальные условия для деловых и дружеских встреч.',
+      },
+      {
+        id: 'quiet-pause',
+        title: 'Спокойная пауза',
+        description:
+          'Мягкий свет, уютные места и любимый вкус — для чтения, работы или просто чтобы остановиться и выдохнуть.',
+      },
+    ])
+  })
 })

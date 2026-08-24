@@ -328,6 +328,97 @@ describe('White Cup story scenes', () => {
     )
   })
 
+  it('matches the supplied Visit scene copy, semantic cards, and independent layers', () => {
+    render(<App />)
+
+    const visit = screen.getByRole('region', {
+      name: /у нас есть место.*для вашего ритма/i,
+    })
+    const heading = within(visit).getByRole('heading', { level: 2 })
+    const articles = within(visit).getAllByRole('article')
+
+    expect(within(visit).getByText('Для утренних ритуалов, встреч и спокойных пауз')).toBeInTheDocument()
+    expect(heading).toHaveTextContent('У нас есть место для вашего ритма')
+    expect(heading.querySelector('.visit-scene__accent')).toHaveTextContent('ритма')
+    expect(visit.querySelector('.visit-scene__intro p')).toHaveTextContent(
+      'White Cup — это ваш уютный уголок в центре Самары. Здесь удобно взять кофе с собой, провести деловую встречу, перевести дух между делами или неспешно насладиться вечером в приятной атмосфере.',
+    )
+
+    expect(articles).toHaveLength(3)
+    expect(articles.map((article) => within(article).getByRole('heading', { level: 3 }).textContent)).toEqual([
+      'Утро с кофе',
+      'Встреча в центре',
+      'Спокойная пауза',
+    ])
+    expect(articles.map((article) => within(article).getByRole('paragraph').textContent)).toEqual([
+      'Ароматный кофе с собой, свежая выпечка и бодрое начало дня. Быстро, вкусно и рядом с вашими планами.',
+      'Удобное расположение, комфортная атмосфера и вкусные блюда — идеальные условия для деловых и дружеских встреч.',
+      'Мягкий свет, уютные места и любимый вкус — для чтения, работы или просто чтобы остановиться и выдохнуть.',
+    ])
+
+    expect(visit.querySelector('.visit-scene__backdrop')).toHaveAttribute(
+      'src',
+      '/media/rhythm-clean-base-desktop.webp',
+    )
+    expect(visit.querySelector('.visit-scene__backdrop')).toHaveAttribute(
+      'srcset',
+      '/media/rhythm-clean-base-mobile-960.webp 960w, /media/rhythm-clean-base-desktop.webp 1672w',
+    )
+    expect(visit.querySelector('.visit-scene__skyline')).toHaveAttribute(
+      'src',
+      '/media/hero-skyline-exact.png',
+    )
+    expect(visit.querySelectorAll('[data-scene-card-image]')).toHaveLength(3)
+    visit.querySelectorAll('[data-scene-card-image]').forEach((image) => {
+      expect(image).toHaveAttribute('aria-hidden', 'true')
+      expect(image).toHaveAttribute('data-layer', 'foreground')
+      expect(image).toHaveAttribute('data-media-kind', 'decorative-reference-edit')
+      expect(image).toHaveAttribute('alt', '')
+    })
+    expect(visit.querySelectorAll('[data-visit-doodle]')).toHaveLength(4)
+    visit.querySelectorAll('[data-visit-doodle]').forEach((doodle) => {
+      expect(doodle).toHaveAttribute('aria-hidden', 'true')
+      expect(doodle).toHaveAttribute('data-layer', 'decoration')
+    })
+    expect(visit.innerHTML).not.toMatch(/ChatGPT Image|01_44_54 \(3\)|rhythm-(?:clean-base|coffee-reference-edit|table-reference-edit|waffle-reference-edit)\.png/i)
+  })
+
+  it('publishes the Visit assets as decorative production layers without the full reference', () => {
+    const manifest = (
+      mediaRegistry as unknown as {
+        visitSceneLayerManifest?: {
+          backdrop: { src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }
+          cards: Record<string, { src: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }>
+          skyline: { src: string; asset: { kind: string; provenanceKind: string } }
+        }
+      }
+    ).visitSceneLayerManifest
+
+    expect(manifest).toBeDefined()
+    expect(manifest?.backdrop.asset.kind).toBe('decorative')
+    expect(manifest?.backdrop.asset.provenanceKind).toBe('decorative-reference-edit')
+    expect(manifest?.backdrop.srcSet?.split(',')).toHaveLength(2)
+    expect(manifest?.backdrop.sizes).toBe('100vw')
+    expect(Object.values(manifest?.cards ?? {})).toHaveLength(3)
+    expect(Object.values(manifest?.cards ?? {}).every((entry) => entry.asset.kind === 'decorative')).toBe(true)
+    expect(Object.values(manifest?.cards ?? {}).every((entry) => entry.asset.provenanceKind === 'decorative-reference-edit')).toBe(true)
+    expect(Object.values(manifest?.cards ?? {}).every((entry) => entry.src.endsWith('-800.webp'))).toBe(true)
+    expect(Object.values(manifest?.cards ?? {}).every((entry) => entry.asset.sourceArtifactSrc === undefined)).toBe(true)
+    expect(manifest?.skyline.src).toBe('/media/hero-skyline-exact.png')
+  })
+
+  it('keeps the desktop Visit composition in one viewport and gives mobile its own flow', () => {
+    expect(globalCss).toMatch(
+      /@media \(min-width: 1024px\)[\s\S]*?\.scene\.visit-scene\s*{[^}]*height:\s*100dvh;[^}]*max-height:\s*100dvh;/,
+    )
+    expect(globalCss).toMatch(
+      /@media \(max-width: 1023px\)[\s\S]*?\.visit-scene \.section-frame__inner\s*{[^}]*grid-template-areas:/,
+    )
+    expect(globalCss).toMatch(
+      /\.scene\.visit-scene\s*{[^}]*scroll-margin-top:\s*0;/,
+    )
+  })
+
   it('defers the documentary hero fallback until the clean backdrop fails', () => {
     render(<App />)
 

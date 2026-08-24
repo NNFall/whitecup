@@ -464,6 +464,70 @@ export const aboutSceneLayerManifest = {
   }),
 } as const
 
+const visitCleanBaseReferenceEdit: DecorativeMediaProvenance = {
+  id: 'visit-clean-base-reference-edit',
+  src: '/media/rhythm-clean-base-desktop.webp',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Image Generation Skill edit of supplied Visit reference',
+  provenance:
+    'Чистый тёплый бумажный фон с верхней правой линейной иллюстрацией кафе и пунктирным маршрутом, восстановленный редактированием предоставленного Visit-референса без baked-текста и карточек. Локальный authoring PNG не публикуется; production использует responsive WebP. Это decorative reference-art, не документальная фотография White Cup.',
+}
+
+const defineVisitCardReferenceEdit = (
+  id: string,
+  filename: string,
+  description: string,
+): DecorativeMediaProvenance => ({
+  id: `visit-${id}-reference-edit`,
+  src: `/media/rhythm-${filename}-reference-edit-800.webp`,
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Image Generation Skill edit of supplied Visit reference',
+  provenance: `${description} Создано как отдельный decorative reference-edit и оптимизировано в WebP; локальный authoring PNG не публикуется. Ассет не является документальной фотографией White Cup.`,
+})
+
+const visitCardReferenceEdits = {
+  'morning-coffee': defineVisitCardReferenceEdit(
+    'morning-coffee',
+    'coffee',
+    'Крупный кадр латте на деревянном столе, восстановленный по первой карточке предоставленного Visit-референса.',
+  ),
+  'meeting-in-centre': defineVisitCardReferenceEdit(
+    'meeting-in-centre',
+    'table',
+    'Кадр уютного столика в кафе, восстановленный по второй карточке предоставленного Visit-референса.',
+  ),
+  'quiet-pause': defineVisitCardReferenceEdit(
+    'quiet-pause',
+    'waffle',
+    'Крупный кадр вафли с ягодами, восстановленный по третьей карточке предоставленного Visit-референса.',
+  ),
+} as const
+
+export type VisitCardMediaId = keyof typeof visitCardReferenceEdits
+
+export const visitSceneLayerManifest = {
+  backdrop: defineSceneLayer('backdrop', visitCleanBaseReferenceEdit, {
+    srcSet:
+      '/media/rhythm-clean-base-mobile-960.webp 960w, /media/rhythm-clean-base-desktop.webp 1672w',
+    sizes: '100vw',
+  }),
+  cards: Object.fromEntries(
+    Object.entries(visitCardReferenceEdits).map(([id, asset]) => [
+      id,
+      defineSceneLayer('foreground', asset, {
+        sizes: '(max-width: 1023px) 88vw, 27vw',
+      }),
+    ]),
+  ) as Record<VisitCardMediaId, SceneLayerManifestEntry>,
+  skyline: defineSceneLayer('decoration', heroSkylineReference, {
+    sizes: '(max-width: 1023px) 92vw, 47vw',
+  }),
+} as const
+
 export const heroFoodCutout: DecorativeMediaProvenance = {
   id: 'hero-food-cutout',
   src: '/media/hero-food-cutout.png',
@@ -527,6 +591,8 @@ export const decorativeMedia: DecorativeMediaProvenance[] = [
   aboutCoffeeReferenceEdit,
   aboutDoodlesReferenceEdit,
   ...Object.values(aboutBenefitReferenceEdits),
+  visitCleanBaseReferenceEdit,
+  ...Object.values(visitCardReferenceEdits),
   {
     id: 'paper-sketches',
     src: 'inline-svg-or-css',
