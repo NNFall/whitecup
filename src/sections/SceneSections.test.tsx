@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react'
 
 import App from '../App'
+import * as mediaRegistry from '../data/media'
 import { heroSceneLayerManifest } from '../data/media'
 import globalCss from '../styles/global.css?raw'
 
@@ -169,6 +170,96 @@ describe('White Cup story scenes', () => {
     expect(globalCss).not.toMatch(
       /\.menu-scene__intro\s*{[^}]*display:\s*grid;/,
     )
+  })
+
+  it('matches the supplied About scene copy, semantic benefits, and independent layers', () => {
+    render(<App />)
+
+    const about = screen.getByRole('region', {
+      name: /о white cup.*место, в которое.*хочется возвращаться/i,
+    })
+    const heading = within(about).getByRole('heading', { level: 2 })
+    const introParagraphs = about.querySelectorAll('.about-scene__intro > p')
+    const benefits = within(about).getAllByRole('listitem')
+
+    expect(heading).toHaveTextContent('О White Cup — место, в которое хочется возвращаться')
+    expect(heading.querySelector('.about-scene__accent')).toHaveTextContent('хочется')
+    expect(heading.querySelector('.about-scene__return')).toHaveTextContent('возвращаться')
+    expect(introParagraphs).toHaveLength(2)
+    expect(introParagraphs[0]).toHaveTextContent(
+      'Мы обожаем спешелти-кофе и готовим его с вниманием к каждой детали. Наши завтраки подаём весь день — от хрустящих вафель до сытных боулов и ароматной выпечки.',
+    )
+    expect(introParagraphs[1]).toHaveTextContent(
+      'White Cup — это уютная кофейня в самом сердце Самары, где легко переключиться с городского ритма на своё время.',
+    )
+    expect(introParagraphs[1].querySelector('.about-scene__city')).toHaveTextContent(
+      'в самом сердце Самары',
+    )
+
+    expect(benefits).toHaveLength(4)
+    expect(benefits.map((benefit) => within(benefit).getByRole('heading', { level: 3 }).textContent)).toEqual([
+      'Спешелти-кофе',
+      'Завтраки весь день',
+      'Уютная атмосфера',
+      'Центр Самары',
+    ])
+    expect(benefits.map((benefit) => within(benefit).getByRole('paragraph').textContent)).toEqual([
+      'Только отборные зёрна и бережная обжарка',
+      'Любимые блюда в любое время',
+      'Тёплый интерьер и дружелюбная команда',
+      'В самом сердце города, рядом с культурной жизнью',
+    ])
+    expect(about.querySelectorAll('[data-about-benefit-image]')).toHaveLength(4)
+
+    expect(about.querySelector('.about-scene__backdrop')).toHaveAttribute(
+      'src',
+      '/media/about-clean-base-1672.webp',
+    )
+    expect(about.querySelector('.about-scene__backdrop')).toHaveAttribute(
+      'srcset',
+      '/media/about-clean-base-960.webp 960w, /media/about-clean-base-1672.webp 1672w',
+    )
+    expect(about.querySelectorAll('[data-layer="foreground"]')).toHaveLength(2)
+    expect(about.querySelector('.about-scene__pastry')).toHaveAttribute(
+      'src',
+      '/media/about-pastry-cutout-1200.webp',
+    )
+    expect(about.querySelector('.about-scene__coffee')).toHaveAttribute(
+      'src',
+      '/media/about-coffee-cutout-1200.webp',
+    )
+    expect(about.innerHTML).not.toMatch(/about-clean-base\.png|ChatGPT Image|01_44_53 \(1\)/i)
+    expect(about.querySelector('.organic-photo--about')).not.toBeInTheDocument()
+  })
+
+  it('publishes the About assets as responsive decorative scene layers', () => {
+    const manifest = (
+      mediaRegistry as unknown as {
+        aboutSceneLayerManifest?: {
+          backdrop: { src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }
+          foregrounds: Array<{ src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }>
+          benefits: Record<string, { src: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }>
+        }
+      }
+    ).aboutSceneLayerManifest
+
+    expect(manifest).toBeDefined()
+    expect(manifest?.backdrop.asset.kind).toBe('decorative')
+    expect(manifest?.backdrop.asset.provenanceKind).toBe('decorative-reference-edit')
+    expect(manifest?.backdrop.srcSet?.split(',')).toHaveLength(2)
+    expect(manifest?.backdrop.sizes).toBe('100vw')
+    expect(manifest?.foregrounds).toHaveLength(2)
+    expect(manifest?.foregrounds.every((entry) => entry.src.endsWith('-1200.webp'))).toBe(true)
+    expect(manifest?.foregrounds.every((entry) => entry.srcSet?.split(',').length === 2)).toBe(true)
+    expect(Object.values(manifest?.benefits ?? {})).toHaveLength(4)
+    expect(Object.values(manifest?.benefits ?? {}).every((entry) => entry.src.endsWith('-480.webp'))).toBe(true)
+    expect(
+      [
+        manifest?.backdrop,
+        ...(manifest?.foregrounds ?? []),
+        ...Object.values(manifest?.benefits ?? {}),
+      ].every((entry) => entry?.asset.sourceArtifactSrc === undefined),
+    ).toBe(true)
   })
 
   it('defers the documentary hero fallback until the clean backdrop fails', () => {

@@ -99,4 +99,29 @@ describe('White Cup site data', () => {
     expect(cards.every((entry) => entry.asset.sourceArtifactSrc === undefined)).toBe(true)
     expect(siteData.menuItems.every((item) => item.imageId === undefined)).toBe(true)
   })
+
+  it('keeps the supplied About benefit copy in reference order', () => {
+    expect(siteData.benefits).toEqual([
+      {
+        id: 'specialty-coffee',
+        title: 'Спешелти-кофе',
+        description: 'Только отборные зёрна и бережная обжарка',
+      },
+      {
+        id: 'all-day-breakfast',
+        title: 'Завтраки весь день',
+        description: 'Любимые блюда в любое время',
+      },
+      {
+        id: 'cozy-atmosphere',
+        title: 'Уютная атмосфера',
+        description: 'Тёплый интерьер и дружелюбная команда',
+      },
+      {
+        id: 'samara-centre',
+        title: 'Центр Самары',
+        description: 'В самом сердце города, рядом с культурной жизнью',
+      },
+    ])
+  })
 })

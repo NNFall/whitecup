@@ -352,6 +352,104 @@ export const menuSceneLayerManifest = {
   skyline: defineSceneLayer('decoration', heroSkylineReference),
 } as const
 
+const aboutCleanBaseReferenceEdit: DecorativeMediaProvenance = {
+  id: 'about-clean-base-reference-edit',
+  src: '/media/about-clean-base-1672.webp',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Image Generation Skill edit of supplied About reference',
+  provenance:
+    'Чистая бумажно-интерьерная композиция с органическим краем, восстановленная редактированием предоставленного About-референса без baked-текста, карточек, выпечки и чашки. Локальный authoring PNG не публикуется; production использует responsive WebP. Это decorative reference-art, не документальная фотография White Cup.',
+}
+
+const aboutPastryReferenceEdit: DecorativeMediaProvenance = {
+  id: 'about-pastry-reference-edit',
+  src: '/media/about-pastry-cutout-1200.webp',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Image Generation Skill edit + Remove Background Local',
+  provenance:
+    'Независимый декоративный слой с булочкой и тарелкой, восстановленный по предоставленному About-референсу; прозрачность сохранена в responsive WebP. Это reference-art, не документальная фотография блюда White Cup.',
+}
+
+const aboutCoffeeReferenceEdit: DecorativeMediaProvenance = {
+  id: 'about-coffee-reference-edit',
+  src: '/media/about-coffee-cutout-1200.webp',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Image Generation Skill edit + Remove Background Local',
+  provenance:
+    'Независимый декоративный слой с латте, блюдцем и ложкой, восстановленный по предоставленному About-референсу; прозрачность сохранена в responsive WebP. Это reference-art, не документальная фотография напитка White Cup.',
+}
+
+const defineAboutBenefitReferenceEdit = (
+  id: string,
+  filename: string,
+  description: string,
+): DecorativeMediaProvenance => ({
+  id: `about-benefit-${id}-reference-edit`,
+  src: `/media/about-benefit-${filename}-480.webp`,
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Image Generation Skill edit of supplied About reference + Remove Background Local',
+  provenance: `${description} Иллюстрация отделена в самостоятельный прозрачный WebP-слой; это decorative reference-art, не документальная фотография.`,
+})
+
+const aboutBenefitReferenceEdits = {
+  'specialty-coffee': defineAboutBenefitReferenceEdit(
+    'specialty-coffee',
+    'coffee',
+    'Линейная чашка кофе с оранжевым сердцем, восстановленная по первой benefit-карточке About-референса.',
+  ),
+  'all-day-breakfast': defineAboutBenefitReferenceEdit(
+    'all-day-breakfast',
+    'breakfast',
+    'Линейная вафля с ягодами, восстановленная по второй benefit-карточке About-референса.',
+  ),
+  'cozy-atmosphere': defineAboutBenefitReferenceEdit(
+    'cozy-atmosphere',
+    'chair',
+    'Линейное кресло, торшер и оранжевая подушка, восстановленные по третьей benefit-карточке About-референса.',
+  ),
+  'samara-centre': defineAboutBenefitReferenceEdit(
+    'samara-centre',
+    'samara',
+    'Линейный городской силуэт Самары с оранжевым солнцем, восстановленный по четвёртой benefit-карточке About-референса; не является картой.',
+  ),
+} as const
+
+export type AboutBenefitMediaId = keyof typeof aboutBenefitReferenceEdits
+
+export const aboutSceneLayerManifest = {
+  backdrop: defineSceneLayer('backdrop', aboutCleanBaseReferenceEdit, {
+    srcSet:
+      '/media/about-clean-base-960.webp 960w, /media/about-clean-base-1672.webp 1672w',
+    sizes: '100vw',
+  }),
+  foregrounds: [
+    defineSceneLayer('foreground', aboutPastryReferenceEdit, {
+      srcSet:
+        '/media/about-pastry-cutout-720.webp 720w, /media/about-pastry-cutout-1200.webp 1200w',
+      sizes: '(max-width: 720px) 70vw, 34vw',
+    }),
+    defineSceneLayer('foreground', aboutCoffeeReferenceEdit, {
+      srcSet:
+        '/media/about-coffee-cutout-720.webp 720w, /media/about-coffee-cutout-1200.webp 1200w',
+      sizes: '(max-width: 720px) 62vw, 30vw',
+    }),
+  ],
+  benefits: Object.fromEntries(
+    Object.entries(aboutBenefitReferenceEdits).map(([id, asset]) => [
+      id,
+      defineSceneLayer('decoration', asset, { sizes: '(max-width: 720px) 34vw, 9vw' }),
+    ]),
+  ) as Record<AboutBenefitMediaId, SceneLayerManifestEntry>,
+} as const
+
 export const heroFoodCutout: DecorativeMediaProvenance = {
   id: 'hero-food-cutout',
   src: '/media/hero-food-cutout.png',
@@ -410,6 +508,10 @@ export const decorativeMedia: DecorativeMediaProvenance[] = [
   heroSkylineLine,
   menuCleanBaseReferenceEdit,
   ...Object.values(menuCardReferenceEdits),
+  aboutCleanBaseReferenceEdit,
+  aboutPastryReferenceEdit,
+  aboutCoffeeReferenceEdit,
+  ...Object.values(aboutBenefitReferenceEdits),
   {
     id: 'paper-sketches',
     src: 'inline-svg-or-css',

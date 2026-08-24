@@ -1452,7 +1452,6 @@ h2 {
 }
 
 .hero-scene__doodles,
-.about-scene__doodles,
 .visit-scene__doodles,
 .events-scene__doodles,
 .locations-scene__doodles {
@@ -1576,66 +1575,6 @@ h2 {
   transform: translate(0.12rem, -0.12rem);
 }
 
-.about-scene .section-frame__heading {
-  max-width: 70rem;
-}
-
-.about-scene__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(24rem, 1.05fr);
-  align-items: center;
-  gap: clamp(3rem, 9vw, 11rem);
-}
-
-.about-scene__intro,
-.about-scene__photo {
-  position: relative;
-}
-
-.about-scene__intro {
-  display: grid;
-  align-content: center;
-  gap: 1.75rem;
-  min-height: 23rem;
-}
-
-.about-scene__doodles {
-  right: -2rem;
-  bottom: -3rem;
-  width: 11rem;
-  height: 8rem;
-  transform: rotate(-5deg);
-}
-
-.about-scene__photo {
-  padding: 0.65rem 0.7rem 1.3rem 0;
-}
-
-.benefits-list {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0;
-  margin: 0;
-  padding: 0;
-  border-top: 1px solid var(--line);
-  list-style: none;
-}
-
-.benefit-item {
-  min-width: 0;
-  padding: 1.6rem clamp(0.8rem, 2vw, 1.9rem) 0 0;
-  border-right: 1px solid var(--line);
-}
-
-.benefit-item:not(:first-child) {
-  padding-left: clamp(0.8rem, 2vw, 1.9rem);
-}
-
-.benefit-item:last-child {
-  border-right: 0;
-}
-
-.benefit-item__index,
 .scenario-card__index,
 .event-line__index,
 .location-card__index {
@@ -1645,7 +1584,6 @@ h2 {
   letter-spacing: 0.12em;
 }
 
-.benefit-item h3,
 .scenario-card h3,
 .event-line h3,
 .location-card h3 {
@@ -1656,7 +1594,6 @@ h2 {
   line-height: 1.02;
 }
 
-.benefit-item p,
 .scenario-card p,
 .event-line p,
 .location-card p {
@@ -2119,7 +2056,6 @@ h2 {
     font-size: 1rem;
   }
 
-  .about-scene__grid,
   .events-scene__grid,
   .locations-scene__grid {
     grid-template-columns: minmax(0, 1fr);
@@ -2127,7 +2063,6 @@ h2 {
     gap: 2.8rem;
   }
 
-  .about-scene__grid > *,
   .events-scene__grid > *,
   .locations-scene__grid > *,
   .locations-list,
@@ -2135,7 +2070,6 @@ h2 {
     min-width: 0;
   }
 
-  .about-scene__intro,
   .events-scene__content,
   .locations-list,
   .location-card {
@@ -2151,37 +2085,12 @@ h2 {
     overflow-wrap: break-word;
   }
 
-  .about-scene__intro {
-    min-height: auto;
-  }
-
-  .about-scene__photo,
   .events-scene__photo {
     padding: 0.5rem 0 1.2rem;
   }
 
-  .organic-photo--about,
   .organic-photo--events {
     aspect-ratio: 1.1 / 1;
-  }
-
-  .benefits-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .benefit-item {
-    min-height: 11rem;
-    padding: 1.25rem 1rem 1rem 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .benefit-item:nth-child(2n) {
-    padding-left: 1rem;
-    border-right: 0;
-  }
-
-  .benefit-item h3 {
-    font-size: 1.65rem;
   }
 
   .visit-scene__intro,
@@ -2195,13 +2104,6 @@ h2 {
     width: 8rem;
     height: 6rem;
     margin-top: -1.8rem;
-  }
-
-  .about-scene__doodles {
-    right: 0.35rem;
-    bottom: -1.2rem;
-    width: 8rem;
-    height: 6rem;
   }
 
   .scenario-grid {
@@ -2277,27 +2179,12 @@ h2 {
 
   .hero-scene__note,
   .hero-scene__stamp,
-  .about-scene__doodles,
   .visit-scene__doodles,
   .events-scene__doodles,
   .locations-scene__doodles {
     display: none;
   }
 
-  .benefits-list {
-    grid-template-columns: 1fr;
-  }
-
-  .benefit-item,
-  .benefit-item:not(:first-child) {
-    min-height: auto;
-    padding: 1.25rem 0;
-    border-right: 0;
-  }
-
-  .benefit-item:last-child {
-    border-bottom: 0;
-  }
 }
 
 /* Supplied first-screen reference fidelity pass. ------------------------- */
@@ -2924,6 +2811,404 @@ h2 {
   .hero-route-layer,
   .hero-skyline-layer {
     animation: none;
+    transition: none;
+  }
+}
+
+/* Supplied About-screen reference reconstruction. ----------------------- */
+
+.scene.about-scene {
+  min-height: 100dvh;
+  padding: 0;
+  background: var(--paper-light);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.about-scene .section-frame__inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: none;
+  min-height: 100dvh;
+  margin: 0;
+}
+
+.about-scene__backdrop {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  object-fit: cover;
+  object-position: center;
+}
+
+.about-scene .section-frame__heading {
+  position: absolute;
+  z-index: 5;
+  top: 14.9%;
+  left: 4.9%;
+  display: block;
+  width: 49%;
+  max-width: none;
+}
+
+.about-scene .section-frame__heading h2 {
+  max-width: none;
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(3.7rem, 4.45vw, 5.35rem);
+  font-weight: 400;
+  letter-spacing: -0.055em;
+  line-height: 0.94;
+}
+
+.about-scene__title-line {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  white-space: nowrap;
+}
+
+.about-scene__title-line + .about-scene__title-line {
+  margin-top: 0.62vw;
+}
+
+.about-scene__title-line--brand {
+  margin-bottom: 0.82vw;
+  margin-left: 9.8vw;
+  font-family: var(--font-script);
+  font-size: 1.1em;
+  letter-spacing: -0.075em;
+  line-height: 0.88;
+  transform: rotate(-0.7deg);
+  transform-origin: left center;
+}
+
+.about-scene__accent {
+  color: var(--orange);
+}
+
+.about-scene__return,
+.about-scene__city {
+  position: relative;
+  display: inline-block;
+}
+
+.about-scene__return::after,
+.about-scene__city::after {
+  position: absolute;
+  right: 0;
+  bottom: -0.18em;
+  left: 0;
+  height: 0.11em;
+  border-radius: 50%;
+  background: var(--orange);
+  content: '';
+  transform: rotate(-0.9deg) scaleX(0.96);
+  transform-origin: left center;
+}
+
+.about-scene__intro {
+  position: absolute;
+  z-index: 5;
+  top: 45.3%;
+  left: 5%;
+  display: grid;
+  width: 43.5%;
+  gap: clamp(1.45rem, 2.7dvh, 2rem);
+}
+
+.about-scene__intro p {
+  max-width: 64ch;
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.02rem, 1.18vw, 1.42rem);
+  line-height: 1.38;
+}
+
+.about-scene .benefits-list {
+  position: absolute;
+  z-index: 6;
+  bottom: 7.55%;
+  left: 4.5%;
+  display: grid;
+  width: 51.6%;
+  height: 25.5%;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.05vw;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.about-scene .benefit-item {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  padding: clamp(0.72rem, 0.86vw, 1.03rem);
+  border: clamp(1.2px, 0.1vw, 2px) solid var(--ink);
+  border-radius: clamp(0.72rem, 0.86vw, 1rem);
+  background: rgb(251 247 240 / 0.08);
+  overflow: hidden;
+}
+
+.about-scene .benefit-item__illustration {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  pointer-events: none;
+  object-fit: contain;
+  transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.about-scene .benefit-item:hover .benefit-item__illustration {
+  transform: translateY(-0.18rem) rotate(-0.7deg);
+}
+
+.about-scene .benefit-item h3 {
+  margin: 0.2rem 0 0.42rem;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: clamp(0.96rem, 1.04vw, 1.25rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+}
+
+.about-scene .benefit-item p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: clamp(0.72rem, 0.76vw, 0.92rem);
+  line-height: 1.28;
+}
+
+.about-scene__pastry,
+.about-scene__coffee {
+  position: absolute;
+  z-index: 4;
+  display: block;
+  height: auto;
+  pointer-events: none;
+}
+
+.about-scene__pastry {
+  top: 42%;
+  left: 28%;
+  width: 63%;
+}
+
+.about-scene__coffee {
+  top: 64%;
+  left: 72%;
+  width: 32%;
+}
+
+@media (min-width: 1024px) {
+  .scene.about-scene {
+    height: 100dvh;
+    max-height: 100dvh;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1679px) {
+  .about-scene .section-frame__heading h2 {
+    font-size: 4.45vw;
+  }
+
+  .about-scene__intro p {
+    font-size: 1.18vw;
+  }
+
+  .about-scene .benefit-item {
+    padding: 0.8vw;
+  }
+}
+
+@media (max-width: 1023px) {
+  .scene.about-scene {
+    min-height: auto;
+  }
+
+  .about-scene .section-frame__inner {
+    display: grid;
+    width: min(100%, 48rem);
+    min-height: auto;
+    margin: 0 auto;
+    padding: 6rem 1.25rem 2.75rem;
+    grid-template-areas:
+      'heading'
+      'intro'
+      'visual'
+      'benefits';
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.75rem;
+  }
+
+  .about-scene .section-frame__heading {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    grid-area: heading;
+  }
+
+  .about-scene .section-frame__heading h2 {
+    font-size: clamp(2.55rem, 11.8vw, 5rem);
+    line-height: 0.96;
+  }
+
+  .about-scene__title-line {
+    width: auto;
+    max-width: none;
+  }
+
+  .about-scene__title-line + .about-scene__title-line {
+    margin-top: 0.22rem;
+  }
+
+  .about-scene__title-line--brand {
+    margin-bottom: 0.55rem;
+    margin-left: 0;
+    font-size: 1.04em;
+  }
+
+  .about-scene__title-line:last-child {
+    font-size: 0.86em;
+  }
+
+  .about-scene__intro {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    grid-area: intro;
+    gap: 1.1rem;
+  }
+
+  .about-scene__intro p {
+    max-width: 62ch;
+    font-size: clamp(0.95rem, 2.8vw, 1.18rem);
+    line-height: 1.48;
+  }
+
+  .about-scene__backdrop {
+    position: relative;
+    inset: auto;
+    z-index: 0;
+    width: calc(100% + 2.5rem);
+    height: clamp(20rem, 72vw, 27rem);
+    margin-inline: -1.25rem;
+    grid-area: visual;
+    object-fit: cover;
+    object-position: 76% center;
+  }
+
+  .about-scene__pastry,
+  .about-scene__coffee {
+    grid-area: visual;
+  }
+
+  .about-scene__pastry {
+    top: -7%;
+    left: -31%;
+    width: 128%;
+  }
+
+  .about-scene__coffee {
+    top: 31%;
+    left: 40%;
+    width: 88%;
+  }
+
+  .about-scene .benefits-list {
+    position: relative;
+    inset: auto;
+    display: grid;
+    width: 100%;
+    height: auto;
+    grid-area: benefits;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .about-scene .benefit-item {
+    min-height: clamp(11rem, 43vw, 13rem);
+    padding: 0.78rem;
+    border-width: 1.25px;
+    border-radius: 0.78rem;
+  }
+
+  .about-scene .benefit-item h3 {
+    font-size: clamp(0.9rem, 3.2vw, 1.15rem);
+  }
+
+  .about-scene .benefit-item p {
+    font-size: clamp(0.7rem, 2.45vw, 0.86rem);
+  }
+}
+
+@media (max-width: 380px) {
+  .about-scene .section-frame__inner {
+    padding: 5.4rem 1rem 2.25rem;
+    gap: 1.4rem;
+  }
+
+  .about-scene .section-frame__heading h2 {
+    font-size: clamp(2.25rem, 11.4vw, 2.72rem);
+  }
+
+  .about-scene__intro p {
+    font-size: 0.91rem;
+  }
+
+  .about-scene__backdrop {
+    width: calc(100% + 2rem);
+    height: 19rem;
+    margin-inline: -1rem;
+    object-position: 78% center;
+  }
+
+  .about-scene__pastry {
+    top: -4%;
+    left: -36%;
+    width: 136%;
+  }
+
+  .about-scene__coffee {
+    top: 33%;
+    left: 39%;
+    width: 92%;
+  }
+
+  .about-scene .benefits-list {
+    gap: 0.58rem;
+  }
+
+  .about-scene .benefit-item {
+    min-height: 10.8rem;
+    padding: 0.62rem;
+  }
+
+  .about-scene .benefit-item h3 {
+    margin-bottom: 0.3rem;
+    font-size: 0.84rem;
+  }
+
+  .about-scene .benefit-item p {
+    font-size: 0.68rem;
+    line-height: 1.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-scene .benefit-item__illustration {
     transition: none;
   }
 }

@@ -1,51 +1,83 @@
-import { documentarySceneMedia } from '../data/media'
-import { siteData } from '../data/site'
-import { Doodles } from '../components/Doodles'
-import { OrganicPhoto } from '../components/OrganicPhoto'
 import { Reveal } from '../components/Reveal'
+import { SceneLayer } from '../components/SceneLayer'
 import { SectionFrame } from '../components/SectionFrame'
+import {
+  aboutSceneLayerManifest,
+  type AboutBenefitMediaId,
+} from '../data/media'
+import { siteData } from '../data/site'
 
 export function AboutSection() {
+  const [pastryLayer, coffeeLayer] = aboutSceneLayerManifest.foregrounds
+
   return (
     <SectionFrame
       id="about"
-      title="О White Cup — место, в которое хочется возвращаться"
-      kicker="02 / О месте"
+      title={
+        <>
+          <span className="about-scene__title-line about-scene__title-line--brand">
+            О White Cup —
+          </span>{' '}
+          <span className="about-scene__title-line">место, в которое</span>
+          {' '}
+          <span className="about-scene__title-line">
+            <span className="about-scene__accent">хочется</span>{' '}
+            <span className="about-scene__return">возвращаться</span>
+          </span>
+        </>
+      }
       className="about-scene"
     >
-      <div className="about-scene__grid">
-        <Reveal className="about-scene__intro">
-          <p className="scene-copy scene-copy--large">
-            Не нужно ждать особого повода. Здесь можно прийти за капучино, остаться на завтрак и незаметно провести в центре весь день.
-          </p>
-          <p className="scene-copy scene-copy--muted">
-            Честный кофе, спокойный свет и детали, которые замечаешь не с первого раза.
-          </p>
-          <Doodles variant="about" className="about-scene__doodles" />
-        </Reveal>
+      <SceneLayer
+        {...aboutSceneLayerManifest.backdrop}
+        className="about-scene__backdrop"
+        loading="lazy"
+        decoding="async"
+      />
 
-        <Reveal className="about-scene__photo" delay={80}>
-          <OrganicPhoto
-            media={documentarySceneMedia.about[0]}
-            className="organic-photo--about"
-            aspectRatio="1.15 / 1"
-            sizes="(max-width: 720px) 92vw, 43vw"
-            caption="Интерьер, в котором легко задержаться"
-          />
-        </Reveal>
-      </div>
+      <Reveal className="about-scene__intro">
+        <p>
+          Мы обожаем спешелти-кофе и готовим его с вниманием к каждой детали. Наши завтраки подаём весь день — от хрустящих вафель до сытных боулов и ароматной выпечки.
+        </p>
+        <p>
+          White Cup — это уютная кофейня{' '}
+          <span className="about-scene__city">в самом сердце Самары</span>, где легко переключиться с городского ритма на своё время.
+        </p>
+      </Reveal>
 
       <ul className="benefits-list" aria-label="Что есть в White Cup">
-        {siteData.benefits.map((benefit, index) => (
-          <li key={benefit.id} className="benefit-item">
-            <Reveal delay={index * 70}>
-              <span className="benefit-item__index">0{index + 1}</span>
+        {siteData.benefits.map((benefit) => {
+          const illustration =
+            aboutSceneLayerManifest.benefits[benefit.id as AboutBenefitMediaId]
+
+          return (
+            <li key={benefit.id} className="benefit-item">
+              <SceneLayer
+                {...illustration}
+                className="benefit-item__illustration"
+                data-about-benefit-image={benefit.id}
+                loading="lazy"
+                decoding="async"
+              />
               <h3>{benefit.title}</h3>
               <p>{benefit.description}</p>
-            </Reveal>
-          </li>
-        ))}
+            </li>
+          )
+        })}
       </ul>
+
+      <SceneLayer
+        {...pastryLayer}
+        className="about-scene__pastry"
+        loading="lazy"
+        decoding="async"
+      />
+      <SceneLayer
+        {...coffeeLayer}
+        className="about-scene__coffee"
+        loading="lazy"
+        decoding="async"
+      />
     </SectionFrame>
   )
 }
