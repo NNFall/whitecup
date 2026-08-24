@@ -557,6 +557,134 @@ export const visitSceneLayerManifest = {
   }),
 } as const
 
+const eventsCleanBaseReferenceEdit: DecorativeMediaProvenance = {
+  id: 'events-clean-base-reference-edit',
+  src: '/media/events-clean-base-1672w.webp',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Image Generation Skill edit of supplied Events reference',
+  provenance:
+    'Чистая полноэкранная бумажно-интерьерная сцена с правой фотопанелью и столом, восстановленная редактированием предоставленного Events-референса без baked-текста, карточек, доски и предметов переднего плана. Production использует только responsive WebP; это decorative reference-art, не документальная фотография White Cup.',
+}
+
+const defineEventsCardReferenceEdit = (
+  id: string,
+  filename: string,
+  description: string,
+): DecorativeMediaProvenance => ({
+  id: `events-${id}-reference-edit`,
+  src: `/media/events-card-${filename}-800w.webp`,
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Image Generation Skill edit of supplied Events reference',
+  provenance: `${description} Создано как отдельный decorative reference-edit и оптимизировано в WebP; локальный authoring PNG не публикуется. Ассет не является документальной фотографией White Cup.`,
+})
+
+const eventsCardReferenceEdits = {
+  breakfasts: defineEventsCardReferenceEdit(
+    'breakfasts',
+    '01',
+    'Кадр завтрака двух подруг за столом, восстановленный по первой карточке предоставленного Events-референса.',
+  ),
+  meetings: defineEventsCardReferenceEdit(
+    'meetings',
+    '02',
+    'Кадр рабочей встречи за ноутбуком, восстановленный по второй карточке предоставленного Events-референса.',
+  ),
+  'warm-events': defineEventsCardReferenceEdit(
+    'warm-events',
+    '03',
+    'Кадр камерной встречи в кафе, восстановленный по третьей карточке предоставленного Events-референса.',
+  ),
+} as const
+
+export type EventsCardMediaId = keyof typeof eventsCardReferenceEdits
+
+const eventsCakePlateReferenceEdit: DecorativeMediaProvenance = {
+  id: 'events-cake-plate-reference-edit',
+  src: '/media/events-cake-plate-reference-edit-1200w.webp',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Image Generation Skill edit + Remove Background Local',
+  provenance:
+    'Отдельный прозрачный слой торта вместе с тарелкой, восстановленный по нижнему правому foreground предоставленного Events-референса. Production использует alpha-preserving responsive WebP; это decorative reference-art, не документальная фотография блюда White Cup.',
+}
+
+const eventsCoffeeReferenceEdit: DecorativeMediaProvenance = {
+  id: 'events-coffee-reference-edit',
+  src: '/media/events-coffee-cutout-1200w.webp',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Image Generation Skill edit + Remove Background Local',
+  provenance:
+    'Отдельный прозрачный слой чашки латте с блюдцем, восстановленный по нижнему правому foreground предоставленного Events-референса. Production использует alpha-preserving responsive WebP; это decorative reference-art, не документальная фотография White Cup.',
+}
+
+const eventsDoodlesReferenceEdit: DecorativeMediaProvenance = {
+  id: 'events-doodles-reference-edit',
+  src: '/media/events-doodles-reference-edit-1672.webp',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Supplied Events reference + Remove Background Local',
+  provenance:
+    'Точный прозрачный полноэкранный слой с контуром фотопанели, маршрутом, облаком, сердцами, чашкой, кексом и карточными значками из предоставленного Events-референса. Production использует alpha-preserving responsive WebP; это декоративный reference-art.',
+}
+
+const eventsChalkboardReferenceEdit: DecorativeMediaProvenance = {
+  id: 'events-chalkboard-reference-edit',
+  src: '/media/events-chalkboard-reference-edit-480w.webp',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Image Generation Skill edit + Remove Background Local',
+  provenance:
+    'Отдельная декоративная меловая доска для правой стены, восстановленная по предоставленному Events-референсу и оптимизированная в responsive WebP. Текст на ней является частью иллюстрации, а не операционной информацией заведения.',
+}
+
+export const eventsSceneLayerManifest = {
+  backdrop: defineSceneLayer('backdrop', eventsCleanBaseReferenceEdit, {
+    srcSet:
+      '/media/events-clean-base-960w.webp 960w, /media/events-clean-base-1672w.webp 1672w',
+    sizes: '100vw',
+  }),
+  cards: Object.fromEntries(
+    Object.entries(eventsCardReferenceEdits).map(([id, asset]) => [
+      id,
+      defineSceneLayer('foreground', asset, {
+        srcSet: `${asset.src} 800w`,
+        sizes: '(max-width: 1023px) 88vw, 16vw',
+      }),
+    ]),
+  ) as Record<EventsCardMediaId, SceneLayerManifestEntry>,
+  foregrounds: [
+    defineSceneLayer('foreground', eventsCakePlateReferenceEdit, {
+      srcSet:
+        '/media/events-cake-plate-reference-edit-720w.webp 720w, /media/events-cake-plate-reference-edit-1200w.webp 1200w',
+      sizes: '(max-width: 1023px) 76vw, 31vw',
+    }),
+    defineSceneLayer('foreground', eventsCoffeeReferenceEdit, {
+      srcSet:
+        '/media/events-coffee-cutout-720w.webp 720w, /media/events-coffee-cutout-1200w.webp 1200w',
+      sizes: '(max-width: 1023px) 92vw, 43vw',
+    }),
+  ],
+  decoration: defineSceneLayer('decoration', eventsDoodlesReferenceEdit, {
+    srcSet:
+      '/media/events-doodles-reference-edit-960.webp 960w, /media/events-doodles-reference-edit-1672.webp 1672w',
+    sizes: '100vw',
+  }),
+  chalkboard: defineSceneLayer('decoration', eventsChalkboardReferenceEdit, {
+    srcSet:
+      '/media/events-chalkboard-reference-edit-300w.webp 300w, /media/events-chalkboard-reference-edit-480w.webp 480w',
+    sizes: '(max-width: 1023px) 30vw, 10vw',
+  }),
+} as const
+
 export const heroFoodCutout: DecorativeMediaProvenance = {
   id: 'hero-food-cutout',
   src: '/media/hero-food-cutout.png',
@@ -624,6 +752,12 @@ export const decorativeMedia: DecorativeMediaProvenance[] = [
   ...Object.values(visitCardReferenceEdits),
   visitDoodlesReferenceEdit,
   visitSkylineReferenceEdit,
+  eventsCleanBaseReferenceEdit,
+  ...Object.values(eventsCardReferenceEdits),
+  eventsCakePlateReferenceEdit,
+  eventsCoffeeReferenceEdit,
+  eventsDoodlesReferenceEdit,
+  eventsChalkboardReferenceEdit,
   {
     id: 'paper-sketches',
     src: 'inline-svg-or-css',

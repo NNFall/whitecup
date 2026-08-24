@@ -147,4 +147,24 @@ describe('White Cup site data', () => {
       },
     ])
   })
+
+  it('keeps the supplied Events card copy in reference order', () => {
+    expect(siteData.events).toEqual([
+      {
+        id: 'breakfasts',
+        title: 'Завтраки с друзьями',
+        description: 'Вкусные завтраки, душевные разговоры и отличное начало дня.',
+      },
+      {
+        id: 'meetings',
+        title: 'Рабочие встречи',
+        description: 'Уютная атмосфера и всё необходимое для продуктивных встреч.',
+      },
+      {
+        id: 'warm-events',
+        title: 'Камерные события',
+        description: 'Идеальное место для небольших праздников, мастер-классов и встреч.',
+      },
+    ])
+  })
 })

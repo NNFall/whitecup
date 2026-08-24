@@ -464,6 +464,144 @@ describe('White Cup story scenes', () => {
     )
   })
 
+  it('matches the supplied Events scene copy, semantic cards, and independent layers', () => {
+    render(<App />)
+
+    const events = screen.getByRole('region', {
+      name: /завтраки, встречи.*и тёплые события/i,
+    })
+    const heading = within(events).getByRole('heading', { level: 2 })
+    const articles = within(events).getAllByRole('article')
+
+    expect(heading).toHaveTextContent('Завтраки, встречи и тёплые события')
+    expect(heading.querySelector('.events-scene__accent')).toHaveTextContent('события')
+    expect(events.querySelector('.scene-kicker')).not.toBeInTheDocument()
+    expect(events.querySelector('.events-scene__intro p')).toHaveTextContent(
+      'Начните день с вкусного завтрака в компании друзей, проведите продуктивную встречу за ароматным кофе или устройте камерное мероприятие в уютной атмосфере White Cup.',
+    )
+    expect(events.querySelector('.events-scene__intro-brand')).toHaveTextContent('White Cup')
+    expect(events.querySelectorAll('.events-scene__desktop-break')).toHaveLength(3)
+
+    expect(articles).toHaveLength(3)
+    expect(
+      articles.map((article) => within(article).getByRole('heading', { level: 3 }).textContent),
+    ).toEqual(['Завтраки с друзьями', 'Рабочие встречи', 'Камерные события'])
+    expect(articles.map((article) => within(article).getByRole('paragraph').textContent)).toEqual([
+      'Вкусные завтраки, душевные разговоры и отличное начало дня.',
+      'Уютная атмосфера и всё необходимое для продуктивных встреч.',
+      'Идеальное место для небольших праздников, мастер-классов и встреч.',
+    ])
+
+    const cardImages = events.querySelectorAll('[data-events-card-image]')
+    expect(cardImages).toHaveLength(3)
+    cardImages.forEach((image) => {
+      expect(image).toHaveAttribute('aria-hidden', 'true')
+      expect(image).toHaveAttribute('data-layer', 'foreground')
+      expect(image).toHaveAttribute('data-media-kind', 'decorative-reference-edit')
+      expect(image).toHaveAttribute('alt', '')
+      expect(image).toHaveAttribute('srcset', expect.stringContaining('.webp 800w'))
+      expect(image).toHaveAttribute('sizes')
+    })
+
+    const expectedLayers = [
+      ['.events-scene__backdrop', '/media/events-clean-base-1672w.webp', 'backdrop'],
+      ['.events-scene__doodles', '/media/events-doodles-reference-edit-1672.webp', 'decoration'],
+      ['.events-scene__chalkboard', '/media/events-chalkboard-reference-edit-480w.webp', 'decoration'],
+      ['.events-scene__cake', '/media/events-cake-plate-reference-edit-1200w.webp', 'foreground'],
+      ['.events-scene__coffee', '/media/events-coffee-cutout-1200w.webp', 'foreground'],
+    ] as const
+
+    expectedLayers.forEach(([selector, src, layer]) => {
+      const image = events.querySelector(selector)
+      expect(image).toHaveAttribute('src', src)
+      expect(image).toHaveAttribute('aria-hidden', 'true')
+      expect(image).toHaveAttribute('alt', '')
+      expect(image).toHaveAttribute('data-layer', layer)
+      expect(image).toHaveAttribute('data-media-kind', 'decorative-reference-edit')
+      expect(image).toHaveAttribute('srcset')
+      expect(image).toHaveAttribute('sizes')
+    })
+
+    expect(
+      within(events).getByRole('link', { name: /камерные события.*vk.*новой вкладке/i }),
+    ).toHaveAttribute('href', 'https://vk.ru/white_cup')
+    expect(events.querySelector('.organic-photo')).not.toBeInTheDocument()
+    expect(events.innerHTML).not.toMatch(
+      /interior-03|ChatGPT Image|01_44_54 \(4\)|events-(?:clean-base|cake-plate-reference-edit|coffee-cutout|chalkboard-reference-edit|doodles-reference-edit)\.png/i,
+    )
+  })
+
+  it('publishes the Events assets as decorative responsive production layers', () => {
+    const manifest = (
+      mediaRegistry as unknown as {
+        eventsSceneLayerManifest?: {
+          backdrop: { src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }
+          cards: Record<string, { src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }>
+          foregrounds: Array<{ src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }>
+          decoration: { src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }
+          chalkboard: { src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }
+        }
+      }
+    ).eventsSceneLayerManifest
+
+    expect(manifest).toBeDefined()
+    const layers = [
+      manifest?.backdrop,
+      ...Object.values(manifest?.cards ?? {}),
+      ...(manifest?.foregrounds ?? []),
+      manifest?.decoration,
+      manifest?.chalkboard,
+    ].filter(Boolean)
+
+    expect(manifest?.backdrop.srcSet?.split(',')).toHaveLength(2)
+    expect(manifest?.backdrop.sizes).toBe('100vw')
+    expect(Object.values(manifest?.cards ?? {})).toHaveLength(3)
+    expect(manifest?.foregrounds).toHaveLength(2)
+    expect(layers.every((entry) => entry?.asset.kind === 'decorative')).toBe(true)
+    expect(layers.every((entry) => entry?.asset.provenanceKind === 'decorative-reference-edit')).toBe(true)
+    expect(layers.every((entry) => entry?.src.endsWith('.webp'))).toBe(true)
+    expect(layers.every((entry) => Boolean(entry?.srcSet) && Boolean(entry?.sizes))).toBe(true)
+    expect(layers.every((entry) => entry?.asset.sourceArtifactSrc === undefined)).toBe(true)
+    expect(manifest?.foregrounds.map((entry) => entry.src)).toEqual([
+      '/media/events-cake-plate-reference-edit-1200w.webp',
+      '/media/events-coffee-cutout-1200w.webp',
+    ])
+    expect(manifest?.chalkboard.srcSet?.split(',')).toHaveLength(2)
+    expect(manifest?.decoration.srcSet?.split(',')).toHaveLength(2)
+  })
+
+  it('keeps the desktop Events composition in one viewport and gives mobile its own flow', () => {
+    expect(globalCss).toMatch(
+      /@media \(min-width: 1024px\)[\s\S]*?\.scene\.events-scene\s*\{[^}]*height:\s*100dvh;[^}]*max-height:\s*100dvh;/,
+    )
+    expect(globalCss).toMatch(
+      /@media \(max-width: 1023px\)[\s\S]*?\.events-scene \.section-frame__inner\s*\{[^}]*grid-template-areas:/,
+    )
+    expect(globalCss).toMatch(/\.scene\.events-scene\s*\{[^}]*scroll-margin-top:\s*0;/)
+    expect(globalCss).toMatch(
+      /\.events-scene__art\s*\{[^}]*position:\s*absolute;[^}]*inset:\s*0;/,
+    )
+    expect(globalCss).toMatch(
+      /\.events-scene__cards\s*\{[^}]*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\);/,
+    )
+    expect(globalCss).toMatch(
+      /@media \(max-width: 1023px\)[\s\S]*?\.events-scene__cards\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\);/,
+    )
+    expect(globalCss).toMatch(/\.events-card__title-link:focus-visible\s*\{[^}]*outline:/)
+    expect(globalCss).toMatch(
+      /\.events-scene__title-line:first-child\s*\{[^}]*transform:\s*scaleX\(1\.23\);/,
+    )
+    expect(globalCss).toMatch(
+      /\.events-scene__title-line:last-child\s*\{[^}]*transform:\s*scaleX\(1\.43\);/,
+    )
+    expect(globalCss).toMatch(
+      /\.events-scene__cake\s*\{[^}]*left:\s*49\.8%;[^}]*width:\s*36%;/,
+    )
+    expect(globalCss).toMatch(
+      /@media \(max-width: 1023px\)[\s\S]*?\.events-scene__title-line:first-child,\s*\.events-scene__title-line:last-child\s*\{[^}]*transform:\s*none;/,
+    )
+  })
+
   it('defers the documentary hero fallback until the clean backdrop fails', () => {
     render(<App />)
 
@@ -498,7 +636,7 @@ describe('White Cup story scenes', () => {
     render(<App />)
 
     const images = document.querySelectorAll('.organic-photo img')
-    expect(images.length).toBeGreaterThanOrEqual(3)
+    expect(images.length).toBeGreaterThanOrEqual(2)
     expect(Array.from(images).every((image) => (image.getAttribute('alt') ?? '').trim().length > 12)).toBe(true)
 
     const doodleContainers = document.querySelectorAll('[data-doodle]')
