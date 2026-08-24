@@ -279,6 +279,81 @@ export const heroSceneLayerManifest = {
   ],
 } as const
 
+const menuCleanBaseReferenceEdit: DecorativeMediaProvenance = {
+  id: 'menu-clean-base-reference-edit',
+  src: '/media/menu-clean-base-1672.webp',
+  sourceArtifactSrc: '/media/menu-clean-base.png',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Image Generation Skill edit of supplied menu reference',
+  provenance:
+    'Чистый бумажный фон с правой линейной иллюстрацией кафе, восстановленный редактированием предоставленного menu-референса без baked-текста, карточек и интерфейса. Production использует responsive WebP; это decorative reference-art, не документальная фотография White Cup.',
+}
+
+const defineMenuCardReferenceEdit = (
+  id: string,
+  filename: string,
+  description: string,
+): DecorativeMediaProvenance => ({
+  id: `menu-${id}-reference-edit`,
+  src: `/media/menu-${filename}-768.webp`,
+  sourceArtifactSrc: `/media/menu-${filename}-reference-edit.png`,
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Image Generation Skill edit of supplied menu reference',
+  provenance: `${description} Создано как отдельный decorative reference-edit и оптимизировано в responsive WebP; ассет не является документальной фотографией блюда White Cup.`,
+})
+
+const menuCardReferenceEdits = {
+  cappuccino: defineMenuCardReferenceEdit(
+    'cappuccino',
+    'cappuccino',
+    'Крупный кадр капучино на деревянном столе, восстановленный по композиции предоставленного menu-референса.',
+  ),
+  bagel: defineMenuCardReferenceEdit(
+    'bagel',
+    'bagel',
+    'Крупный кадр бейгла с лососем на тарелке, восстановленный по композиции предоставленного menu-референса.',
+  ),
+  waffle: defineMenuCardReferenceEdit(
+    'waffle',
+    'waffle',
+    'Крупный кадр вафли с ягодами, восстановленный по композиции предоставленного menu-референса.',
+  ),
+  syrniki: defineMenuCardReferenceEdit(
+    'syrniki',
+    'syrniki',
+    'Крупный кадр сырников с ягодами, восстановленный по композиции предоставленного menu-референса.',
+  ),
+  cheesecake: defineMenuCardReferenceEdit(
+    'cheesecake',
+    'cheesecake',
+    'Крупный кадр малинового чизкейка, восстановленный по композиции предоставленного menu-референса.',
+  ),
+} as const
+
+export type MenuCardMediaId = keyof typeof menuCardReferenceEdits
+
+export const menuSceneLayerManifest = {
+  backdrop: defineSceneLayer('backdrop', menuCleanBaseReferenceEdit, {
+    srcSet:
+      '/media/menu-clean-base-960.webp 960w, /media/menu-clean-base-1672.webp 1672w',
+    sizes: '100vw',
+  }),
+  cards: Object.fromEntries(
+    Object.entries(menuCardReferenceEdits).map(([id, asset]) => [
+      id,
+      defineSceneLayer('foreground', asset, {
+        srcSet: `/media/menu-${id}-480.webp 480w, /media/menu-${id}-768.webp 768w`,
+        sizes: '(max-width: 480px) 82vw, (max-width: 1679px) 20vw, 17vw',
+      }),
+    ]),
+  ) as Record<MenuCardMediaId, SceneLayerManifestEntry>,
+  skyline: defineSceneLayer('decoration', heroSkylineReference),
+} as const
+
 export const heroFoodCutout: DecorativeMediaProvenance = {
   id: 'hero-food-cutout',
   src: '/media/hero-food-cutout.png',
@@ -335,6 +410,8 @@ export const decorativeMedia: DecorativeMediaProvenance[] = [
   heroCleanPanel,
   heroLogoBadge,
   heroSkylineLine,
+  menuCleanBaseReferenceEdit,
+  ...Object.values(menuCardReferenceEdits),
   {
     id: 'paper-sketches',
     src: 'inline-svg-or-css',

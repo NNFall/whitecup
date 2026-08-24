@@ -16,8 +16,29 @@ describe('MenuCarousel', () => {
 
     const region = screen.getByRole('region', { name: /избранное меню white cup/i })
     expect(region).toBeInTheDocument()
-    expect(within(region).getAllByRole('listitem')).toHaveLength(siteData.menuItems.length)
-    expect(within(region).getByRole('heading', { name: 'Капучино' })).toBeInTheDocument()
+    const cards = within(region).getAllByRole('listitem')
+    expect(cards).toHaveLength(5)
+    expect(
+      cards.map((card) => within(card).getByRole('heading').textContent),
+    ).toEqual([
+      'Капучино',
+      'Бейгл с лососем',
+      'Вафля с ягодами',
+      'Сырники',
+      'Малиновый чизкейк',
+    ])
+
+    const decorativePhotos = region.querySelectorAll<HTMLImageElement>(
+      'img[data-scene-card-image]',
+    )
+    expect(decorativePhotos).toHaveLength(5)
+    decorativePhotos.forEach((photo) => {
+      expect(photo).toHaveAttribute('alt', '')
+      expect(photo).toHaveAttribute('aria-hidden', 'true')
+      expect(photo.getAttribute('src')).toMatch(/^\/media\/menu-.+-768\.webp$/)
+      expect(photo.getAttribute('srcset')?.split(',')).toHaveLength(2)
+    })
+
     expect(within(region).getByText('270–320 ₽')).toBeInTheDocument()
     expect(within(region).getAllByText(/актуальная цена — в меню/i)).toHaveLength(siteData.menuItems.length - 1)
   })

@@ -362,6 +362,785 @@ h2 {
   }
 }
 
+/* Supplied menu-screen reference fidelity pass. -------------------------- */
+
+.scene.menu-scene {
+  min-height: 100dvh;
+  padding: 0;
+  background: var(--paper-light);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.menu-scene .section-frame__inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: none;
+  min-height: 100dvh;
+  padding: clamp(2.7rem, 2.75vw, 3.3rem) 0 clamp(1rem, 1.8vw, 2rem);
+}
+
+.menu-scene__backdrop {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  pointer-events: none;
+}
+
+.menu-scene .section-frame__heading {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  width: min(57%, 67rem);
+  max-width: none;
+  gap: clamp(0.6rem, 0.8vw, 0.95rem);
+  margin-left: 11.72%;
+}
+
+.menu-scene .scene-kicker {
+  display: block;
+  width: min(28ch, 100%);
+  color: var(--orange-action);
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.16vw, 1.35rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.25;
+  text-transform: none;
+}
+
+.menu-scene .section-frame__heading h2 {
+  max-width: none;
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(4.25rem, 4.4vw, 5.3rem);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+}
+
+.menu-scene__title-line {
+  display: block;
+  white-space: nowrap;
+}
+
+.menu-scene__accent {
+  position: relative;
+  display: inline-block;
+  color: var(--orange-action);
+}
+
+.menu-scene__accent::after {
+  position: absolute;
+  right: -0.4rem;
+  bottom: -0.15em;
+  left: 0.15rem;
+  height: 0.12rem;
+  background: var(--orange-action);
+  content: '';
+  transform: rotate(-1.4deg);
+  transform-origin: left center;
+}
+
+.menu-scene__intro {
+  position: relative;
+  z-index: 2;
+  width: min(28rem, 31%);
+  margin: clamp(1.25rem, 1.45vw, 1.75rem) 0 0 11.82%;
+}
+
+.menu-scene__intro .scene-copy {
+  max-width: none;
+  color: var(--ink-soft);
+  font-size: clamp(0.83rem, 0.88vw, 1.02rem);
+  line-height: 1.45;
+}
+
+.menu-scene__carousel {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  margin-top: clamp(1.05rem, 1.15vw, 1.4rem);
+}
+
+.menu-scene .menu-carousel {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  gap: 0;
+}
+
+.menu-scene .menu-carousel__toolbar {
+  position: relative;
+  display: flex;
+  min-height: clamp(2.4rem, 2.65vw, 3.2rem);
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-scene .menu-carousel__hint {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1.5vw, 1.8rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1;
+  text-transform: none;
+}
+
+.menu-scene .menu-carousel__hint::before,
+.menu-scene .menu-carousel__hint::after {
+  display: inline-block;
+  width: 0.65rem;
+  height: 0.12rem;
+  margin: 0 1rem 0.25rem;
+  background: var(--orange-action);
+  content: '';
+  transform: rotate(58deg);
+}
+
+.menu-scene .menu-carousel__hint::after {
+  transform: rotate(-58deg);
+}
+
+.menu-scene .menu-carousel__controls {
+  position: absolute;
+  z-index: 4;
+  top: calc(clamp(2.4rem, 2.65vw, 3.2rem) + 8.25vw - 1.5rem);
+  right: 3.25%;
+  left: 3.25%;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.menu-scene .menu-carousel__control {
+  width: 3.15rem;
+  min-width: 2.75rem;
+  height: 3.15rem;
+  min-height: 2.75rem;
+  border: 1px solid rgb(18 17 15 / 0.12);
+  background: rgb(255 255 255 / 0.94);
+  color: var(--ink);
+  box-shadow: 0 0.25rem 0.8rem rgb(55 35 20 / 0.08);
+  pointer-events: auto;
+}
+
+.menu-scene .menu-carousel__control:hover:not(:disabled) {
+  background: var(--orange-action);
+  border-color: var(--orange-action);
+  color: var(--paper-light);
+  transform: translateY(-1px);
+}
+
+.menu-scene .menu-carousel__viewport {
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
+  scroll-padding-inline: 7.65%;
+  scroll-snap-type: x mandatory;
+  scrollbar-color: transparent transparent;
+  scrollbar-width: none;
+}
+
+.menu-scene .menu-carousel__viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.menu-scene .menu-carousel__viewport:focus-visible {
+  outline: 3px solid var(--orange-action);
+  outline-offset: -3px;
+}
+
+.menu-scene .menu-carousel__track {
+  display: grid;
+  width: max-content;
+  grid-auto-columns: clamp(15.5rem, 16.55vw, 20rem);
+  grid-auto-flow: column;
+  gap: clamp(0.9rem, 1.18vw, 1.42rem);
+  margin: 0;
+  padding: 0.35rem 7.65% 0.55rem;
+  list-style: none;
+}
+
+.menu-scene .menu-card {
+  min-width: 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.menu-scene .menu-card article {
+  display: grid;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid rgb(76 65 55 / 0.32);
+  border-radius: clamp(0.85rem, 1vw, 1.2rem);
+  background: rgb(249 241 231 / 0.92);
+  box-shadow: 0 0.3rem 1rem rgb(55 35 20 / 0.035);
+  clip-path: none;
+  transition: border-color 180ms ease, transform 180ms ease;
+}
+
+.menu-scene .menu-card article:hover {
+  border-color: rgb(223 58 6 / 0.55);
+  transform: translateY(-2px);
+}
+
+.menu-scene .menu-card__art {
+  position: relative;
+  display: block;
+  min-height: 0;
+  aspect-ratio: 1.25 / 1;
+  overflow: hidden;
+  border-bottom: 1px solid rgb(76 65 55 / 0.22);
+  color: var(--orange-action);
+  isolation: isolate;
+}
+
+.menu-scene .menu-card__art::before,
+.menu-scene .menu-card__art::after {
+  content: none;
+}
+
+.menu-scene .menu-card__art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.menu-scene .menu-card article:hover .menu-card__art img {
+  transform: scale(1.025);
+}
+
+.menu-card__season {
+  position: absolute;
+  z-index: 2;
+  top: 0.65rem;
+  left: 0.65rem;
+  padding: 0.28rem 0.52rem 0.24rem;
+  border-radius: 999px;
+  background: var(--orange-action);
+  color: var(--paper-light);
+  font-size: 0.63rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.menu-card__favorite {
+  position: absolute;
+  z-index: 2;
+  right: 0.72rem;
+  bottom: 0.62rem;
+  width: 0.72rem;
+  height: 0.72rem;
+  border-right: 0.12rem solid var(--orange-action);
+  border-bottom: 0.12rem solid var(--orange-action);
+  transform: rotate(45deg);
+}
+
+.menu-card__favorite::before,
+.menu-card__favorite::after {
+  position: absolute;
+  width: 0.72rem;
+  height: 0.72rem;
+  border: 0.12rem solid var(--orange-action);
+  border-radius: 50%;
+  content: '';
+}
+
+.menu-card__favorite::before {
+  top: -0.42rem;
+  left: -0.12rem;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.menu-card__favorite::after {
+  top: -0.12rem;
+  left: -0.42rem;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.menu-scene .menu-card__body {
+  display: grid;
+  min-height: clamp(6rem, 6.5vw, 7.8rem);
+  align-content: start;
+  gap: clamp(0.28rem, 0.32vw, 0.4rem);
+  padding: clamp(0.65rem, 0.72vw, 0.86rem) clamp(0.72rem, 0.8vw, 0.95rem) clamp(0.72rem, 0.82vw, 1rem);
+}
+
+.menu-scene .menu-card h3 {
+  max-width: none;
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.18rem, 1.34vw, 1.62rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.menu-scene .menu-card__description {
+  display: -webkit-box;
+  max-width: none;
+  margin: 0;
+  overflow: hidden;
+  color: var(--ink-soft);
+  font-size: clamp(0.7rem, 0.76vw, 0.9rem);
+  line-height: 1.32;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.menu-scene .menu-card__price {
+  align-self: end;
+  margin: auto 0 0;
+  color: var(--orange-action);
+  font-family: var(--font-body);
+  font-size: clamp(0.68rem, 0.7vw, 0.83rem);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.menu-scene .menu-carousel__footer {
+  display: flex;
+  min-height: clamp(2.6rem, 3.15vw, 3.8rem);
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.menu-scene .menu-carousel__dots {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0;
+}
+
+.menu-scene .menu-carousel__dot {
+  position: relative;
+  display: inline-grid;
+  width: 2.75rem;
+  min-width: 2.75rem;
+  height: 2.75rem;
+  min-height: 2.75rem;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgb(80 75 70 / 0.48);
+  transform: none;
+}
+
+.menu-scene .menu-carousel__dot span {
+  display: block;
+  width: 0.62rem;
+  height: 0.62rem;
+  overflow: hidden;
+  border-radius: 50%;
+  background: currentColor;
+  color: transparent;
+  transition: width 180ms ease, height 180ms ease, background-color 180ms ease;
+}
+
+.menu-scene .menu-carousel__dot:hover,
+.menu-scene .menu-carousel__dot[aria-current='true'] {
+  background: transparent;
+  color: var(--orange-action);
+  transform: none;
+}
+
+.menu-scene .menu-carousel__dot[aria-current='true'] span {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.menu-scene .menu-carousel__position {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.menu-carousel__note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.22vw, 1.46rem);
+  line-height: 1.1;
+}
+
+.menu-carousel__note span:not(.menu-carousel__note-mark) {
+  text-decoration: underline;
+  text-decoration-color: var(--orange-action);
+  text-decoration-thickness: 0.11rem;
+  text-underline-offset: 0.28rem;
+}
+
+.menu-carousel__note-mark {
+  position: relative;
+  display: inline-block;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-right: 0.08rem solid var(--ink);
+  border-left: 0.08rem solid var(--ink);
+}
+
+.menu-carousel__note-mark::before,
+.menu-carousel__note-mark::after {
+  position: absolute;
+  inset: 0;
+  border-right: 0.08rem solid var(--ink);
+  border-left: 0.08rem solid var(--ink);
+  content: '';
+  transform: rotate(60deg);
+}
+
+.menu-carousel__note-mark::after {
+  transform: rotate(-60deg);
+}
+
+.menu-scene__source {
+  position: absolute;
+  z-index: 3;
+  right: 1.25rem;
+  bottom: 0.55rem;
+  display: grid;
+  width: min(24rem, 30%);
+  gap: 0.2rem;
+  padding: 0.45rem 0.6rem;
+  background: rgb(249 241 231 / 0.9);
+}
+
+.menu-scene__source p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: clamp(0.56rem, 0.58vw, 0.7rem);
+  line-height: 1.35;
+}
+
+.menu-scene__source .text-link {
+  min-height: 2rem;
+  font-size: clamp(0.58rem, 0.62vw, 0.74rem);
+}
+
+.menu-scene__skyline {
+  position: absolute;
+  z-index: 1;
+  bottom: 0.5rem;
+  left: 23.15%;
+  display: block;
+  width: 50.8%;
+  height: auto;
+  opacity: 0.86;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  transform: scaleY(0.34);
+  transform-origin: bottom center;
+}
+
+@media (min-width: 1680px) {
+  .menu-scene .section-frame__heading {
+    margin-left: 11.72%;
+  }
+
+  .menu-scene .menu-carousel__track {
+    grid-auto-columns: 16.55vw;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1679px) {
+  .menu-scene .section-frame__heading {
+    width: 60%;
+  }
+
+  .menu-scene .section-frame__heading h2 {
+    font-size: 4.35vw;
+  }
+
+  .menu-scene .menu-carousel__track {
+    grid-auto-columns: 16.55vw;
+  }
+}
+
+@media (max-width: 1023px) {
+  .scene.menu-scene {
+    min-height: auto;
+  }
+
+  .menu-scene .section-frame__inner {
+    min-height: auto;
+    padding: 6.5rem 0 2rem;
+  }
+
+  .menu-scene__backdrop {
+    height: 30rem;
+    object-fit: cover;
+    object-position: 82% top;
+    opacity: 0.32;
+  }
+
+  .menu-scene .section-frame__heading,
+  .menu-scene__intro {
+    width: min(100% - 3rem, 46rem);
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .menu-scene .section-frame__heading {
+    gap: 0.85rem;
+  }
+
+  .menu-scene .section-frame__heading h2 {
+    font-size: clamp(3.7rem, 7.8vw, 5.2rem);
+  }
+
+  .menu-scene__title-line {
+    white-space: normal;
+  }
+
+  .menu-scene__intro {
+    margin-top: 1.5rem;
+  }
+
+  .menu-scene__intro .scene-copy {
+    max-width: 34rem;
+    font-size: 0.98rem;
+  }
+
+  .menu-scene__carousel {
+    margin-top: 2.6rem;
+  }
+
+  .menu-scene .menu-carousel__toolbar {
+    min-height: 3.2rem;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+  }
+
+  .menu-scene .menu-carousel__controls {
+    position: static;
+    display: flex;
+    gap: 0.5rem;
+    pointer-events: auto;
+  }
+
+  .menu-scene .menu-carousel__track {
+    grid-auto-columns: minmax(18rem, 42vw);
+    gap: 1rem;
+    padding-inline: 1.5rem;
+  }
+
+  .menu-scene .menu-carousel__viewport {
+    margin-top: 0.7rem;
+    scroll-padding-inline: 1.5rem;
+  }
+
+  .menu-scene .menu-card__body {
+    min-height: 7.4rem;
+  }
+
+  .menu-scene .menu-card h3 {
+    font-size: 1.48rem;
+  }
+
+  .menu-scene .menu-card__description {
+    font-size: 0.82rem;
+  }
+
+  .menu-scene .menu-card__price {
+    font-size: 0.76rem;
+  }
+
+  .menu-carousel__note {
+    padding: 0 1.5rem;
+    text-align: center;
+  }
+
+  .menu-scene__source {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: min(100% - 3rem, 42rem);
+    margin: 1.3rem auto 0;
+    padding: 1rem 0 0;
+    border-top: 1px solid rgb(76 65 55 / 0.25);
+    background: transparent;
+  }
+
+  .menu-scene__source p {
+    font-size: 0.72rem;
+  }
+
+  .menu-scene__source .text-link {
+    font-size: 0.76rem;
+  }
+
+  .menu-scene__skyline {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    width: min(90%, 42rem);
+    margin: 1.25rem auto 0;
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu-scene .section-frame__inner {
+    padding: 5.8rem 0 1.5rem;
+  }
+
+  .menu-scene__backdrop {
+    height: 25rem;
+    object-position: 84% top;
+    opacity: 0.24;
+  }
+
+  .menu-scene .section-frame__heading,
+  .menu-scene__intro {
+    width: calc(100% - 2.5rem);
+  }
+
+  .menu-scene .scene-kicker {
+    width: min(25ch, 100%);
+    font-size: 1rem;
+  }
+
+  .menu-scene .section-frame__heading h2 {
+    font-size: clamp(3rem, 13.5vw, 4.05rem);
+    line-height: 0.94;
+  }
+
+  .menu-scene__intro {
+    margin-top: 1.3rem;
+  }
+
+  .menu-scene__intro .scene-copy {
+    font-size: 0.92rem;
+  }
+
+  .menu-scene__carousel {
+    margin-top: 2.15rem;
+  }
+
+  .menu-scene .menu-carousel__toolbar {
+    min-height: 3rem;
+    padding-inline: 1.25rem;
+  }
+
+  .menu-scene .menu-carousel__hint {
+    max-width: 9ch;
+    font-size: 1.18rem;
+    line-height: 1.08;
+  }
+
+  .menu-scene .menu-carousel__hint::before,
+  .menu-scene .menu-carousel__hint::after {
+    display: none;
+  }
+
+  .menu-scene .menu-carousel__control {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .menu-scene .menu-carousel__viewport {
+    scroll-padding-inline: 1.25rem;
+  }
+
+  .menu-scene .menu-carousel__track {
+    grid-auto-columns: minmax(16rem, 82vw);
+    gap: 0.85rem;
+    padding-inline: 1.25rem;
+  }
+
+  .menu-scene .menu-card__body {
+    min-height: 7.1rem;
+    padding: 0.72rem 0.78rem 0.82rem;
+  }
+
+  .menu-scene .menu-carousel__footer {
+    min-height: 3.2rem;
+  }
+
+  .menu-carousel__note {
+    gap: 0.55rem;
+    padding-inline: 1.25rem;
+    font-size: 0.98rem;
+  }
+
+  .menu-scene__source {
+    width: calc(100% - 2.5rem);
+  }
+
+  .menu-scene__skyline {
+    width: calc(100% - 2.5rem);
+  }
+}
+
+@media (max-width: 340px) {
+  .menu-scene .section-frame__inner {
+    padding-top: 5.35rem;
+  }
+
+  .menu-scene .section-frame__heading h2 {
+    font-size: 2.82rem;
+  }
+
+  .menu-scene__intro .scene-copy {
+    font-size: 0.86rem;
+  }
+
+  .menu-scene .menu-carousel__track {
+    grid-auto-columns: minmax(15.5rem, 80vw);
+    padding-inline: 1rem;
+  }
+
+  .menu-scene .menu-carousel__toolbar {
+    padding-inline: 1rem;
+  }
+
+  .menu-carousel__note {
+    padding-inline: 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-scene .menu-carousel__viewport {
+    scroll-behavior: auto;
+  }
+
+  .menu-scene .menu-card article,
+  .menu-scene .menu-card__art img,
+  .menu-scene .menu-carousel__dot span {
+    transition: none;
+  }
+}
+
 @media (max-width: 720px) {
   .site-nav__inner {
     min-height: 4.25rem;

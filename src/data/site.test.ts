@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
+import * as mediaRegistry from './media'
+
 import {
   documentarySceneMedia,
   media,
@@ -58,5 +60,33 @@ describe('White Cup site data', () => {
     expect(new Set(media.decorative.map((asset) => asset.provenanceKind))).toEqual(
       new Set(allowedProvenanceKinds),
     )
+  })
+
+  it('keeps the generated menu photography in a production decorative manifest', () => {
+    const manifest = (
+      mediaRegistry as unknown as {
+        menuSceneLayerManifest?: {
+          backdrop: { asset: { kind: string; provenanceKind: string }; src: string; srcSet?: string }
+          cards: Record<
+            string,
+            { asset: { kind: string; provenanceKind: string }; src: string; srcSet?: string }
+          >
+        }
+      }
+    ).menuSceneLayerManifest
+
+    expect(manifest).toBeDefined()
+    expect(manifest?.backdrop.asset.kind).toBe('decorative')
+    expect(manifest?.backdrop.asset.provenanceKind).toBe('decorative-reference-edit')
+    expect(manifest?.backdrop.src).toBe('/media/menu-clean-base-1672.webp')
+    expect(manifest?.backdrop.srcSet?.split(',')).toHaveLength(2)
+
+    const cards = Object.values(manifest?.cards ?? {})
+    expect(cards).toHaveLength(5)
+    expect(cards.every((entry) => entry.asset.kind === 'decorative')).toBe(true)
+    expect(cards.every((entry) => entry.asset.provenanceKind === 'decorative-reference-edit')).toBe(true)
+    expect(cards.every((entry) => entry.src.endsWith('-768.webp'))).toBe(true)
+    expect(cards.every((entry) => entry.srcSet?.split(',').length === 2)).toBe(true)
+    expect(siteData.menuItems.every((item) => item.imageId === undefined)).toBe(true)
   })
 })

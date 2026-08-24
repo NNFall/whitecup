@@ -120,6 +120,42 @@ describe('White Cup story scenes', () => {
     expect(hero.querySelector('.hero-scene__pin')).toHaveAttribute('aria-hidden', 'true')
   })
 
+  it('matches the supplied menu scene copy and semantic card contract', () => {
+    render(<App />)
+
+    const menu = screen.getByRole('region', {
+      name: /завтраки, ради которых хочется заглянуть/i,
+    })
+    const heading = within(menu).getByRole('heading', { level: 2 })
+
+    expect(within(menu).getByText('Для утренних ритуалов, встреч и спокойных пауз')).toBeInTheDocument()
+    expect(heading).toHaveTextContent('Завтраки, ради которых хочется заглянуть')
+    expect(heading.querySelector('.menu-scene__accent')).toHaveTextContent('заглянуть')
+    expect(within(menu).getByText(
+      'White Cup — это ваш уютный уголок в центре Самары. Здесь удобно взять кофе с собой, провести деловую встречу, перевести дух между делами или неспешно насладиться вечером в приятной атмосфере.',
+    )).toBeInTheDocument()
+    expect(within(menu).getByText('Популярное и сезонное')).toBeInTheDocument()
+    expect(menu.querySelector('.menu-carousel__note')).toHaveTextContent(
+      'Это лишь часть меню — листайте, чтобы увидеть больше!',
+    )
+    expect(within(menu).getByText(/декоративные.*по референсу/i)).toBeInTheDocument()
+    expect(within(menu).getByRole('link', { name: /открыть полное меню в яндекс картах/i })).toHaveAttribute(
+      'href',
+      expect.stringContaining('/menu/'),
+    )
+
+    expect(menu.querySelector('.menu-scene__backdrop')).toHaveAttribute(
+      'src',
+      '/media/menu-clean-base-1672.webp',
+    )
+    expect(menu.querySelector('.menu-scene__skyline')).toHaveAttribute(
+      'src',
+      '/media/hero-skyline-exact.png',
+    )
+    expect(menu.querySelectorAll('[data-scene-card-image]')).toHaveLength(5)
+    expect(menu.innerHTML).not.toMatch(/ChatGPT Image|01_44_54 \(2\)|menu-clean-base\.png/i)
+  })
+
   it('defers the documentary hero fallback until the clean backdrop fails', () => {
     render(<App />)
 

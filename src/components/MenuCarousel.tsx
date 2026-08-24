@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react'
 
+import { menuSceneLayerManifest, type MenuCardMediaId } from '../data/media'
 import type { MenuItem } from '../data/site'
 
 export interface MenuCarouselProps {
@@ -85,7 +86,7 @@ export function MenuCarousel({ items }: MenuCarouselProps) {
   return (
     <div className="menu-carousel" role="region" aria-roledescription="carousel" aria-label="Избранное меню White Cup">
       <div className="menu-carousel__toolbar">
-        <p className="menu-carousel__hint">Листайте, чтобы выбрать свой ритм</p>
+        <p className="menu-carousel__hint">Популярное и сезонное</p>
         <div className="menu-carousel__controls" role="group" aria-label="Навигация по меню">
           <button
             className="menu-carousel__control"
@@ -130,12 +131,22 @@ export function MenuCarousel({ items }: MenuCarouselProps) {
               data-menu-index={index}
             >
               <article aria-labelledby={`menu-card-${item.id}`}>
-                <div className={`menu-card__art menu-card__art--${index % 3}`} aria-hidden="true">
-                  <span className="menu-card__art-mark">{String(index + 1).padStart(2, '0')}</span>
-                  <span className="menu-card__art-line" />
+                <div className="menu-card__art">
+                  <img
+                    src={menuSceneLayerManifest.cards[item.id as MenuCardMediaId].src}
+                    srcSet={menuSceneLayerManifest.cards[item.id as MenuCardMediaId].srcSet}
+                    sizes={menuSceneLayerManifest.cards[item.id as MenuCardMediaId].sizes}
+                    alt=""
+                    aria-hidden="true"
+                    data-scene-card-image=""
+                    data-media-kind={menuSceneLayerManifest.cards[item.id as MenuCardMediaId].asset.provenanceKind}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  {item.id === 'cheesecake' ? <span className="menu-card__season">Сезон</span> : null}
+                  <span className="menu-card__favorite" aria-hidden="true" />
                 </div>
                 <div className="menu-card__body">
-                  <p className="menu-card__eyebrow">{String(index + 1).padStart(2, '0')} / White Cup</p>
                   <h3 id={`menu-card-${item.id}`}>{item.name}</h3>
                   <p className="menu-card__description">{item.description}</p>
                   <p className="menu-card__price" aria-label={item.price ? `Цена: ${item.price}` : 'Цена уточняется'}>
@@ -167,6 +178,10 @@ export function MenuCarousel({ items }: MenuCarouselProps) {
           {String(activeIndex + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}
         </p>
       </div>
+      <p className="menu-carousel__note">
+        <span className="menu-carousel__note-mark" aria-hidden="true" />
+        Это лишь часть меню — <span>листайте</span>, чтобы увидеть больше!
+      </p>
     </div>
   )
 }

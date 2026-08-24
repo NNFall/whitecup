@@ -2,7 +2,7 @@ import type { HTMLAttributes, ReactNode } from 'react'
 
 export interface SectionFrameProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> {
   id: string
-  title: string
+  title: ReactNode
   kicker?: string
   children: ReactNode
 }
