@@ -786,6 +786,17 @@ export const heroLogoBadge: DecorativeMediaProvenance = {
     'Точно извлечённый знак White Cup из предоставленного первого экранного референса с прозрачным paper-background; используется как декоративный header-asset, не является документальной фотографией.',
 }
 
+export const menuLogoReferenceCrop: DecorativeMediaProvenance = {
+  id: 'menu-logo-reference-crop',
+  src: '/media/menu-logo-reference-crop.png',
+  alt: 'White Cup',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-extract',
+  sourceLabel: 'Supplied menu reference crop',
+  provenance:
+    'Точный компактный вертикальный знак White Cup из предоставленного menu-референса; paper-поле сохранено, чтобы исходная графика и подпись не перерисовывались.',
+}
+
 export const heroSkylineLine: DecorativeMediaProvenance = {
   id: 'hero-skyline-line',
   src: '/media/hero-skyline-line.png',
@@ -807,6 +818,7 @@ export const decorativeMedia: DecorativeMediaProvenance[] = [
   heroFoodCutout,
   heroCleanPanel,
   heroLogoBadge,
+  menuLogoReferenceCrop,
   heroSkylineLine,
   menuCleanBaseReferenceEdit,
   ...Object.values(menuCardReferenceEdits),

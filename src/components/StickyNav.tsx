@@ -3,8 +3,31 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { BrandMark } from './BrandMark'
 
 interface NavItem {
-  href: string
+  href: `#${SceneId}`
   label: string
+}
+
+export const sceneIds = [
+  'hero',
+  'menu',
+  'about',
+  'visit',
+  'events',
+  'locations',
+  'contact',
+] as const
+
+export type SceneId = (typeof sceneIds)[number]
+export type NavProfile = 'full' | 'compact-brand' | 'brand-only' | 'hidden' | 'utility'
+
+const navProfileByScene: Record<SceneId, NavProfile> = {
+  hero: 'full',
+  menu: 'compact-brand',
+  about: 'brand-only',
+  visit: 'hidden',
+  events: 'full',
+  locations: 'full',
+  contact: 'utility',
 }
 
 const navItems: NavItem[] = [
@@ -15,17 +38,83 @@ const navItems: NavItem[] = [
   { href: '#contact', label: 'Контакты' },
 ]
 
-const focusableSelector = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+const focusableSelector = '.mobile-nav__panel a[href], .mobile-nav__panel button:not([disabled])'
+
+export function getNavProfile(scene: SceneId): NavProfile {
+  return navProfileByScene[scene]
+}
+
+function sceneFromHash(hash: string): SceneId | undefined {
+  const candidate = hash.replace(/^#/, '')
+  return sceneIds.find((scene) => scene === candidate)
+}
+
+function sceneFromViewport(): SceneId | undefined {
+  const documentHeight = Math.max(
+    document.documentElement.scrollHeight,
+    document.body.scrollHeight,
+  )
+
+  if (
+    documentHeight > window.innerHeight &&
+    window.scrollY + window.innerHeight >= documentHeight - 2
+  ) {
+    return 'contact'
+  }
+
+  const anchor = window.innerHeight * 0.32
+  const scenes = sceneIds
+    .map((id) => document.getElementById(id))
+    .filter((scene): scene is HTMLElement => scene !== null)
+
+  return (
+    scenes.find((scene) => {
+      const rect = scene.getBoundingClientRect()
+      return rect.top <= anchor && rect.bottom > anchor
+    })?.id as SceneId | undefined
+  )
+}
+
+function currentScene(): SceneId {
+  return sceneFromHash(window.location.hash) ?? sceneFromViewport() ?? 'hero'
+}
 
 export function StickyNav() {
   const [isOpen, setIsOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
+  const [activeScene, setActiveScene] = useState<SceneId>(() => currentScene())
   const triggerRef = useRef<HTMLButtonElement>(null)
   const dialogRef = useRef<HTMLDivElement>(null)
+  const profile = getNavProfile(activeScene)
+  const brandVariant = profile === 'compact-brand' ? 'menu' : 'badge'
+  const showDesktopLinks = profile === 'full'
 
   const closeMenu = useCallback(() => {
     setIsOpen(false)
     triggerRef.current?.focus()
+  }, [])
+
+  useEffect(() => {
+    const updateFromViewport = () => {
+      const scene = sceneFromViewport()
+      if (scene) {
+        setActiveScene(scene)
+      }
+    }
+
+    const updateFromHash = () => {
+      setActiveScene(sceneFromHash(window.location.hash) ?? sceneFromViewport() ?? 'hero')
+    }
+
+    updateFromHash()
+    window.addEventListener('scroll', updateFromViewport, { passive: true })
+    window.addEventListener('resize', updateFromViewport)
+    window.addEventListener('hashchange', updateFromHash)
+
+    return () => {
+      window.removeEventListener('scroll', updateFromViewport)
+      window.removeEventListener('resize', updateFromViewport)
+      window.removeEventListener('hashchange', updateFromHash)
+    }
   }, [])
 
   useEffect(() => {
@@ -66,12 +155,7 @@ export function StickyNav() {
     }
 
     document.addEventListener('keydown', handleKeyDown)
-
-    // The backdrop is intentionally focusable for mouse/touch dismissal, but
-    // opening the menu should place keyboard users on the first useful page
-    // destination rather than on a close-only affordance.
-    const firstFocusable = dialogRef.current?.querySelector<HTMLElement>('.mobile-nav__panel a[href]')
-    firstFocusable?.focus()
+    dialogRef.current?.querySelector<HTMLElement>('.mobile-nav__panel a[href]')?.focus()
 
     return () => {
       document.body.style.overflow = previousOverflow
@@ -79,33 +163,43 @@ export function StickyNav() {
     }
   }, [closeMenu, isOpen])
 
-  useEffect(() => {
-    const updateScrollState = () => setIsScrolled(window.scrollY > 24)
-    updateScrollState()
-    window.addEventListener('scroll', updateScrollState, { passive: true })
-    return () => window.removeEventListener('scroll', updateScrollState)
-  }, [])
-
   const handleMobileLinkClick = () => {
     closeMenu()
   }
 
+  const currentFor = (href: NavItem['href']) =>
+    href === `#${activeScene}` ? ('location' as const) : undefined
+
   return (
-    <header className={`site-nav${isScrolled ? ' site-nav--scrolled' : ' site-nav--hero'}`} data-menu-open={isOpen}>
+    <header
+      className="site-nav"
+      data-active-scene={activeScene}
+      data-menu-open={isOpen}
+      data-nav-profile={profile}
+    >
       <div className="site-nav__inner">
-        <a className="site-nav__brand" href="#hero" aria-label="White Cup — на главную">
-          <BrandMark variant="badge" />
+        <a
+          className="site-nav__brand"
+          href="#hero"
+          aria-current={activeScene === 'hero' ? 'location' : undefined}
+          aria-label="White Cup — на главную"
+        >
+          <BrandMark variant={brandVariant} />
         </a>
 
-        <nav className="site-nav__desktop" aria-label="Основная навигация">
-          <ul>
-            {navItems.map((item) => (
-              <li key={item.href}>
-                <a href={item.href}>{item.label}</a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        {showDesktopLinks ? (
+          <nav className="site-nav__desktop" aria-label="Основная навигация">
+            <ul>
+              {navItems.map((item) => (
+                <li key={item.href}>
+                  <a href={item.href} aria-current={currentFor(item.href)}>
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ) : null}
 
         <button
           ref={triggerRef}
@@ -132,14 +226,24 @@ export function StickyNav() {
         aria-label="Меню сайта"
         hidden={!isOpen}
       >
-        <button className="mobile-nav__backdrop" type="button" aria-label="Закрыть меню" onClick={closeMenu} />
+        <button
+          className="mobile-nav__backdrop"
+          type="button"
+          tabIndex={-1}
+          aria-label="Закрыть меню"
+          onClick={closeMenu}
+        />
         <div className="mobile-nav__panel">
           <p className="mobile-nav__kicker">White Cup / Самара</p>
           <nav aria-label="Навигация по странице">
             <ul>
               {navItems.map((item) => (
                 <li key={item.href}>
-                  <a href={item.href} onClick={handleMobileLinkClick}>
+                  <a
+                    href={item.href}
+                    aria-current={currentFor(item.href)}
+                    onClick={handleMobileLinkClick}
+                  >
                     {item.label}
                   </a>
                 </li>

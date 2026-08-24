@@ -1,14 +1,28 @@
 import { useId } from 'react'
 
-import { heroLogoBadge } from '../data/media'
+import { heroLogoBadge, menuLogoReferenceCrop } from '../data/media'
 
 interface BrandMarkProps {
-  variant?: 'default' | 'badge'
+  variant?: 'default' | 'badge' | 'menu'
 }
 
 export function BrandMark({ variant = 'default' }: BrandMarkProps) {
   const titleId = useId()
   const isBadge = variant === 'badge'
+
+  if (variant === 'menu') {
+    return (
+      <span className="brand-mark brand-mark--menu" data-media-kind="decorative-reference">
+        <img
+          className="brand-mark__icon"
+          src={menuLogoReferenceCrop.src}
+          alt={menuLogoReferenceCrop.alt}
+          data-media-kind="decorative-reference"
+          draggable="false"
+        />
+      </span>
+    )
+  }
 
   if (isBadge) {
     return (
