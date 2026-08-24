@@ -1,3 +1,27 @@
+@font-face {
+  font-family: 'White Cup Display';
+  src: url('/fonts/pangolin-cyrillic.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'White Cup Hand';
+  src: url('/fonts/white-cup-hand-cyrillic.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'White Cup Body';
+  src: url('/fonts/golos-text-cyrillic-variable.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+}
+
 :root {
   --paper: #f9f1e7;
   --paper-light: #f9f1e7;
@@ -8,9 +32,8 @@
   --line: #b6aea3;
   --map-water: #d8e2e5;
 
-  /* The first names mirror the supplied references; local fallbacks keep the
-     landing deterministic offline instead of loading a blocking font request. */
-  --font-display: 'Pangolin', 'Neucha', 'Segoe Print', 'Comic Sans MS', cursive;
-  --font-script: 'Marck Script', 'Caveat', 'Segoe Script', cursive;
-  --font-body: 'Golos Text', 'Manrope', 'Segoe UI', system-ui, sans-serif;
+  /* Bundled subsets make the reference typography deterministic offline. */
+  --font-display: 'White Cup Display', 'Pangolin', ui-rounded, cursive;
+  --font-script: 'White Cup Hand', 'Marck Script', 'Caveat', cursive;
+  --font-body: 'White Cup Body', 'Golos Text', 'Manrope', system-ui, sans-serif;
 }
