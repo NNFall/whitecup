@@ -19,7 +19,7 @@
 - Create: `src/components/SceneLayer.tsx`
 - Create: `src/components/SceneLayer.test.tsx`
 
-- [ ] **Step 1: Write failing provenance and layer tests**
+- [x] **Step 1: Write failing provenance and layer tests**
 
 ```tsx
 expect(hero.querySelector('[data-layer="backdrop"]')).toHaveAttribute('data-media-kind', 'decorative-reference-edit')
@@ -28,13 +28,13 @@ expect(document.querySelector('[src*="3679ac8b"]')).not.toBeInTheDocument()
 expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Завтраки')
 ```
 
-- [ ] **Step 2: Run the focused tests and confirm RED**
+- [x] **Step 2: Run the focused tests and confirm RED**
 
 Run: `npm.cmd test -- --run src/components/SceneLayer.test.tsx src/sections/SceneSections.test.tsx src/data/site.test.ts`
 
 Expected: failures for the missing `SceneLayer` component and new media kinds.
 
-- [ ] **Step 3: Add the typed layer component and media kinds**
+- [x] **Step 3: Add the typed layer component and media kinds**
 
 ```tsx
 type SceneLayerProps = React.ImgHTMLAttributes<HTMLImageElement> & {
@@ -47,13 +47,13 @@ export function SceneLayer({ layer, mediaKind, alt = '', ...props }: SceneLayerP
 }
 ```
 
-- [ ] **Step 4: Run the focused tests and confirm GREEN**
+- [x] **Step 4: Run the focused tests and confirm GREEN**
 
 Run: `npm.cmd test -- --run src/components/SceneLayer.test.tsx src/sections/SceneSections.test.tsx src/data/site.test.ts`
 
 Expected: all selected tests pass.
 
-- [ ] **Step 5: Commit the contract**
+- [x] **Step 5: Commit the contract**
 
 Run: `git add src/components/SceneLayer.tsx src/components/SceneLayer.test.tsx src/data/media.ts src/data/site.test.ts src/sections/SceneSections.test.tsx && git commit -m "test: define layered scene media contract"`
 
@@ -68,7 +68,7 @@ Run: `git add src/components/SceneLayer.tsx src/components/SceneLayer.test.tsx s
 - Use: `public/media/hero-bagel-cutout-poc.png`
 - Use: `public/media/hero-coffee-cutout-poc.png`
 
-- [ ] **Step 1: Extend the hero test to require clean backdrop, two foreground layers, exact logo, doodles and skyline**
+- [x] **Step 1: Extend the hero test to require clean backdrop, two foreground layers, exact logo, doodles and skyline**
 
 ```tsx
 expect(hero.querySelector('.hero-backdrop')).toHaveAttribute('src', '/media/hero-clean-base-edit-poc.png')
@@ -77,13 +77,13 @@ expect(hero.querySelector('.hero-coffee')).toHaveAttribute('src', '/media/hero-c
 expect(hero.querySelector('.hero-logo')).toHaveAttribute('src', '/media/hero-logo-reference.png')
 ```
 
-- [ ] **Step 2: Run the hero test and confirm RED**
+- [x] **Step 2: Run the hero test and confirm RED**
 
 Run: `npm.cmd test -- --run src/sections/SceneSections.test.tsx`
 
 Expected: missing clean backdrop and foreground layers.
 
-- [ ] **Step 3: Render independent `SceneLayer` nodes and remove `object-fit: fill` from hero photography**
+- [x] **Step 3: Render independent `SceneLayer` nodes and remove `object-fit: fill` from hero photography**
 
 ```tsx
 <SceneLayer className="hero-backdrop" layer="backdrop" mediaKind="decorative-reference-edit" src={heroCleanBase.src} />
@@ -93,17 +93,17 @@ Expected: missing clean backdrop and foreground layers.
 
 Use `object-fit: cover` for `.hero-backdrop`; use scene-local percentage coordinates and intrinsic aspect ratios for `.hero-bagel` and `.hero-coffee`.
 
-- [ ] **Step 4: Add independent 1920, 1536, 390 and 320 coordinate sets**
+- [x] **Step 4: Add independent 1920, 1536, 390 and 320 coordinate sets**
 
 Desktop coordinates reproduce the supplied 1672×941 reference. Mid-desktop changes crop/foreground offsets without scaling `.hero-reference-frame`. Mobile stacks content and visual media and hides only nonessential doodles.
 
-- [ ] **Step 5: Run hero tests and build**
+- [x] **Step 5: Run hero tests and build**
 
 Run: `npm.cmd test -- --run src/sections/SceneSections.test.tsx && npm.cmd run build`
 
 Expected: tests and production build pass.
 
-- [ ] **Step 6: Commit the hero reconstruction**
+- [x] **Step 6: Commit the hero reconstruction**
 
 Run: `git add src/sections/HeroSection.tsx src/styles/global.css src/data/media.ts src/sections/SceneSections.test.tsx public/media/hero-clean-base-edit-poc.png public/media/hero-bagel-cutout-poc.png public/media/hero-coffee-cutout-poc.png && git commit -m "feat: decompose hero into responsive visual layers"`
 
