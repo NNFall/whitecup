@@ -5,6 +5,9 @@ import { StaticMapCard } from '../components/StaticMapCard'
 import { locationsSceneLayerManifest } from '../data/media'
 import { siteData, type Location } from '../data/site'
 
+const transparentMobileLayer =
+  'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='
+
 function getDisplayAddress(location: Location) {
   return location.id === 'tsekh'
     ? `Станкозавод, ${location.address}`
@@ -30,7 +33,7 @@ export function LocationsSection() {
       id="locations"
       title={
         <>
-          Как <span className="locations-scene__title-accent">нас найти</span>
+          Как нас <span className="locations-scene__title-accent">найти</span>
         </>
       }
       className="locations-scene"
@@ -62,24 +65,15 @@ export function LocationsSection() {
           loading="lazy"
           decoding="async"
         />
-        <SceneLayer
-          {...locationsSceneLayerManifest.cardIcons}
-          className="locations-scene__card-icons"
-          loading="lazy"
-          decoding="async"
-        />
-        <SceneLayer
-          {...locationsSceneLayerManifest.cardIcons}
-          className="locations-scene__action-icons"
-          loading="lazy"
-          decoding="async"
-        />
-        <SceneLayer
-          {...locationsSceneLayerManifest.cardIcons}
-          className="locations-scene__contact-icons"
-          loading="lazy"
-          decoding="async"
-        />
+        <picture className="locations-scene__card-icons-picture" aria-hidden="true">
+          <source media="(max-width: 1023px)" srcSet={transparentMobileLayer} />
+          <SceneLayer
+            {...locationsSceneLayerManifest.cardIcons}
+            className="locations-scene__card-icons"
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
       </div>
 
       <Reveal className="locations-scene__intro">
@@ -111,7 +105,6 @@ export function LocationsSection() {
                     <LocationHeading location={location} />
                   </h3>
                   <address>
-                    <span className="location-card__meta-label">{displayAddress}. </span>
                     <p>{location.context}</p>
                   </address>
                 </div>

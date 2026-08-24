@@ -639,6 +639,7 @@ describe('White Cup story scenes', () => {
     const articles = within(locations).getAllByRole('article')
 
     expect(heading).toHaveTextContent('Как нас найти')
+    expect(heading.querySelector('.locations-scene__title-accent')).toHaveTextContent('найти')
     expect(locations.querySelector('.scene-kicker')).not.toBeInTheDocument()
     expect(locations.querySelector('.locations-scene__intro p')).toHaveTextContent(
       'Мы в самом сердце Самары. Две уютные кофейни с ароматным кофе, свежими завтраками и тёплой атмосферой каждый день.',
@@ -655,6 +656,8 @@ describe('White Cup story scenes', () => {
     expect(articles[1]).toContainHTML('<address')
     expect(articles[0].querySelector('address h3')).not.toBeInTheDocument()
     expect(articles[1].querySelector('address h3')).not.toBeInTheDocument()
+    expect(articles[0].querySelector('address .location-card__meta-label')).not.toBeInTheDocument()
+    expect(articles[1].querySelector('address .location-card__meta-label')).not.toBeInTheDocument()
     expect(within(articles[0]).getByRole('heading', { level: 3 })).toHaveTextContent(
       'Красноармейская, 15',
     )
@@ -693,8 +696,6 @@ describe('White Cup story scenes', () => {
       ['.locations-scene__interior', '/media/locations-interior-base-1672w.webp', 'foreground'],
       ['.locations-scene__doodles', '/media/locations-doodles-reference-edit-1672.webp', 'decoration'],
       ['.locations-scene__card-icons', '/media/locations-card-icons-reference-edit-1672.webp', 'decoration'],
-      ['.locations-scene__action-icons', '/media/locations-card-icons-reference-edit-1672.webp', 'decoration'],
-      ['.locations-scene__contact-icons', '/media/locations-card-icons-reference-edit-1672.webp', 'decoration'],
     ] as const
 
     expectedLayers.forEach(([selector, src, layer]) => {
@@ -707,6 +708,14 @@ describe('White Cup story scenes', () => {
       expect(image).toHaveAttribute('srcset')
       expect(image).toHaveAttribute('sizes')
     })
+
+    expect(locations.querySelectorAll('[src="/media/locations-card-icons-reference-edit-1672.webp"]')).toHaveLength(1)
+    expect(locations.querySelector('.locations-scene__card-icons-picture source')).toHaveAttribute(
+      'media',
+      '(max-width: 1023px)',
+    )
+    expect(locations.querySelector('.locations-scene__action-icons')).not.toBeInTheDocument()
+    expect(locations.querySelector('.locations-scene__contact-icons')).not.toBeInTheDocument()
 
     expect(locations.querySelector('.organic-photo')).not.toBeInTheDocument()
     expect(locations.innerHTML).not.toMatch(
@@ -768,6 +777,28 @@ describe('White Cup story scenes', () => {
     )
     expect(globalCss).toMatch(
       /@media \(max-width: 1023px\)[\s\S]*?\.locations-scene__map-image\s*{[^}]*position:\s*absolute;/,
+    )
+  })
+
+  it('locks the reviewed Locations convergence geometry and hit targets', () => {
+    expect(globalCss).toMatch(/\.locations-scene__interior\s*\{[^}]*top:\s*51%;[^}]*height:\s*49%;/)
+    expect(globalCss).toMatch(/\.locations-scene__map-city\s*\{[^}]*top:\s*56%;/)
+    expect(globalCss).toMatch(
+      /\.locations-scene__map-label\[data-map-location='modern-museum'\]\s*\{[^}]*top:\s*39\.5%;/,
+    )
+    expect(globalCss).toMatch(
+      /\.locations-scene__map-label\[data-map-location='tsekh'\]\s*\{[^}]*top:\s*78%;/,
+    )
+    expect(globalCss).toMatch(
+      /\.locations-scene__card-icons\s*\{[^}]*position:\s*absolute;[^}]*inset:\s*0;[^}]*width:\s*100%;[^}]*height:\s*100%;/,
+    )
+    expect(globalCss).not.toContain('.locations-scene__action-icons')
+    expect(globalCss).not.toContain('.locations-scene__contact-icons')
+    expect(globalCss).toMatch(
+      /\.location-card,\s*\.location-card\[data-location-card='tsekh'\]\s*\{[^}]*min-height:\s*35\.7vh;/,
+    )
+    expect(globalCss).toMatch(
+      /\.location-card__phone::before\s*\{[^}]*height:\s*2\.75rem;/,
     )
   })
 
