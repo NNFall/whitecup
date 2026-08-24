@@ -718,16 +718,30 @@ const locationsDoodlesReferenceEdit: DecorativeMediaProvenance = {
     'Прозрачный полноэкранный слой с пинами, птицами, облаками, чашками, маршрутом и самарским skyline из предоставленного Locations-референса. Production использует alpha-preserving responsive WebP; слой декоративный.',
 }
 
-const locationsCardIconsReferenceEdit: DecorativeMediaProvenance = {
-  id: 'locations-card-icons-reference-edit',
-  src: '/media/locations-card-icons-reference-edit-1672.webp',
-  alt: '',
-  kind: 'decorative',
-  provenanceKind: 'decorative-reference-edit',
-  sourceLabel: 'Supplied Locations reference + Remove Background Local',
-  provenance:
-    'Прозрачный полноэкранный слой карточных пинов, часов, телефонов, стрелок и контактных знаков из предоставленного Locations-референса. Production использует alpha-preserving responsive WebP; слой декоративный.',
+type LocationCardIconName = 'pin' | 'clock' | 'phone' | 'arrow' | 'chat'
+
+function defineLocationCardIcon(
+  name: LocationCardIconName,
+  description: string,
+): DecorativeMediaProvenance {
+  return {
+    id: `locations-icon-${name}`,
+    src: `/media/locations-icon-${name}.webp`,
+    alt: '',
+    kind: 'decorative',
+    provenanceKind: 'decorative-reference-edit',
+    sourceLabel: 'Supplied Locations reference + Remove Background Local crop',
+    provenance: `${description} точно извлечён из предоставленного Locations-референса, очищен от фона и сохранён как прозрачный WebP. Ассет декоративный.`,
+  }
 }
+
+export const locationsCardIconMedia = {
+  pin: defineLocationCardIcon('pin', 'Пин адреса'),
+  clock: defineLocationCardIcon('clock', 'Знак часов работы'),
+  phone: defineLocationCardIcon('phone', 'Знак телефона'),
+  arrow: defineLocationCardIcon('arrow', 'Стрелка маршрута'),
+  chat: defineLocationCardIcon('chat', 'Знак связи'),
+} satisfies Record<LocationCardIconName, DecorativeMediaProvenance>
 
 export const locationsSceneLayerManifest = {
   map: defineSceneLayer('backdrop', locationsMapReferenceEdit, {
@@ -743,11 +757,6 @@ export const locationsSceneLayerManifest = {
   decoration: defineSceneLayer('decoration', locationsDoodlesReferenceEdit, {
     srcSet:
       '/media/locations-doodles-reference-edit-960.webp 960w, /media/locations-doodles-reference-edit-1672.webp 1672w',
-    sizes: '100vw',
-  }),
-  cardIcons: defineSceneLayer('decoration', locationsCardIconsReferenceEdit, {
-    srcSet:
-      '/media/locations-card-icons-reference-edit-960.webp 960w, /media/locations-card-icons-reference-edit-1672.webp 1672w',
     sizes: '100vw',
   }),
 } as const
@@ -840,7 +849,7 @@ export const decorativeMedia: DecorativeMediaProvenance[] = [
   locationsMapReferenceEdit,
   locationsInteriorReferenceEdit,
   locationsDoodlesReferenceEdit,
-  locationsCardIconsReferenceEdit,
+  ...Object.values(locationsCardIconMedia),
   {
     id: 'paper-sketches',
     src: 'inline-svg-or-css',

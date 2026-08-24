@@ -2,11 +2,29 @@ import { Reveal } from '../components/Reveal'
 import { SceneLayer } from '../components/SceneLayer'
 import { SectionFrame } from '../components/SectionFrame'
 import { StaticMapCard } from '../components/StaticMapCard'
-import { locationsSceneLayerManifest } from '../data/media'
+import { locationsCardIconMedia, locationsSceneLayerManifest } from '../data/media'
 import { siteData, type Location } from '../data/site'
 
-const transparentMobileLayer =
-  'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='
+type LocationCardIconName = keyof typeof locationsCardIconMedia
+
+function LocationCardIcon({ name }: { name: LocationCardIconName }) {
+  const asset = locationsCardIconMedia[name]
+  const actionClass =
+    name === 'arrow' || name === 'chat' ? ' location-card__action-icon' : ''
+
+  return (
+    <img
+      className={`location-card__icon location-card__icon--${name}${actionClass}`}
+      src={asset.src}
+      alt=""
+      aria-hidden="true"
+      data-media-kind={asset.provenanceKind}
+      draggable={false}
+      loading="lazy"
+      decoding="async"
+    />
+  )
+}
 
 function getDisplayAddress(location: Location) {
   return location.id === 'tsekh'
@@ -65,15 +83,6 @@ export function LocationsSection() {
           loading="lazy"
           decoding="async"
         />
-        <picture className="locations-scene__card-icons-picture" aria-hidden="true">
-          <source media="(max-width: 1023px)" srcSet={transparentMobileLayer} />
-          <SceneLayer
-            {...locationsSceneLayerManifest.cardIcons}
-            className="locations-scene__card-icons"
-            loading="lazy"
-            decoding="async"
-          />
-        </picture>
       </div>
 
       <Reveal className="locations-scene__intro">
@@ -100,6 +109,10 @@ export function LocationsSection() {
                 data-location-card={location.id}
                 aria-labelledby={`location-${location.id}-title`}
               >
+                <LocationCardIcon name="pin" />
+                <LocationCardIcon name="clock" />
+                <LocationCardIcon name="phone" />
+
                 <div className="location-card__address">
                   <h3 id={`location-${location.id}-title`}>
                     <LocationHeading location={location} />
@@ -132,6 +145,7 @@ export function LocationsSection() {
                     aria-label={`Построить маршрут до White Cup, ${displayAddress}, откроется в новой вкладке`}
                   >
                     Построить маршрут
+                    <LocationCardIcon name="arrow" />
                   </a>
                   <a
                     className="location-card__action location-card__action--contact"
@@ -139,6 +153,7 @@ export function LocationsSection() {
                     aria-label={`Связаться с White Cup, ${displayAddress}`}
                   >
                     Связаться
+                    <LocationCardIcon name="chat" />
                   </a>
                 </div>
 

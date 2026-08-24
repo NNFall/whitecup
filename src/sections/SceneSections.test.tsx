@@ -695,7 +695,6 @@ describe('White Cup story scenes', () => {
       ['.locations-scene__map-image', '/media/locations-map-reference-1672w.webp', 'backdrop'],
       ['.locations-scene__interior', '/media/locations-interior-base-1672w.webp', 'foreground'],
       ['.locations-scene__doodles', '/media/locations-doodles-reference-edit-1672.webp', 'decoration'],
-      ['.locations-scene__card-icons', '/media/locations-card-icons-reference-edit-1672.webp', 'decoration'],
     ] as const
 
     expectedLayers.forEach(([selector, src, layer]) => {
@@ -709,13 +708,24 @@ describe('White Cup story scenes', () => {
       expect(image).toHaveAttribute('sizes')
     })
 
-    expect(locations.querySelectorAll('[src="/media/locations-card-icons-reference-edit-1672.webp"]')).toHaveLength(1)
-    expect(locations.querySelector('.locations-scene__card-icons-picture source')).toHaveAttribute(
-      'media',
-      '(max-width: 1023px)',
-    )
-    expect(locations.querySelector('.locations-scene__action-icons')).not.toBeInTheDocument()
-    expect(locations.querySelector('.locations-scene__contact-icons')).not.toBeInTheDocument()
+    const expectedCardSprites = ['pin', 'clock', 'phone', 'arrow', 'chat'] as const
+    expectedCardSprites.forEach((sprite) => {
+      const images = locations.querySelectorAll<HTMLImageElement>(
+        `.location-card__icon--${sprite}`,
+      )
+      expect(images).toHaveLength(2)
+      images.forEach((image) => {
+        expect(image).toHaveAttribute('src', `/media/locations-icon-${sprite}.webp`)
+        expect(image).toHaveAttribute('alt', '')
+        expect(image).toHaveAttribute('aria-hidden', 'true')
+        expect(image).toHaveAttribute('draggable', 'false')
+        expect(image).toHaveAttribute('data-media-kind', 'decorative-reference-edit')
+      })
+    })
+    expect(locations.querySelector('[src*="locations-card-icons-reference-edit"]')).not.toBeInTheDocument()
+    expect(locations.querySelector('.locations-scene__card-icons')).not.toBeInTheDocument()
+    expect(routeLinks[0].querySelector('.location-card__icon--arrow')).toBeInTheDocument()
+    expect(contactLinks[0].querySelector('.location-card__icon--chat')).toBeInTheDocument()
 
     expect(locations.querySelector('.organic-photo')).not.toBeInTheDocument()
     expect(locations.innerHTML).not.toMatch(
@@ -724,26 +734,25 @@ describe('White Cup story scenes', () => {
   })
 
   it('publishes Locations artwork as responsive decorative production layers', () => {
-    const manifest = (
-      mediaRegistry as unknown as {
+    const registry = mediaRegistry as unknown as {
         locationsSceneLayerManifest?: {
           map: { src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }
           interior: { src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }
           decoration: { src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }
-          cardIcons: { src: string; srcSet?: string; sizes?: string; asset: { kind: string; provenanceKind: string; sourceArtifactSrc?: string } }
         }
+        locationsCardIconMedia?: Record<string, { src: string; alt: string; kind: string; provenanceKind: string; sourceArtifactSrc?: string }>
       }
-    ).locationsSceneLayerManifest
+    const manifest = registry.locationsSceneLayerManifest
+    const cardSprites = Object.values(registry.locationsCardIconMedia ?? {})
 
     expect(manifest).toBeDefined()
     const layers = [
       manifest?.map,
       manifest?.interior,
       manifest?.decoration,
-      manifest?.cardIcons,
     ].filter(Boolean)
 
-    expect(layers).toHaveLength(4)
+    expect(layers).toHaveLength(3)
     expect(layers.every((entry) => entry?.asset.kind === 'decorative')).toBe(true)
     expect(layers.every((entry) => entry?.asset.provenanceKind === 'decorative-reference-edit')).toBe(true)
     expect(layers.every((entry) => entry?.src.endsWith('.webp'))).toBe(true)
@@ -752,6 +761,16 @@ describe('White Cup story scenes', () => {
     expect(layers.every((entry) => entry?.asset.sourceArtifactSrc === undefined)).toBe(true)
     expect(manifest?.map.src).toBe('/media/locations-map-reference-1672w.webp')
     expect(manifest?.interior.src).toBe('/media/locations-interior-base-1672w.webp')
+    expect(cardSprites).toHaveLength(5)
+    expect(cardSprites.map((asset) => asset.src).sort()).toEqual(
+      ['arrow', 'chat', 'clock', 'phone', 'pin'].map(
+        (name) => `/media/locations-icon-${name}.webp`,
+      ),
+    )
+    expect(cardSprites.every((asset) => asset.alt === '')).toBe(true)
+    expect(cardSprites.every((asset) => asset.kind === 'decorative')).toBe(true)
+    expect(cardSprites.every((asset) => asset.provenanceKind === 'decorative-reference-edit')).toBe(true)
+    expect(cardSprites.every((asset) => asset.sourceArtifactSrc === undefined)).toBe(true)
   })
 
   it('keeps Locations in one desktop viewport and authors a separate mobile flow', () => {
@@ -789,8 +808,16 @@ describe('White Cup story scenes', () => {
     expect(globalCss).toMatch(
       /\.locations-scene__map-label\[data-map-location='tsekh'\]\s*\{[^}]*top:\s*78%;/,
     )
+    expect(globalCss).not.toContain('.locations-scene__card-icons')
+    expect(globalCss).toMatch(/\.location-card\s*\{[^}]*position:\s*relative;/)
     expect(globalCss).toMatch(
-      /\.locations-scene__card-icons\s*\{[^}]*position:\s*absolute;[^}]*inset:\s*0;[^}]*width:\s*100%;[^}]*height:\s*100%;/,
+      /\.location-card__icon\s*\{[^}]*max-width:\s*2\.375rem;[^}]*pointer-events:\s*none;/,
+    )
+    expect(globalCss).toMatch(
+      /\.location-card__icon--pin,\s*\.location-card__icon--clock,\s*\.location-card__icon--phone\s*\{[^}]*position:\s*absolute;/,
+    )
+    expect(globalCss).toMatch(
+      /\.location-card__action-icon\s*\{[^}]*width:\s*1\.56rem;[^}]*max-width:\s*1\.56rem;/,
     )
     expect(globalCss).not.toContain('.locations-scene__action-icons')
     expect(globalCss).not.toContain('.locations-scene__contact-icons')
