@@ -18,7 +18,9 @@ export function AboutSection() {
           <span className="about-scene__title-line about-scene__title-line--brand">
             О White Cup —
           </span>{' '}
-          <span className="about-scene__title-line">место, в которое</span>
+          <span className="about-scene__title-line about-scene__title-line--place">
+            место, в которое
+          </span>
           {' '}
           <span className="about-scene__title-line">
             <span className="about-scene__accent">хочется</span>{' '}

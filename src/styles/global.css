@@ -2823,6 +2823,7 @@ h2 {
   background: var(--paper-light);
   isolation: isolate;
   overflow: hidden;
+  scroll-margin-top: 0;
 }
 
 .about-scene .section-frame__inner {
@@ -3065,8 +3066,11 @@ h2 {
   }
 
   .about-scene__title-line {
-    width: auto;
-    max-width: none;
+    /* Independent line scales keep the reference rhythm while normal
+       wrapping prevents both fallback and local fonts from being clipped. */
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
   }
 
   .about-scene__title-line + .about-scene__title-line {
@@ -3076,11 +3080,18 @@ h2 {
   .about-scene__title-line--brand {
     margin-bottom: 0.55rem;
     margin-left: 0;
-    font-size: 1.04em;
+    font-size: 0.91em;
+  }
+
+  .about-scene__title-line--place {
+    font-size: 0.8em;
   }
 
   .about-scene__title-line:last-child {
-    font-size: 0.86em;
+    display: flex;
+    font-size: 0.78em;
+    flex-wrap: wrap;
+    column-gap: 0.22em;
   }
 
   .about-scene__intro {

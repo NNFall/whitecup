@@ -262,6 +262,40 @@ describe('White Cup story scenes', () => {
     ).toBe(true)
   })
 
+  it('keeps every mobile About title line inside the authored gutters', () => {
+    render(<App />)
+
+    const about = screen.getByRole('region', {
+      name: /о white cup.*место, в которое.*хочется возвращаться/i,
+    })
+    const heading = within(about).getByRole('heading', { level: 2 })
+
+    expect(heading.querySelector('.about-scene__title-line--place')).toHaveTextContent(
+      'место, в которое',
+    )
+    expect(globalCss).toMatch(
+      /@media \(max-width: 1023px\)[\s\S]*?\.about-scene__title-line\s*{[^}]*max-width:\s*100%;[^}]*white-space:\s*normal;/,
+    )
+    expect(globalCss).toMatch(
+      /@media \(max-width: 1023px\)[\s\S]*?\.about-scene__title-line--brand\s*{[^}]*font-size:\s*0\.91em;/,
+    )
+    expect(globalCss).toMatch(
+      /@media \(max-width: 1023px\)[\s\S]*?\.about-scene__title-line--place\s*{[^}]*font-size:\s*0\.8em;/,
+    )
+    expect(globalCss).toMatch(
+      /@media \(max-width: 1023px\)[\s\S]*?\.about-scene__title-line:last-child\s*{[^}]*font-size:\s*0\.78em;[^}]*flex-wrap:\s*wrap;/,
+    )
+  })
+
+  it('aligns an About hash visit to the viewport instead of adding the global nav offset', () => {
+    expect(globalCss).toMatch(
+      /\.scene\.about-scene\s*{[^}]*scroll-margin-top:\s*0;/,
+    )
+    expect(globalCss).toMatch(
+      /@media \(min-width: 1024px\)[\s\S]*?\.scene\.about-scene\s*{[^}]*height:\s*100dvh;[^}]*max-height:\s*100dvh;/,
+    )
+  })
+
   it('defers the documentary hero fallback until the clean backdrop fails', () => {
     render(<App />)
 
