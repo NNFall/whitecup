@@ -68,7 +68,7 @@
 4. Добавить или обновить visual-contract tests, затем run focused tests.
 5. Провести spec review и quality review.
 
-## 5. Визуальная проверка, финальное ревью и публикация — в процессе
+## 5. Визуальная проверка, финальное ревью и публикация — выполнено
 
 **Файлы:**
 - Create: `docs/evidence/continuity-convergence/*`
@@ -76,9 +76,9 @@
 - Modify: `docs/visual-deviations.md`
 
 **Шаги:**
-1. [x] Во встроенном браузере снять hero, каждый bridge/junction и полную страницу на 1920x1080, 390x844 и 320x568; 1536x864 остаётся в предыдущей evidence-серии и будет обновлён перед публикацией.
+1. [x] Во встроенном браузере снять hero, каждый bridge/junction и полную страницу на 1920x1080, 1536x864, 390x844 и 320x568.
 2. [x] На viewport-проверках подтвердить `scrollWidth === clientWidth`, один h1, CTA/nav reachability и отсутствие горизонтального overflow.
 3. [x] Получить независимые spec/quality ревью; Antigravity запускался, но его завершённый output отсутствует и PASS не заявляется.
 4. [x] Выполнить `npm.cmd test -- --run --pool=threads --maxWorkers=1` (17 файлов/96 тестов), `npm.cmd run build`, `git diff --check`; вручную сверить evidence с шестью supplied references.
 5. [x] Обновить verification/deviations с фактическими командами, снимками и осознанными отклонениями.
-6. [ ] Проверить git status, stage только нужные файлы, commit, push `master` в `NNFall/whitecup`, затем подтвердить remote SHA.
+6. [x] Проверить git status, stage только нужные файлы, commit `e73e3fd`, push `master` в `NNFall/whitecup`, затем подтвердить remote SHA.
