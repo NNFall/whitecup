@@ -1,5 +1,7 @@
 # White Cup First Screen Implementation Plan
 
+> Historical planning record. Any early generated public experiment named below was removed before publication; see `docs/reference/white-cup-asset-provenance.md` for active runtime media.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use subagent-driven-development or executing-plans to implement this plan task-by-task. Steps use checkbox syntax.
 
 **Goal:** Recompose the White Cup hero so the supplied `3679ac8b-1f0d-40be-b73d-d5246178ba35.png` first screen is recognisable to pixel-level visual review while keeping semantic text, accessible CTAs, and a robust mobile layout.

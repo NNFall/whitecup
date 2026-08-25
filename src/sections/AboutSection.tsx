@@ -22,7 +22,7 @@ export function AboutSection() {
             место, в которое
           </span>
           {' '}
-          <span className="about-scene__title-line">
+          <span className="about-scene__title-line about-scene__title-line--return">
             <span className="about-scene__accent">хочется</span>{' '}
             <span className="about-scene__return">возвращаться</span>
           </span>

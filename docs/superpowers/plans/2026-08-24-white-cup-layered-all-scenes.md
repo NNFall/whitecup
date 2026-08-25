@@ -64,16 +64,17 @@ Run: `git add src/components/SceneLayer.tsx src/components/SceneLayer.test.tsx s
 - Modify: `src/styles/global.css`
 - Modify: `src/data/media.ts`
 - Modify: `src/sections/SceneSections.test.tsx`
-- Use: `public/media/hero-clean-base-edit-poc.png`
-- Use: `public/media/hero-bagel-cutout-poc.png`
-- Use: `public/media/hero-coffee-cutout-poc.png`
+- Use: `public/media/hero-clean-base-v2-1672.webp`
+- Use: `public/media/hero-bagel-plate-reference-edit-1200.webp`
+- Use: `public/media/hero-coffee-cutout-1200.webp`
+- Retain authoring-only assets in `docs/reference/assets/`, never `public/media/`
 
 - [x] **Step 1: Extend the hero test to require clean backdrop, two foreground layers, exact logo, doodles and skyline**
 
 ```tsx
-expect(hero.querySelector('.hero-backdrop')).toHaveAttribute('src', '/media/hero-clean-base-edit-poc.png')
-expect(hero.querySelector('.hero-bagel')).toHaveAttribute('src', '/media/hero-bagel-cutout-poc.png')
-expect(hero.querySelector('.hero-coffee')).toHaveAttribute('src', '/media/hero-coffee-cutout-poc.png')
+expect(hero.querySelector('.hero-backdrop')).toHaveAttribute('src', '/media/hero-clean-base-v2-1672.webp')
+expect(hero.querySelector('.hero-bagel')).toHaveAttribute('src', '/media/hero-bagel-plate-reference-edit-1200.webp')
+expect(hero.querySelector('.hero-coffee')).toHaveAttribute('src', '/media/hero-coffee-cutout-1200.webp')
 expect(hero.querySelector('.hero-logo')).toHaveAttribute('src', '/media/hero-logo-reference.png')
 ```
 
@@ -105,7 +106,7 @@ Expected: tests and production build pass.
 
 - [x] **Step 6: Commit the hero reconstruction**
 
-Run: `git add src/sections/HeroSection.tsx src/styles/global.css src/data/media.ts src/sections/SceneSections.test.tsx public/media/hero-clean-base-edit-poc.png public/media/hero-bagel-cutout-poc.png public/media/hero-coffee-cutout-poc.png && git commit -m "feat: decompose hero into responsive visual layers"`
+Run: `git add src/sections/HeroSection.tsx src/styles/global.css src/data/media.ts src/sections/SceneSections.test.tsx public/media/hero-clean-base-v2-1672.webp public/media/hero-bagel-plate-reference-edit-1200.webp public/media/hero-coffee-cutout-1200.webp && git commit -m "feat: decompose hero into responsive visual layers"`
 
 ### Task 3: Reconstruct the menu scene
 
@@ -162,7 +163,7 @@ Outcome: commits `7cf6251` and `9d1ed98`; 8 files / 30 tests and production buil
 - Modify: `src/styles/global.css`
 - Modify: `src/data/media.ts`
 - Create: `public/media/about-clean-base.png`
-- Create: `public/media/about-pastry-cutout.png`
+- Create: `public/media/about-pastry-plate-reference-edit-v2-{720,1200}.webp`
 - Create: `public/media/about-coffee-cutout.png`
 - Create: `public/media/about-benefit-coffee.png`
 - Create: `public/media/about-benefit-breakfast.png`
@@ -172,6 +173,8 @@ Outcome: commits `7cf6251` and `9d1ed98`; 8 files / 30 tests and production buil
 - [x] **Step 1: Edit the About reference into a clean interior base, pastry/cup foregrounds and benefit illustration pack**
 
 Preserve the reference seam and interior composition; remove all semantic text before saving the base.
+
+25 August follow-up: the initial pastry-only cutout was replaced by a full patterned-plate foreground. Its authoring PNG is kept privately in `docs/reference/assets/about-pastry-plate-v2-authoring.png`; the responsive production pair is the only runtime path.
 
 - [x] **Step 2: Add failing tests for two paragraphs, four benefits and independent visual layers**
 
@@ -200,29 +203,31 @@ Outcome: commits `d615920`, `578d7f4`, and `1098bf1`; full suite reached 8 files
 - Modify: `src/sections/SceneSections.test.tsx`
 - Modify: `src/styles/global.css`
 - Modify: `src/data/media.ts`
-- Create: `public/media/rhythm-clean-base.png`
-- Create: `public/media/rhythm-coffee-reference-edit.png`
-- Create: `public/media/rhythm-table-reference-edit.png`
-- Create: `public/media/rhythm-waffle-reference-edit.png`
+- Create: `public/media/rhythm-clean-base-{desktop,mobile-960}.webp`
+- Create: `public/media/rhythm-coffee-reference-edit-800.webp`
+- Create: `public/media/rhythm-table-reference-edit-800.webp`
+- Create: `public/media/rhythm-waffle-reference-edit-800.webp`
 
-- [ ] **Step 1: Produce the upper-right sketch and three card images from the supplied reference**
+- [x] **Step 1: Produce the upper-right sketch and three card images from the supplied reference**
 
 Each card image is a separate asset with its own crop. Do not bake headings or body copy into the image.
 
-- [ ] **Step 2: Write a failing test for three semantic scenario articles and their images**
+- [x] **Step 2: Write a failing test for three semantic scenario articles and their images**
 
 ```tsx
 expect(within(visit).getAllByRole('article')).toHaveLength(3)
 expect(visit.querySelectorAll('[data-scene-card-image]')).toHaveLength(3)
 ```
 
-- [ ] **Step 3: Run RED, implement the three-card composition and run GREEN**
+- [x] **Step 3: Run RED, implement the three-card composition and run GREEN**
 
 Run: `npm.cmd test -- --run src/sections/SceneSections.test.tsx`
 
-- [ ] **Step 4: Commit the Visit scene**
+- [x] **Step 4: Commit the Visit scene**
 
-Run: `git add src/sections/VisitSection.tsx src/sections/SceneSections.test.tsx src/styles/global.css src/data/media.ts public/media/visit-*.png && git commit -m "feat: reconstruct reference visit scene"`
+Run: `git add src/sections/VisitSection.tsx src/sections/SceneSections.test.tsx src/styles/global.css src/data/media.ts public/media/rhythm-*.webp && git commit -m "feat: reconstruct reference visit scene"`
+
+Outcome: commits `365996b` and `53573df`; the TDD passes recorded four initial and three convergence RED assertions, then reached 9 files / 45 tests GREEN. Production build and diff-check passed. Fresh Codex in-app Browser evidence at 1920x1080 confirmed the reference geometry after convergence: card tops near y=482, heading endpoint near x=1035 and the scene-specific skyline beginning near y=917. The final pass replaced approximate CSS doodles, the generic skyline and the unbranded cup with exact reference-edited WebP layers, and added dedicated 1024–1439/short-height arrangements. The persistent navigation overlay and inherited 320px document minimum remain explicitly queued for Task 8 because they are shared cross-scene behavior.
 
 ### Task 6: Reconstruct Events
 
@@ -231,16 +236,18 @@ Run: `git add src/sections/VisitSection.tsx src/sections/SceneSections.test.tsx 
 - Modify: `src/sections/SceneSections.test.tsx`
 - Modify: `src/styles/global.css`
 - Modify: `src/data/media.ts`
-- Create: `public/media/events-clean-base.png`
-- Create: `public/media/events-cake-cutout.png`
-- Create: `public/media/events-coffee-cutout.png`
-- Create: `public/media/events-card-01.png` through `public/media/events-card-03.png`
+- Create: `public/media/events-clean-base-{1672w,960w}.webp`
+- Create: `public/media/events-cake-plate-reference-edit-{1200w,720w}.webp`
+- Create: `public/media/events-coffee-cutout-{1200w,720w}.webp`
+- Create: `public/media/events-card-01-800w.webp` through `public/media/events-card-03-800w.webp`
+- Create: `public/media/events-doodles-reference-edit-{1672,960}.webp`
+- Create: `public/media/events-chalkboard-reference-edit-{480w,300w}.webp`
 
-- [ ] **Step 1: Edit the Events reference into clean background, cake/cup foregrounds and three independent card images**
+- [x] **Step 1: Edit the Events reference into clean background, cake/cup foregrounds and three independent card images**
 
 Keep people/background reference art decorative. Preserve event names and descriptions as DOM text.
 
-- [ ] **Step 2: Write a failing test for three event articles and independent right-side layers**
+- [x] **Step 2: Write a failing test for three event articles and independent right-side layers**
 
 ```tsx
 expect(within(events).getAllByRole('article')).toHaveLength(3)
@@ -248,11 +255,13 @@ expect(events.querySelector('[data-layer="backdrop"]')).toBeInTheDocument()
 expect(events.querySelectorAll('[data-layer="foreground"]')).toHaveLength(2)
 ```
 
-- [ ] **Step 3: Run RED, implement, run GREEN and commit**
+- [x] **Step 3: Run RED, implement, run GREEN and commit**
 
 Run: `npm.cmd test -- --run src/sections/SceneSections.test.tsx && npm.cmd run build`
 
-Run: `git add src/sections/EventsSection.tsx src/sections/SceneSections.test.tsx src/styles/global.css src/data/media.ts public/media/events-*.png && git commit -m "feat: reconstruct reference events scene"`
+Run: `git add src/sections/EventsSection.tsx src/sections/SceneSections.test.tsx src/styles/global.css src/data/media.ts public/media/events-*.webp && git commit -m "feat: reconstruct reference events scene"`
+
+Outcome: commits `d7132fb` and `1c05656`; four initial RED assertions plus three convergence assertions became 9 files / 52 tests GREEN. Production build and diff-check passed. Fresh root-controlled Codex in-app Browser checks covered 1920x1080, 1536x864, 390x844 and 320x568 with one-viewport desktop bounds, zero authored Events overflow and a dedicated vertical mobile arrangement. The scene uses separate backdrop, seam/doodle, chalkboard, cake-and-plate, coffee and three card assets. Review convergence replaced corrupted foreground masks, reduced the foreground transfer set by 71.4%, aligned both title lines independently, kept the full plate in-frame and aligned all card copy baselines. The global navigation profile and inherited 320px document minimum remain queued for Task 8.
 
 ### Task 7: Reconstruct Locations
 
@@ -262,14 +271,16 @@ Run: `git add src/sections/EventsSection.tsx src/sections/SceneSections.test.tsx
 - Modify: `src/sections/SceneSections.test.tsx`
 - Modify: `src/styles/global.css`
 - Modify: `src/data/media.ts`
-- Create: `public/media/locations-map-reference.png`
-- Create: `public/media/locations-interior-base.png`
+- Create: `public/media/locations-map-reference-{1672w,960w}.webp`
+- Create: `public/media/locations-interior-base-{1672w,960w}.webp`
+- Create: `public/media/locations-doodles-reference-edit-{1672,960}.webp`
+- Create: `public/media/locations-card-icons-reference-edit-{1672,960}.webp`
 
-- [ ] **Step 1: Extract the decorative reference map and edit the lower-right interior without baked semantic addresses**
+- [x] **Step 1: Extract the decorative reference map and edit the lower-right interior without baked semantic addresses**
 
 Remove map labels and pins from the decorative art. The supplied artwork says `Красноармейская, 17`, while the verified public contract is `Красноармейская, 15` with the existing `15/17` entrance clarification; therefore both actual addresses, that clarification and all route/contact actions must remain factual DOM content.
 
-- [ ] **Step 2: Write failing tests for two address cards, route/contact links and map provenance**
+- [x] **Step 2: Write failing tests for two address cards, route/contact links and map provenance**
 
 ```tsx
 expect(within(locations).getAllByRole('article')).toHaveLength(2)
@@ -277,13 +288,15 @@ expect(within(locations).getAllByRole('link', { name: /построить мар
 expect(locations.querySelector('[data-map-kind="decorative-reference-extract"]')).toBeInTheDocument()
 ```
 
-- [ ] **Step 3: Run RED, implement the reference map/photo/card layout and run GREEN**
+- [x] **Step 3: Run RED, implement the reference map/photo/card layout and run GREEN**
 
 Run: `npm.cmd test -- --run src/sections/SceneSections.test.tsx`
 
-- [ ] **Step 4: Commit the Locations scene**
+- [x] **Step 4: Commit the Locations scene**
 
-Run: `git add src/sections/LocationsSection.tsx src/components/StaticMapCard.tsx src/sections/SceneSections.test.tsx src/styles/global.css src/data/media.ts public/media/locations-*.png && git commit -m "feat: reconstruct reference locations scene"`
+Run: `git add src/sections/LocationsSection.tsx src/components/StaticMapCard.tsx src/sections/SceneSections.test.tsx src/styles/global.css src/data/media.ts public/media/locations-*.webp && git commit -m "feat: reconstruct reference locations scene"`
+
+Outcome: commits `9c3bfff`, `332f6df` and `2f83c90`; the Locations contract reached 11 files / 69 tests GREEN, production build and diff-check passed. Review convergence corrected map-label coordinates, the map/interior seam, heading underline, equal card bottoms and 44px contact targets. The original full-canvas icon sheet was then replaced with five exact card-local reference crops (pin, clock, phone, route arrow and chat), eliminating the giant/misaligned sprite failure without redrawing the marks. Fresh root-controlled Codex in-app Browser checks at 1920x1080, 1536x864, 390x844 and 320x568 confirmed the corrected scene, zero horizontal overflow and separate mobile stacking. The scene retains factual DOM address cards: the reference's `Красноармейская, 17` is intentionally corrected to the verified `Красноармейская, 15` with a Yandex 15/17 clarification, and the second venue retains its real 10:00–21:00 schedule.
 
 ### Task 8: Match typography, navigation and shared responsive rhythm
 
@@ -292,28 +305,36 @@ Run: `git add src/sections/LocationsSection.tsx src/components/StaticMapCard.tsx
 - Modify: `src/styles/global.css`
 - Modify: `src/components/StickyNav.tsx`
 - Modify: `src/components/StickyNav.test.tsx`
+- Modify: `src/components/BrandMark.tsx`
+- Modify: `src/App.tsx`
+- Modify: `src/data/media.ts`
+- Create: `src/App.test.tsx`
+- Create: `src/styles/Navigation.test.ts`
+- Create: `public/media/menu-logo-reference-crop.png`
 - Create: `public/fonts/*`
 
-- [ ] **Step 1: Add project-local font files with their license/source record and `@font-face` declarations**
+- [x] **Step 1: Add project-local font files with their license/source record and `@font-face` declarations**
 
 Load only fonts whose redistribution terms permit bundling. Preserve system fallbacks.
 
-- [ ] **Step 2: Write failing assertions for reference nav labels and accessible mobile behavior**
+- [x] **Step 2: Write failing assertions for reference nav labels and accessible mobile behavior**
 
 ```tsx
 expect(screen.getByRole('navigation', { name: 'Основная навигация' })).toBeInTheDocument()
 expect(screen.getByRole('button', { name: 'Открыть меню' })).toHaveAttribute('aria-expanded', 'false')
 ```
 
-- [ ] **Step 3: Match reference display/script/body roles and button emphasis**
+- [x] **Step 3: Match reference display/script/body roles and button emphasis**
 
 Use role-specific font weights, tracking and line heights. Preserve visible focus rings and minimum 44px targets.
 
-- [ ] **Step 4: Run nav/full tests and commit**
+- [x] **Step 4: Run nav/full tests and commit**
 
 Run: `npm.cmd test -- --run src/components/StickyNav.test.tsx src/sections/SceneSections.test.tsx && npm.cmd run build`
 
-Run: `git add src/styles/tokens.css src/styles/global.css src/components/StickyNav.tsx src/components/StickyNav.test.tsx public/fonts && git commit -m "feat: align reference typography and navigation"`
+Run: `git add src/App.tsx src/App.test.tsx src/components/BrandMark.tsx src/components/StickyNav.tsx src/components/StickyNav.test.tsx src/data/media.ts src/styles/global.css src/styles/Navigation.test.ts public/media/menu-logo-reference-crop.png public/fonts && git commit -m "feat: add context-aware reference navigation"`
+
+Outcome: commits `8ce1cf1` and `405b085`; locally bundled licensed fonts and the context-aware navigation reached 11 files / 68 tests GREEN, production build and diff-check passed. Codex in-app Browser checks covered every scene profile at 1920x1080 and 1536x864 plus mobile dialog/focus/Escape/no-overflow at 390x844 and 320x568. Hero, Events and Locations use the large transparent reference badge/navigation; Menu uses the exact compact logo crop; About is badge-only; Visit hides desktop chrome; direct hashes align after React mount; and the inherited 320px document minimum was removed.
 
 ### Task 9: In-app Browser visual convergence
 
@@ -322,21 +343,21 @@ Run: `git add src/styles/tokens.css src/styles/global.css src/components/StickyN
 - Create: `docs/evidence/layered-reconstruction/*.png`
 - Modify: `docs/verification.md`
 
-- [ ] **Step 1: Run the fixed local server**
+- [x] **Step 1: Run the fixed local server**
 
 Run: `npm.cmd run dev -- --host 127.0.0.1 --port 4175`
 
 Expected: `http://127.0.0.1:4175/` returns HTTP 200.
 
-- [ ] **Step 2: Capture every scene at 1920×1080 in the Codex in-app Browser**
+- [x] **Step 2: Capture every scene at 1920×1080 in the Codex in-app Browser**
 
 Compare each current scene to its supplied 1672×941 reference. Record measured x/y/width/height differences for heading block, photo region, cards, CTA, decorative seam and skyline.
 
-- [ ] **Step 3: Repeat at 1536×864, 390×844 and 320×568**
+- [x] **Step 3: Repeat at 1536×864, 390×844 and 320×568**
 
 Confirm `scrollWidth <= clientWidth`, no clipped CTA, readable card content, reachable carousel end and correct art-directed crops.
 
-- [ ] **Step 4: Iterate until no P0/P1 visual discrepancy remains**
+- [x] **Step 4: Iterate until no P0/P1 visual discrepancy remains**
 
 After every CSS/asset adjustment, recapture the affected scene at desktop and mobile; save final evidence with stable names.
 
@@ -351,15 +372,15 @@ Run: `git add src docs/evidence/layered-reconstruction docs/verification.md && g
 - Modify: `docs/reference/white-cup-asset-provenance.md`
 - Modify: `README.md`
 
-- [ ] **Step 1: Dispatch independent visual, accessibility and code reviewers**
+- [x] **Step 1: Dispatch independent visual, accessibility and code reviewers**
 
 Reviewers must compare all six final screenshots, inspect media provenance and report P0/P1/P2 findings without editing shared files.
 
-- [ ] **Step 2: Fix accepted P0/P1 findings and rerun their focused tests**
+- [x] **Step 2: Fix accepted P0/P1 findings and rerun their focused tests**
 
 Do not waive a visual mismatch merely because tests pass. Document only intentional, justified differences.
 
-- [ ] **Step 3: Run the complete release gate**
+- [x] **Step 3: Run the complete release gate**
 
 Run: `npm.cmd test -- --run`
 
@@ -373,11 +394,11 @@ Run: `git diff --check`
 
 Expected: no whitespace errors.
 
-- [ ] **Step 4: Verify fixed server, links, console and all four final viewports in the in-app Browser**
+- [x] **Step 4: Verify fixed server, links, console and all four final viewports in the in-app Browser**
 
 Record HTTP 200, zero unexpected console errors, working phone/VK/Yandex anchors, keyboard menu/carousel behavior and final screenshot paths.
 
-- [ ] **Step 5: Update provenance/deviation/release documentation**
+- [x] **Step 5: Update provenance/deviation/release documentation**
 
 List every ImageGen prompt/asset, Remove Background run, generated/reference/documentary classification and justified visual difference.
 

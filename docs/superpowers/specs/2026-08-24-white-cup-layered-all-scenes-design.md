@@ -6,11 +6,11 @@ Rebuild all six supplied 1672×941 White Cup references as one responsive React 
 
 ## Validated image-editing premise
 
-The source hero was loaded as an ImageGen edit target and produced three useful independent proof-of-concept layers:
+The source hero was loaded as an ImageGen edit target and produced three useful independent proof-of-concept layers. Their retained authoring files are documentation-only; public runtime uses the optimized WebP derivatives:
 
-- `public/media/hero-clean-base-edit-poc.png`: text, navigation, logo, doodles, food and cup removed while the warm paper field, café interior and organic seam remain.
-- `public/media/hero-bagel-cutout-poc.png`: isolated bagel/plate foreground with a verified `Format32bppArgb` alpha channel and transparent corner.
-- `public/media/hero-coffee-cutout-poc.png`: isolated latte/saucer/spoon foreground with a verified `Format32bppArgb` alpha channel and transparent corner.
+- `docs/reference/assets/hero-clean-base-v2-authoring.png`: text, navigation, logo, doodles, food and cup removed while the warm paper field, café interior and organic seam remain.
+- `docs/reference/assets/hero-bagel-plate-magenta-authoring.png`: isolated bagel/plate foreground prepared for alpha extraction.
+- `docs/reference/assets/hero-coffee-cutout-authoring.png`: isolated latte/saucer/spoon foreground with a verified alpha channel.
 
 Built-in ImageGen returned the foreground drafts with a baked checkerboard (`Format24bppRgb`), so `remove-background-local` was required to create actual alpha. The generated logo was visually close, but automatic background removal damaged its fine black lines. Runtime branding therefore keeps the exact supplied-reference crop `hero-logo-reference.png`; generated logo files remain POC evidence only.
 

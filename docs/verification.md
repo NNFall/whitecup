@@ -1,46 +1,49 @@
-# White Cup — чеклист проверки
+# White Cup — проверка релизной сборки
 
-Этот файл — рабочая запись доказательств, а не декларация результата. Галочки напротив браузерных пунктов ставятся только после фактического запуска `127.0.0.1:4175`, проверки во встроенном браузере и сохранения соответствующего скриншота в `docs/evidence/`.
+Это запись фактических проверок финальной послойной реконструкции шести supplied-reference экранов. Browser-доказательства сняты только во встроенном браузере Codex с локального сервера `http://127.0.0.1:4175/`.
 
 ## Автоматические проверки
 
-Последний локальный прогон после reference-reconstruction и release-документации (24 августа 2026):
+Последний полный прогон 25 августа 2026 после финальных послойных правок, чистки ассетов, About plate v2 и mobile-проверок:
 
-- [x] `npm test -- --run` — 7 файлов, 21 тест прошёл.
-- [x] `npm run build` — TypeScript + Vite production build.
-- [x] `git diff --check` — без whitespace-ошибок.
-- [x] Повторный прогон выполнен после финальных visual polish правок и ограничения ширины мобильных заголовков.
+- [x] `npm.cmd test -- --run` — 14 файлов, 78 тестов прошли.
+- [x] `npm.cmd run build` — TypeScript + Vite production build прошли.
+- [x] `git diff --check` — прошёл; показал только ожидаемые предупреждения LF→CRLF, whitespace-ошибок нет.
+- [x] Проверка manifest-ассетов — 48 явных `/media/...` URL из `src/data/media.ts` существуют на диске; retired POC/old pastry-файлы отсутствуют в `public/media`.
 
-## Браузерные доказательства
+## Встроенный браузер Codex
 
-Запустить фиксированный сервер:
+Для каждого viewport каждая сцена открывалась отдельным hash URL, дожидалась завершения отрисовки и фиксировалась в `docs/evidence/layered-reconstruction/`.
 
-```powershell
-npm run dev
-```
-
-| Viewport | Скриншот | Проверить | Статус |
+| Viewport | Evidence | Фактически проверено | Статус |
 | --- | --- | --- | --- |
-| 1920×1080 | `docs/evidence/reference-reconstruction/hero-iab-1920-final.png` | первый экран, пять пунктов навигации, source-derived café crop, точные doodles/heart/pin и skyline | [x] verified in Codex in-app Browser |
-| 390×844 | `docs/evidence/reference-reconstruction/hero-iab-390-final.png` | отдельная мобильная композиция, paper-first copy, scene below CTA, full-width actions | [x] verified in Codex in-app Browser |
-| 320×568 | `docs/evidence/reference-reconstruction/hero-iab-320-final.png` | нет горизонтального overflow, читаемые заголовки, safe 16px gutters | [x] verified in Codex in-app Browser |
-| 1536×864 (125% equivalent) | `docs/evidence/reference-reconstruction/hero-iab-1536-final.png` | hero не становится чрезмерным, copy/CTA остаются в viewport при уменьшенной CSS-высоте | [x] verified in Codex in-app Browser |
+| 1920×1080 | `release-{hero,menu,about,visit,events,locations}-1920x1080.png` | Шесть desktop-сцен, все видимые слои загрузились, `clientWidth = scrollWidth = 1905`, один H1, console errors `[]` | [x] |
+| 1536×864 (эквивалент 1920×1080 при 125% zoom) | `release-{hero,menu,about,visit,events,locations}-1536x864.png` | Проверены art-directed desktop crops без чрезмерного масштаба, `1521 = 1521`, console errors `[]` | [x] |
+| 390×844 | `release-{hero,menu,about,visit,events,locations}-390x844.png` | Отдельный mobile layout, читаемые карточки и CTA, `375 = 375`, console errors `[]` | [x] |
+| 320×568 | `release-{hero,menu,about,visit,events,locations}-320x568.png` | Safe mobile gutters, CTA не обрезаны по горизонтали, `305 = 305`, console errors `[]` | [x] |
 
-Для каждого viewport зафиксировать:
+Дополнительные визуальные сводки:
 
-- [x] `scrollWidth <= innerWidth` на всех проверенных viewport; in-app Browser DOM показал 1920/1536/390/320 без горизонтального overflow (body `scrollWidth === clientWidth`: 1920, 1536, 390, 320).
-- [x] H1, CTA и телефонная ссылка не выходят за viewport; hero bounds проверены через DOM.
-- [x] На 390px About/Locations grids и адресные заголовки сжимаются в 303px column; на 320px — в 256px column, без обрезания телефона или адреса.
-- [x] Заголовок About также не выходит за границы сцены: 390px `right=339 <= sceneRight=359`, 320px `right=288 <= sceneRight=304`.
-- [x] Якоря `#menu`, `#locations`, `#about`, `#events`, `#contact` присутствуют и ведут к одноимённым сценам/футеру.
-- [x] Mobile menu открывается с клавиатуры, `Escape` закрывает его, фокус возвращается на кнопку; при открытии фокус на ссылке «Меню».
-- [x] В carousel работают `ArrowLeft`/`ArrowRight`, dots и финальная карточка: active `02` после ArrowRight, затем `05`, next disabled.
-- [x] Телефон (`tel:+79372355715`), VK и Yandex Maps имеют обычные anchors с проверенными href.
-- [x] Нормальный hero-запрос загружает source-derived reference layers и не запрашивает старый `hero-food-cutout.png`; documentary интерьер остаётся отдельным fallback, активируемым только при ошибке reference crop.
-- [x] Видимые café crop, logo, doodles и skyline маркированы в DOM как `data-media-kind="decorative-reference"` и `aria-hidden`; documentary интерьер остаётся отдельным fallback.
-- [x] Reduced-motion CSS contract сохранён: Reveal immediately visible and global `scroll-behavior: auto` override остаётся в `@media (prefers-reduced-motion: reduce)`; поведение покрыто тестами и статической проверкой CSS.
-- [x] Сняты доказательные скриншоты, пути записаны в таблице выше.
+- release-серия: 24 `release-*.png` кадра, по шесть сцен на каждом из четырёх viewport;
+- финальная доступность карусели подтверждена во встроенном браузере на 320px: `scrollLeft = maxScroll = 1061`, фокус остаётся на viewport.
 
-## Ограничения доказательств
+### Поведение и доступность
 
-Фото из VK не считаются проверенными, пока публичная группа не открыта и кадры не просмотрены. Reference-art crop/extracts не считаются документальной фотографией. Реальные цены/наличие и второй график требуют повторной проверки в живом источнике перед коммерческим использованием.
+- [x] Hero собран независимыми слоями: reference-directed clean backdrop, bagel/plate, latte, logo, doodles, route, skyline и отдельный прозрачный underline. Full supplied screenshot не используется как runtime-scene.
+- [x] Финальное подчёркивание — alpha-extract оранжевого штриха из supplied hero-reference: `hero-underline-reference-extract-tight.webp`; в hero не осталось SVG.
+- [x] Нормальный hero-путь не монтирует documentary fallback и не загружает старый optional food fallback.
+- [x] Обычные HTTP изображения каждой видимой сцены имеют `complete=true` и ненулевые natural dimensions. Невидимые lazy duplicate/sliver-карточки меню могут оставаться незагруженными до прокрутки — это не влияет на видимые позиции.
+- [x] На 320px `ArrowRight` в keyboard-focusable carousel сдвигает viewport; после последовательных действий достигнута последняя карточка (`scrollLeft = max = 1061`).
+- [x] Контекстная desktop/mobile навигация, Escape в mobile menu, anchor-ссылки, phone, VK и Yandex links покрыты тестами и проверялись в браузерном проходе. В release-проходе IAB были считаны `tel:+79372355715`, `https://vk.ru/white_cup` и `https://yandex.ru/maps/org/white_cup/19381755919/menu/`.
+- [x] `prefers-reduced-motion` и no-JS Reveal contract покрыты CSS/тестами; Reveal остаётся видимым без JavaScript.
+
+## Независимые проверки
+
+- [x] Независимые subagent-ревью провели отдельную проверку Hero, Menu, Events и Locations; принятые P1 по hero-тексту, underline, foreground geometry, mobile overflow и map/card icons устранены до финального IAB-прохода.
+- [x] Antigravity Worker запускался трижды в read-only режиме. Первые и третий job завершились внутренней ошибкой без output, второй был отклонён менеджером из-за несовместимой пары model/effort; `doctor` подтвердил установленный runner. Это **не** считается Antigravity PASS и не подменяет независимые subagent/IAB проверки.
+
+## Ограничения достоверности
+
+- VK-группа остаётся внешним CTA: VK-only факты и цены не используются без визуальной проверки доступных публикаций.
+- Декоративные reference edits/extracts и ImageGen assets не являются документальными фотографиями заведения или меню. Документальные Yandex фото описаны отдельно в `src/data/media.ts`.
+- Наличие, цены и второй график должны уточняться перед коммерческой публикацией.

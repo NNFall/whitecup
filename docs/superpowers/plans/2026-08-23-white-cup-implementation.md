@@ -1,5 +1,7 @@
 # White Cup Landing Page Implementation Plan
 
+> Historical planning record. Any early generated public experiment named below was removed before publication; see `docs/reference/white-cup-asset-provenance.md` for active runtime media.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) to implement this plan task-by-task. Each task includes TDD and review checkpoints.
 
 **Goal:** Build and ship the verified, responsive White Cup landing page described in `docs/superpowers/specs/2026-08-23-white-cup-design.md`.

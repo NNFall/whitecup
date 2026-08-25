@@ -11,7 +11,9 @@ export function MenuSection() {
       id="menu"
       title={
         <>
-          <span className="menu-scene__title-line">Завтраки, ради которых</span>{' '}
+          <span className="menu-scene__title-line">
+            <span className="menu-scene__title-initial">З</span>автраки, ради которых
+          </span>{' '}
           <span className="menu-scene__title-line">
             хочется <span className="menu-scene__accent">заглянуть</span>
           </span>
@@ -32,16 +34,15 @@ export function MenuSection() {
         </p>
       </div>
       <Reveal className="menu-scene__carousel" delay={80}>
-        <MenuCarousel items={siteData.menuItems} />
+        <MenuCarousel
+          items={siteData.menuItems}
+          fullMenuUrl={siteData.menuUrl}
+          provenanceDescriptionId="menu-provenance-note"
+        />
       </Reveal>
-      <div className="menu-scene__source">
-        <p>
-          Изображения карточек — декоративные арт-материалы по референсу, не документальные фото блюд White Cup. Подтверждён только диапазон цены капучино; остальные цены и наличие сверяйте в актуальном меню.
-        </p>
-        <a className="text-link text-link--arrow" href={siteData.menuUrl} target="_blank" rel="noreferrer">
-          Открыть полное меню в Яндекс Картах <span aria-hidden="true">↗</span>
-        </a>
-      </div>
+      <p className="menu-scene__provenance" id="menu-provenance-note">
+        Изображения карточек — декоративные арт-материалы по референсу, не документальные фото блюд White Cup. Подтверждён только диапазон цены капучино; остальные цены и наличие сверяйте в актуальном меню.
+      </p>
       <SceneLayer
         {...menuSceneLayerManifest.skyline}
         className="menu-scene__skyline"

@@ -1,5 +1,7 @@
 # White Cup Reference Reconstruction Implementation Plan
 
+> Historical planning record. The early public POC assets named below were removed before publication; active runtime paths and retained authoring files are recorded in `docs/reference/white-cup-asset-provenance.md`.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Reconstruct the supplied White Cup first screen as a measured 16:9 composition with separately controllable reference-art/documentary layers, then align the remaining scenes to the same paper/ink/orange system.

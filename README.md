@@ -19,7 +19,7 @@ npm run build
 npm run preview
 ```
 
-Перед публикацией пройдите чеклист [docs/verification.md](docs/verification.md). В нём специально не проставлены результаты браузерных проверок до фактического снятия скриншотов.
+Результаты полного release-gate и in-app Browser evidence записаны в [docs/verification.md](docs/verification.md).
 
 ## Данные и источники
 
@@ -28,7 +28,7 @@ npm run preview
 - [GitHub NNFall/whitecup](https://github.com/NNFall/whitecup) — репозиторий проекта.
 - Локальные визуальные референсы пользователя: `C:\Users\User\Downloads\3679ac8b-1f0d-40be-b73d-d5246178ba35.png` и пять файлов `ChatGPT Image ... (1–5).png` из той же папки. Они не копируются в репозиторий без необходимости.
 
-Документальные кадры в `public/media/` — только визуально проверенные публичные WebP из галереи Yandex Maps, с описанием источника и роли в `src/data/media.ts`. Видимый hero-panel, logo, doodles и skyline — отдельные механические/alpha-extracted decorative reference-art из supplied PNG; они не выдаются за фотографию, карту или документальный вид. Сгенерированные food/interior эксперименты и Remove Background cutouts сохранены как provenance pack, но не загружаются в нормальном hero-пути. Все provenance-метки собраны в `src/data/media.ts` и `docs/visual-deviations.md`.
+Документальные кадры в `public/media/` — только визуально проверенные публичные WebP из галереи Yandex Maps, с описанием источника и роли в `src/data/media.ts`. Нормальный hero собирается отдельными слоями: ImageGen reference-edit clean backdrop, bagel/plate, latte, reference logo, doodles, route, skyline и transparent underline extract; ни один полный screenshot не является runtime-сценой. About также использует отдельный alpha-слой выпечки с полной узорной тарелкой. Эти слои явно являются decorative reference-art, а не фотографией, картой или документальным видом. Полная обработка и решение по Remove Background Local записаны в [docs/reference/white-cup-asset-provenance.md](docs/reference/white-cup-asset-provenance.md).
 
 ## Фактические оговорки
 

@@ -5,11 +5,11 @@ import { siteData } from '../data/site'
 import {
   documentarySceneMedia,
   heroSceneLayerManifest,
+  heroUnderlineReferenceExtract,
 } from '../data/media'
 import { OrganicPhoto } from '../components/OrganicPhoto'
 import { Reveal } from '../components/Reveal'
 import { SceneLayer } from '../components/SceneLayer'
-import { SketchUnderline } from '../components/SketchUnderline'
 
 function hideBrokenDecorativeLayer(event: SyntheticEvent<HTMLImageElement>) {
   event.currentTarget.hidden = true
@@ -51,19 +51,29 @@ export function HeroSection() {
 
         <div className="hero-scene__inner">
           <Reveal className="hero-scene__copy">
-            <h1 id="hero-title">
-              Завтраки,{' '}
-              <br />
-              <span className="hero-scene__accent">кофе</span> и свой{' '}
-              <br />
-              <span className="hero-scene__last-line">
+            <h1 id="hero-title" aria-label="Завтраки, кофе и свой вайб в White Cup">
+              <span className="hero-scene__title-line hero-scene__title-line--first">
+                Завтраки,
+              </span>{' '}
+              <span className="hero-scene__title-line hero-scene__title-line--second">
+                <span className="hero-scene__accent">кофе</span> и свой
+              </span>{' '}
+              <span className="hero-scene__title-line hero-scene__title-line--third hero-scene__last-line">
                 вайб в <em>White Cup</em>
                 <span className="hero-scene__heart" aria-hidden="true">
                   ♡
                 </span>
               </span>
             </h1>
-            <SketchUnderline className="hero-scene__underline" width={280} />
+            <SceneLayer
+              className="hero-scene__underline"
+              asset={heroUnderlineReferenceExtract}
+              layer="decoration"
+              src={heroUnderlineReferenceExtract.src}
+              data-doodle
+              decoding="async"
+              draggable="false"
+            />
             <p className="hero-scene__lede">
               Спешелти кофе, свежие завтраки
               <br />

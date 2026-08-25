@@ -118,58 +118,6 @@ export const documentarySceneMedia: Record<MediaSceneRole, readonly DocumentaryM
   locations: [mediaAssets['interior-02'], mediaAssets['interior-04']],
 }
 
-export const generatedSkyline: DecorativeMediaProvenance = {
-  id: 'samara-skyline',
-  src: '/media/samara-skyline-decorative.png',
-  alt: '',
-  kind: 'decorative',
-  provenanceKind: 'decorative-generated',
-  sourceLabel: 'Image Generation Skill',
-  provenance:
-    'Сгенерированный прозрачный силуэт Самары для декоративного слоя hero; не является документальной фотографией и не используется как карта.',
-  fallbackDescription: 'При недоступности PNG показывается локальный inline SVG-эскиз силуэта Самары.',
-}
-
-/**
- * The reference hero is intentionally assembled from independent decorative
- * layers. Keeping each file in the provenance registry makes it explicit that
- * these are reference-art or synthetic art-direction assets, not documentary
- * venue evidence.
- */
-export const heroCafeBackdrop: DecorativeMediaProvenance = {
-  id: 'hero-cafe-backdrop',
-  src: '/media/hero-reference-cafe-crop.png',
-  alt: '',
-  kind: 'decorative',
-  provenanceKind: 'decorative-reference-extract',
-  sourceLabel: 'Supplied reference crop',
-  provenance:
-    'Изолированный правый фотопанельный crop из предоставленного 1672×941 референса; из crop удалены baked-навигация и текстовые фрагменты, DOM-типографика остаётся семантической. Это декоративный reference-art, не документальная фотография White Cup.',
-  fallbackDescription: 'При недоступности reference crop показывается проверенный документальный интерьер White Cup как визуальный fallback.',
-}
-
-export const heroFoodBurger: DecorativeMediaProvenance = {
-  id: 'hero-food-burger',
-  src: '/media/hero-food-burger.png',
-  alt: '',
-  kind: 'decorative',
-  provenanceKind: 'decorative-generated',
-  sourceLabel: 'Image Generation Skill + Remove Background Local',
-  provenance:
-    'Синтетический декоративный breakfast-бургер/бублик для арт-дирекции первого экрана; фон удалён локальным Remove Background и ассет не выдаётся за документальную фотографию меню.',
-}
-
-export const heroFoodLatte: DecorativeMediaProvenance = {
-  id: 'hero-food-latte',
-  src: '/media/hero-food-latte.png',
-  alt: '',
-  kind: 'decorative',
-  provenanceKind: 'decorative-generated',
-  sourceLabel: 'Image Generation Skill + Remove Background Local',
-  provenance:
-    'Синтетический декоративный латте в чашке для арт-дирекции первого экрана; фон удалён локальным Remove Background и ассет не выдаётся за документальную фотографию White Cup.',
-}
-
 export const heroDoodlesReference: DecorativeMediaProvenance = {
   id: 'hero-doodles-reference',
   src: '/media/hero-doodles-exact.png',
@@ -179,6 +127,18 @@ export const heroDoodlesReference: DecorativeMediaProvenance = {
   sourceLabel: 'Supplied reference crop + local alpha extraction',
   provenance:
     'Точечно извлечённые из предоставленного референса облака, птица, сердце и маленькие marks на прозрачный холст; baked-типографика и навигация не входят в ассет.',
+}
+
+export const heroUnderlineReferenceExtract: DecorativeMediaProvenance = {
+  id: 'hero-underline-reference-extract',
+  src: '/media/hero-underline-reference-extract-tight.webp',
+  sourceArtifactSrc: 'docs/reference/assets/hero-underline-reference-crop-authoring.png',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-extract',
+  sourceLabel: 'Supplied reference crop + exact orange alpha extraction',
+  provenance:
+    'Точный прозрачный orange-штрих под White Cup, извлечённый из предоставленного hero-референса без baked-текста и paper-фона; production WebP обрезан по alpha-bounds.',
 }
 
 export const heroSkylineReference: DecorativeMediaProvenance = {
@@ -192,42 +152,34 @@ export const heroSkylineReference: DecorativeMediaProvenance = {
     'Точно извлечённая из нижней части предоставленного референса прозрачная линейная иллюстрация с orange sun; не является картой или документальной фотографией.',
 }
 
-export const heroGeneratedLayers = [
-  heroCafeBackdrop,
-  heroFoodBurger,
-  heroFoodLatte,
-  heroDoodlesReference,
-  heroSkylineReference,
-] as const
-
 export const heroCleanBaseEdit: DecorativeMediaProvenance = {
   id: 'hero-clean-base-edit',
-  src: '/media/hero-clean-base-edit-1672.webp',
-  sourceArtifactSrc: '/media/hero-clean-base-edit-poc.png',
+  src: '/media/hero-clean-base-v2-1672.webp',
+  sourceArtifactSrc: 'docs/reference/assets/hero-clean-base-v2-authoring.png',
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
   sourceLabel: 'Image Generation Skill edit of supplied reference',
   provenance:
-    'Отредактированный по предоставленному референсу чистый фон hero без навигации, текста, логотипа, doodles, бублика и чашки; исходный PNG сохранён как authoring artifact, production использует responsive WebP. Reference-art, не документальная фотография White Cup.',
+    'Отредактированный по предоставленному референсу чистый фон hero без навигации, текста, логотипа, doodles, бублика и чашки; исходный PNG сохранён в docs/reference/assets как authoring artifact, production использует responsive WebP. Reference-art, не документальная фотография White Cup.',
 }
 
 export const heroBagelReferenceEdit: DecorativeMediaProvenance = {
   id: 'hero-bagel-reference-edit',
-  src: '/media/hero-bagel-cutout-1200.webp',
-  sourceArtifactSrc: '/media/hero-bagel-cutout-poc.png',
+  src: '/media/hero-bagel-plate-reference-edit-1200.webp',
+  sourceArtifactSrc: 'docs/reference/assets/hero-bagel-plate-magenta-authoring.png',
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
-  sourceLabel: 'Image Generation Skill edit + Remove Background Local',
+  sourceLabel: 'Image Generation Skill edit + chroma alpha extraction',
   provenance:
-    'Изолированный по предоставленному hero-референсу декоративный бублик с тарелкой; прозрачность создана локальным Remove Background и сохранена в responsive WebP, исходный PNG оставлен как authoring artifact. Ассет не является документальной фотографией меню.',
+    'Изолированный по предоставленному hero-референсу декоративный бублик с бумажной подложкой и полной тарелкой; после ImageGen-редактирования альфа создана точным chroma-key. Remove Background Local был проверен, но не использован в production из-за потери белой тарелки. Исходный PNG сохранён в docs/reference/assets; ассет не является документальной фотографией меню.',
 }
 
 export const heroCoffeeReferenceEdit: DecorativeMediaProvenance = {
   id: 'hero-coffee-reference-edit',
   src: '/media/hero-coffee-cutout-1200.webp',
-  sourceArtifactSrc: '/media/hero-coffee-cutout-poc.png',
+  sourceArtifactSrc: 'docs/reference/assets/hero-coffee-cutout-authoring.png',
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -239,7 +191,7 @@ export const heroCoffeeReferenceEdit: DecorativeMediaProvenance = {
 export const heroRouteCupReferenceEdit: DecorativeMediaProvenance = {
   id: 'hero-route-cup-reference-edit',
   src: '/media/hero-route-cup-1672.webp',
-  sourceArtifactSrc: '/media/hero-route-cup.png',
+  sourceArtifactSrc: 'docs/reference/assets/hero-route-cup-authoring.png',
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -257,13 +209,13 @@ const defineSceneLayer = (
 export const heroSceneLayerManifest = {
   backdrop: defineSceneLayer('backdrop', heroCleanBaseEdit, {
     srcSet:
-      '/media/hero-clean-base-edit-960.webp 960w, /media/hero-clean-base-edit-1672.webp 1672w',
+      '/media/hero-clean-base-v2-960.webp 960w, /media/hero-clean-base-v2-1672.webp 1672w',
     sizes: '100vw',
   }),
   foregrounds: [
     defineSceneLayer('foreground', heroBagelReferenceEdit, {
       srcSet:
-        '/media/hero-bagel-cutout-720.webp 720w, /media/hero-bagel-cutout-1200.webp 1200w',
+        '/media/hero-bagel-plate-reference-edit-720.webp 720w, /media/hero-bagel-plate-reference-edit-1200.webp 1200w',
       sizes: '(max-width: 480px) 130vw, (max-width: 720px) 125vw, 40vw',
     }),
     defineSceneLayer('foreground', heroCoffeeReferenceEdit, {
@@ -364,14 +316,14 @@ const aboutCleanBaseReferenceEdit: DecorativeMediaProvenance = {
 }
 
 const aboutPastryReferenceEdit: DecorativeMediaProvenance = {
-  id: 'about-pastry-reference-edit',
-  src: '/media/about-pastry-cutout-1200.webp',
+  id: 'about-pastry-plate-reference-edit-v2',
+  src: '/media/about-pastry-plate-reference-edit-v2-1200.webp',
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
-  sourceLabel: 'Image Generation Skill edit + Remove Background Local',
+  sourceLabel: 'Image Generation Skill edit of supplied About reference, v2',
   provenance:
-    'Независимый декоративный слой с булочкой и тарелкой, восстановленный по предоставленному About-референсу; прозрачность сохранена в responsive WebP. Это reference-art, не документальная фотография блюда White Cup.',
+    'Независимый декоративный слой с булочкой и полной узорной тарелкой, восстановленный по предоставленному About-референсу; прозрачность сохранена в responsive WebP. Это reference-art, не документальная фотография блюда White Cup.',
 }
 
 const aboutCoffeeReferenceEdit: DecorativeMediaProvenance = {
@@ -444,8 +396,8 @@ export const aboutSceneLayerManifest = {
   foregrounds: [
     defineSceneLayer('foreground', aboutPastryReferenceEdit, {
       srcSet:
-        '/media/about-pastry-cutout-720.webp 720w, /media/about-pastry-cutout-1200.webp 1200w',
-      sizes: '(max-width: 1023px) 128vw, 63vw',
+        '/media/about-pastry-plate-reference-edit-v2-720.webp 720w, /media/about-pastry-plate-reference-edit-v2-1200.webp 1200w',
+      sizes: '(max-width: 1023px) 128vw, 23vw',
     }),
     defineSceneLayer('foreground', aboutCoffeeReferenceEdit, {
       srcSet:
@@ -761,29 +713,6 @@ export const locationsSceneLayerManifest = {
   }),
 } as const
 
-export const heroFoodCutout: DecorativeMediaProvenance = {
-  id: 'hero-food-cutout',
-  src: '/media/hero-food-cutout.png',
-  alt: '',
-  kind: 'decorative',
-  provenanceKind: 'decorative-generated',
-  sourceLabel: 'Image Generation Skill + Remove Background Local',
-  provenance:
-    'Сгенерированный food-cutout для декоративной композиции первого экрана; фон удалён локальным Remove Background, ассет не выдаётся за документальную фотографию меню.',
-}
-
-export const heroCleanPanel: DecorativeMediaProvenance = {
-  id: 'hero-clean-panel',
-  src: '/media/hero-clean-panel.png',
-  alt: '',
-  kind: 'decorative',
-  provenanceKind: 'decorative-reference-edit',
-  sourceLabel: 'Image Generation Skill',
-  provenance:
-    'Сгенерированная декоративная панель по локальному референсу первого экрана: интерьер, красный потолок, бублик и кофе без текста и интерфейсных элементов; не является документальной фотографией White Cup.',
-  fallbackDescription: 'При недоступности панели используется проверенный документальный интерьер White Cup.',
-}
-
 export const heroLogoBadge: DecorativeMediaProvenance = {
   id: 'hero-logo-badge',
   src: '/media/hero-logo-reference.png',
@@ -806,29 +735,13 @@ export const menuLogoReferenceCrop: DecorativeMediaProvenance = {
     'Точный компактный вертикальный знак White Cup из предоставленного menu-референса; paper-поле сохранено, чтобы исходная графика и подпись не перерисовывались.',
 }
 
-export const heroSkylineLine: DecorativeMediaProvenance = {
-  id: 'hero-skyline-line',
-  src: '/media/hero-skyline-line.png',
-  alt: '',
-  kind: 'decorative',
-  provenanceKind: 'decorative-generated',
-  sourceLabel: 'Image Generation Skill',
-  provenance:
-    'Сгенерированная прозрачная линейная иллюстрация горизонта Самары с собором и солнцем для декоративного слоя hero; не является картой или документальной фотографией.',
-}
-
 export const decorativeMedia: DecorativeMediaProvenance[] = [
-  generatedSkyline,
-  ...heroGeneratedLayers,
   heroCleanBaseEdit,
   heroBagelReferenceEdit,
   heroCoffeeReferenceEdit,
   heroRouteCupReferenceEdit,
-  heroFoodCutout,
-  heroCleanPanel,
   heroLogoBadge,
   menuLogoReferenceCrop,
-  heroSkylineLine,
   menuCleanBaseReferenceEdit,
   ...Object.values(menuCardReferenceEdits),
   aboutCleanBaseReferenceEdit,

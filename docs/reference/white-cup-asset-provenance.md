@@ -1,17 +1,25 @@
-# White Cup hero asset provenance
+# White Cup — provenance послойных сцен
 
-Generated/extracted and inspected on 2026-08-24 for the separated reference-reconstruction hero layers. The supplied screenshot at `C:\Users\User\Downloads\3679ac8b-1f0d-40be-b73d-d5246178ba35.png` is the visual source. Only isolated decorative crops/extracts are shipped; its baked copy, navigation, and CTA are not used as live text.
+Проверено 25 августа 2026. Визуальный источник hero — supplied screenshot `C:\Users\User\Downloads\3679ac8b-1f0d-40be-b73d-d5246178ba35.png`. Live hero не растягивает этот screenshot: он складывается из независимого background, foreground, logo, doodles, route, skyline, underline и DOM-типографики.
 
-| Workspace asset | Role | Source and processing | Technical check |
+| Production asset | Роль | Источник и обработка | Проверка / классификация |
 | --- | --- | --- | --- |
-| `public/media/hero-reference-cafe-crop.png` | Primary decorative right-hand hero panel | Mechanical crop of the supplied 1672×941 reference (`x=760..1672`), with only baked nav/text fragments in the paper margin painted back to the reference paper tone. No DOM copy is embedded in the live page. | 912×941 RGB PNG; seam, café interior, bagel, and latte remain source-matched. Classified as reference art, not documentary venue evidence. |
-| `public/media/hero-doodles-exact.png` | Primary small paper doodles | Selected cloud, bird, heart, and marks from the supplied reference, alpha-extracted into a 1672×941 transparent canvas. | 1672×941 RGBA PNG; no baked copy or navigation. |
-| `public/media/hero-skyline-exact.png` | Primary lower skyline illustration | Lower skyline/sun crop from the supplied reference, alpha-extracted into a transparent 685×210 panel. | 685×210 RGBA PNG; no baked copy or navigation. |
-| `public/media/hero-logo-reference.png` | Primary header logo badge | Supplied-reference logo crop (`140×142`) with the near-paper background alpha-extracted locally. | 140×142 RGBA PNG; exact reference badge, no surrounding copy. |
-| `public/media/hero-cafe-backdrop.png` | Decorative café interior backdrop | Image Generation Skill built-in generation; warm red ceiling, hanging bulbs, wood bar, lounge seating; no text, logo, food, or UI. | 1672×941 RGB PNG; continuous photo scene. |
-| `public/media/hero-food-burger.png` | Decorative breakfast bagel/sandwich subject | Image Generation Skill built-in generation, then Remove Background Local wrapper at default aggressiveness `0.30`. | 1448×1086 RGBA PNG; corner alpha 0 and food alpha 255; checkerboard edge preview inspected and discarded after QA. |
-| `public/media/hero-food-latte.png` | Decorative white latte cup/saucer/teaspoon subject | Image Generation Skill built-in generation, then Remove Background Local wrapper at default aggressiveness `0.30`. | 1448×1086 RGBA PNG; corner alpha 0 and cup alpha 255; checkerboard edge preview inspected and discarded after QA. |
-| `public/media/hero-doodles-reference.png` | Decorative route, cup, clouds, birds, marks, and orange heart | Image Generation Skill built-in generation with a true transparent canvas; no background, text, logo, or UI. | 1672×941 RGBA PNG; corner and copy-safe center alpha 0. |
-| `public/media/hero-skyline-reference.png` | Decorative Samara-inspired skyline and orange sun | Image Generation Skill built-in generation with a true transparent canvas; twin-spire cathedral, low façades, modern tower, birds, and thin baseline. | 1672×941 RGBA PNG; corner alpha 0; upper canvas remains transparent. |
+| `public/media/hero-clean-base-v2-{960,1672}.webp` | clean café/backdrop | Image Generation Skill edit supplied reference: из prompt удалены навигация, текст, logo, doodles, bagel и cup; raw authoring PNG сохранён в `docs/reference/assets/hero-clean-base-v2-authoring.png` | responsive WebP, `decorative-reference-edit`; не documentary photo |
+| `public/media/hero-bagel-plate-reference-edit-{720,1200}.webp` | bagel + printed paper + full plate | Image Generation Skill edit: предмет помещён на chroma field; exact chroma alpha extraction; raw input в `docs/reference/assets/hero-bagel-plate-magenta-authoring.png` | alpha и dark/paper composites проверены; `decorative-reference-edit`; не menu documentary |
+| `public/media/hero-coffee-cutout-{720,1200}.webp` | latte, saucer, spoon | ранее созданный ImageGen reference edit + Remove Background Local; raw authoring PNG перенесён в `docs/reference/assets/hero-coffee-cutout-authoring.png` | отдельный transparent foreground, `decorative-reference-edit`; не documentary |
+| `public/media/hero-logo-reference.png` | header badge | supplied-reference crop + local alpha extraction | exact 140×142 reference badge; `decorative-reference-extract` |
+| `public/media/hero-doodles-exact.png` | clouds, bird, heart, small marks | supplied reference crop + local alpha extraction | transparent 1672×941 decorative canvas; no baked nav/copy |
+| `public/media/hero-route-cup-1672.webp` | route and small cup | reference-directed edit + background removal; raw authoring PNG в `docs/reference/assets/hero-route-cup-authoring.png` | `decorative-reference-edit`, not venue evidence |
+| `public/media/hero-skyline-exact.png` | skyline and orange sun | supplied reference crop + local alpha extraction | transparent decorative extract; not a map |
+| `public/media/hero-underline-reference-extract-tight.webp` | orange underline under `White Cup` | direct crop of supplied reference; only orange pixels retained with local alpha mask; tight WebP derived from `docs/reference/assets/hero-underline-reference-crop-authoring.png` | 364×28 `yuva420p`; exact stroke, no script-copy, no SVG |
+| `public/media/about-pastry-plate-reference-edit-v2-{720,1200}.webp` | About: pastry + full patterned plate | Built-in Image Generation Skill edit of the supplied About reference; selected raw authoring PNG is preserved in `docs/reference/assets/about-pastry-plate-v2-authoring.png` | alpha-preserving lossless responsive WebP; `decorative-reference-edit`; not a documentary dish photo |
 
-The `*-exact`/`*-reference` files used by the live hero are decorative reference-art, not documentary venue evidence. The Image Generation/Remove Background rows are optional experiments retained for provenance and are not requested by the normal hero path. Documentary venue photography remains separately sourced and labelled in `src/data/media.ts`.
+## Remove Background Local decision
+
+`Remove Background Local` was run against the new chroma bagel/plate variant. It removed part of the white plate, so its output was rejected after visual inspection. The production asset instead uses deterministic chroma alpha extraction, preserving the whole plate and printed paper. This is an intentional quality decision, not an unreported skipped tool.
+
+## Non-runtime experiments
+
+Ранние POC и generated hero-эксперименты перед публикацией удалены из `public/media` и из production registry: они не будут публично раздаваться Vite и не участвуют в runtime. Нужные authoring-оригиналы активных foreground-слоёв сохранены в `docs/reference/assets/`. Для About также отклонены два промежуточных результата: у одного была мягкая полупрозрачная вуаль, а у второго шахматный фон оказался baked; Remove Background Local удалил у него белую тарелку. Они не попали в рабочую директорию и не участвуют в runtime. Documentary Yandex images stay separately typed in `src/data/media.ts` and mount only where their venue role is factual.
+
+All reference edits/extracts above are visual art direction. They must never be described as documentary photos of White Cup, menu availability, prices, or a live map.
