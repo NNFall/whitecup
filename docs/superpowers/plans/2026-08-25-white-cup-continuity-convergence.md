@@ -79,6 +79,13 @@
 1. [x] Во встроенном браузере снять hero, каждый bridge/junction и полную страницу на 1920x1080, 1536x864, 390x844 и 320x568.
 2. [x] На viewport-проверках подтвердить `scrollWidth === clientWidth`, один h1, CTA/nav reachability и отсутствие горизонтального overflow.
 3. [x] Получить независимые spec/quality ревью; Antigravity запускался, но его завершённый output отсутствует и PASS не заявляется.
-4. [x] Выполнить `npm.cmd test -- --run --pool=threads --maxWorkers=1` (17 файлов/96 тестов), `npm.cmd run build`, `git diff --check`; вручную сверить evidence с шестью supplied references.
+4. [x] Выполнить `npm.cmd test -- --run --pool=threads --maxWorkers=1` (17 файлов/97 тестов), `npm.cmd run build`, `git diff --check`; вручную сверить evidence с шестью supplied references.
 5. [x] Обновить verification/deviations с фактическими командами, снимками и осознанными отклонениями.
 6. [x] Проверить git status, stage только нужные файлы, commit `e73e3fd`, push `master` в `NNFall/whitecup`, затем подтвердить remote SHA.
+
+## 6. Повторная полировка стыков и mobile-якорей — выполнено
+
+1. [x] Убрать двойной header offset: оставить `scroll-padding-top` на `html`, удалить дублирующий `scroll-margin-top` у `.scene`.
+2. [x] Смягчить границу bridge: заменить жёсткий горизонтальный divider на paper fade и лёгкую тень, сохранив inert connector-art.
+3. [x] Повторно проверить во встроенном браузере 1920×1080, 1536×864, 390×844 и 320×568: все шесть hash-якорей, `scrollWidth === clientWidth`, отсутствие обрезанного хвоста предыдущей сцены.
+4. [x] Обновить visual deviations/verification и закрыть TDD-контракт (`17 файлов/97 тестов`).

@@ -4982,11 +4982,11 @@ h2 {
   position: absolute;
   z-index: -1;
   inset: 1rem 0;
-  border-block: 1px solid rgb(182 174 163 / 0.12);
   background:
     radial-gradient(circle at 18% 50%, rgb(223 58 6 / 0.06), transparent 15%),
     radial-gradient(circle at 82% 50%, rgb(18 17 15 / 0.04), transparent 19%),
     var(--paper-light);
+  box-shadow: 0 -1rem 1.8rem rgb(74 48 30 / 0.045), 0 1rem 1.8rem rgb(74 48 30 / 0.045);
   content: '';
 }
 
@@ -5255,10 +5255,6 @@ h2 {
 
 html {
   scroll-padding-top: var(--anchor-header-offset);
-}
-
-.scene {
-  scroll-margin-top: var(--anchor-header-offset);
 }
 
 .site-nav__desktop-shell {

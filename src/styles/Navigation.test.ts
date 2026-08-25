@@ -6,9 +6,10 @@ describe('reference navigation layout guards', () => {
     expect(globalCss).not.toMatch(/body\s*\{[^}]*min-width:\s*320px;/)
   })
 
-  it('keeps scene anchors below the persistent navigation without a magic viewport edge', () => {
+  it('keeps scene anchors below the persistent navigation without double-counting the header offset', () => {
     expect(globalCss).toMatch(/--anchor-header-offset:\s*clamp\(5rem,\s*5vw,\s*5\.85rem\);/)
-    expect(globalCss).toMatch(
+    expect(globalCss).toMatch(/html\s*\{[^}]*scroll-padding-top:\s*var\(--anchor-header-offset\);/)
+    expect(globalCss).not.toMatch(
       /\.scene\s*\{[^}]*scroll-margin-top:\s*var\(--anchor-header-offset\);/,
     )
   })
@@ -47,6 +48,11 @@ describe('reference navigation layout guards', () => {
     expect(globalCss).toMatch(
       /\.site-nav__desktop-shell\[data-nav-profile='compact'\] \.site-nav__desktop\s*\{[^}]*margin-left:\s*3\.2vw;[^}]*transform:\s*translateX\(/,
     )
+  })
+
+  it('keeps scene bridges soft instead of drawing a hard horizontal divider', () => {
+    expect(globalCss).toMatch(/\.scene-bridge::after\s*\{[^}]*box-shadow:/)
+    expect(globalCss).not.toMatch(/\.scene-bridge::after\s*\{[^}]*border-block:/)
   })
 
   it('keeps compact desktop links inside the viewport at 125% zoom widths', () => {
