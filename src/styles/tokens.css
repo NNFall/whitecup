@@ -1,12 +1,4 @@
 @font-face {
-  font-family: 'White Cup Display';
-  src: url('/fonts/pangolin-cyrillic.woff2') format('woff2');
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
   font-family: 'White Cup Hand';
   src: url('/fonts/white-cup-hand-cyrillic.woff2') format('woff2');
   font-style: normal;
@@ -23,9 +15,9 @@
 }
 
 :root {
-  --paper: #f9f1e7;
-  --paper-light: #f9f1e7;
-  --ink: #000000;
+  --paper: #fbf7f0;
+  --paper-light: #fbf7f0;
+  --ink: #12110f;
   --ink-soft: #24211e;
   --orange: #e9460d;
   --orange-action: #df3a06;
@@ -33,7 +25,7 @@
   --map-water: #d8e2e5;
 
   /* Bundled subsets make the reference typography deterministic offline. */
-  --font-display: 'White Cup Display', 'Pangolin', ui-rounded, cursive;
+  --font-display: 'White Cup Body', 'Golos Text', 'Manrope', system-ui, sans-serif;
   --font-script: 'White Cup Hand', 'Marck Script', 'Caveat', cursive;
   --font-body: 'White Cup Body', 'Golos Text', 'Manrope', system-ui, sans-serif;
 }

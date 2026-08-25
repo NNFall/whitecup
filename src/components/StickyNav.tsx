@@ -18,16 +18,16 @@ export const sceneIds = [
 ] as const
 
 export type SceneId = (typeof sceneIds)[number]
-export type NavProfile = 'full' | 'compact-brand' | 'brand-only' | 'hidden' | 'utility'
+export type NavProfile = 'reference' | 'compact'
 
 const navProfileByScene: Record<SceneId, NavProfile> = {
-  hero: 'full',
-  menu: 'compact-brand',
-  about: 'brand-only',
-  visit: 'hidden',
-  events: 'full',
-  locations: 'full',
-  contact: 'utility',
+  hero: 'reference',
+  menu: 'compact',
+  about: 'compact',
+  visit: 'compact',
+  events: 'compact',
+  locations: 'compact',
+  contact: 'compact',
 }
 
 const navItems: NavItem[] = [
@@ -79,14 +79,48 @@ function currentScene(): SceneId {
   return sceneFromHash(window.location.hash) ?? sceneFromViewport() ?? 'hero'
 }
 
+interface DesktopNavigationProps {
+  activeScene: SceneId
+  profile: NavProfile
+}
+
+function DesktopNavigation({ activeScene, profile }: DesktopNavigationProps) {
+  const currentFor = (href: NavItem['href']) =>
+    href === `#${activeScene}` ? ('location' as const) : undefined
+
+  return (
+    <div className="site-nav__desktop-shell" data-nav-profile={profile}>
+      <a
+        className="site-nav__desktop-brand"
+        href="#hero"
+        aria-current={activeScene === 'hero' ? 'location' : undefined}
+        aria-label="White Cup — на главную"
+      >
+        <BrandMark variant="badge" />
+      </a>
+
+      <nav className="site-nav__desktop" aria-label="Основная навигация">
+        <ul>
+          {navItems.map((item) => (
+            <li key={item.href}>
+              <a href={item.href} aria-current={currentFor(item.href)}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+  )
+}
+
 export function StickyNav() {
   const [isOpen, setIsOpen] = useState(false)
   const [activeScene, setActiveScene] = useState<SceneId>(() => currentScene())
+  const [isScrolled, setIsScrolled] = useState(() => window.scrollY > 24)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const dialogRef = useRef<HTMLDivElement>(null)
-  const profile = getNavProfile(activeScene)
-  const brandVariant = profile === 'compact-brand' ? 'menu' : 'badge'
-  const showDesktopLinks = profile === 'full'
+  const profile = activeScene === 'hero' && !isScrolled ? getNavProfile(activeScene) : 'compact'
 
   const closeMenu = useCallback(() => {
     setIsOpen(false)
@@ -95,6 +129,7 @@ export function StickyNav() {
 
   useEffect(() => {
     const updateFromViewport = () => {
+      setIsScrolled(window.scrollY > 24)
       const scene = sceneFromViewport()
       if (scene) {
         setActiveScene(scene)
@@ -102,6 +137,7 @@ export function StickyNav() {
     }
 
     const updateFromHash = () => {
+      setIsScrolled(window.scrollY > 24)
       setActiveScene(sceneFromHash(window.location.hash) ?? sceneFromViewport() ?? 'hero')
     }
 
@@ -177,29 +213,19 @@ export function StickyNav() {
       data-menu-open={isOpen}
       data-nav-profile={profile}
     >
-      <div className="site-nav__inner">
+      <DesktopNavigation activeScene={activeScene} profile={profile} />
+
+      <div className="site-nav__mobile">
         <a
-          className="site-nav__brand"
+          className="site-nav__mobile-brand"
           href="#hero"
           aria-current={activeScene === 'hero' ? 'location' : undefined}
           aria-label="White Cup — на главную"
         >
-          <BrandMark variant={brandVariant} />
+          <span aria-hidden="true">
+            <BrandMark variant="badge" />
+          </span>
         </a>
-
-        {showDesktopLinks ? (
-          <nav className="site-nav__desktop" aria-label="Основная навигация">
-            <ul>
-              {navItems.map((item) => (
-                <li key={item.href}>
-                  <a href={item.href} aria-current={currentFor(item.href)}>
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        ) : null}
 
         <button
           ref={triggerRef}

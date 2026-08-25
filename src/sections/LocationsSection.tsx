@@ -2,7 +2,11 @@ import { Reveal } from '../components/Reveal'
 import { SceneLayer } from '../components/SceneLayer'
 import { SectionFrame } from '../components/SectionFrame'
 import { StaticMapCard } from '../components/StaticMapCard'
-import { locationsCardIconMedia, locationsSceneLayerManifest } from '../data/media'
+import {
+  locationsCardIconMedia,
+  locationsSceneLayerManifest,
+  locationsTitleReferenceExtract,
+} from '../data/media'
 import { siteData, type Location } from '../data/site'
 
 type LocationCardIconName = keyof typeof locationsCardIconMedia
@@ -54,6 +58,7 @@ export function LocationsSection() {
           Как нас <span className="locations-scene__title-accent">найти</span>
         </>
       }
+      referenceTitles={[{ asset: locationsTitleReferenceExtract, className: 'locations-scene__title-reference' }]}
       className="locations-scene"
     >
       <div className="locations-scene__art">

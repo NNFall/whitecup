@@ -4,12 +4,12 @@
 
 ## Автоматические проверки
 
-Последний полный прогон 25 августа 2026 после финальных послойных правок, чистки ассетов, About plate v2 и mobile-проверок:
+Последний полный прогон 25 августа 2026 после финальных послойных правок, точных title-extract слоёв для всех сцен, чистки ассетов, About plate v2 и mobile-проверок:
 
-- [x] `npm.cmd test -- --run` — 14 файлов, 78 тестов прошли.
+- [x] `npm.cmd test -- --run --pool=threads --maxWorkers=1` — 17 файлов, 96 тестов прошли.
 - [x] `npm.cmd run build` — TypeScript + Vite production build прошли.
 - [x] `git diff --check` — прошёл; показал только ожидаемые предупреждения LF→CRLF, whitespace-ошибок нет.
-- [x] Проверка manifest-ассетов — 48 явных `/media/...` URL из `src/data/media.ts` существуют на диске; retired POC/old pastry-файлы отсутствуют в `public/media`.
+- [x] Проверка manifest-ассетов — 65 явных `/media/...` URL из `src/data/media.ts` и 7 шаблонов динамических путей разрешаются без пропусков; retired POC/old pastry-файлы отсутствуют в `public/media`.
 
 ## Встроенный браузер Codex
 
@@ -17,10 +17,10 @@
 
 | Viewport | Evidence | Фактически проверено | Статус |
 | --- | --- | --- | --- |
-| 1920×1080 | `release-{hero,menu,about,visit,events,locations}-1920x1080.png` | Шесть desktop-сцен, все видимые слои загрузились, `clientWidth = scrollWidth = 1905`, один H1, console errors `[]` | [x] |
-| 1536×864 (эквивалент 1920×1080 при 125% zoom) | `release-{hero,menu,about,visit,events,locations}-1536x864.png` | Проверены art-directed desktop crops без чрезмерного масштаба, `1521 = 1521`, console errors `[]` | [x] |
-| 390×844 | `release-{hero,menu,about,visit,events,locations}-390x844.png` | Отдельный mobile layout, читаемые карточки и CTA, `375 = 375`, console errors `[]` | [x] |
-| 320×568 | `release-{hero,menu,about,visit,events,locations}-320x568.png` | Safe mobile gutters, CTA не обрезаны по горизонтали, `305 = 305`, console errors `[]` | [x] |
+| 1920×1080 | `release-{hero,menu,about,visit,events,locations}-1920x1080.png`, `continuity-polish-hero-1920x1080.png` и `continuity-polish-bridge-menu-1920x1080.png` | Шесть desktop-сцен, title-extract слои и видимые foreground-слои загрузились; `clientWidth = scrollWidth = 1905`, один H1 | [x] |
+| 1536×864 (эквивалент 1920×1080 при 125% zoom) | `release-{hero,menu,about,visit,events,locations}-1536x864.png`, `continuity-polish-locations-1536x864.png` и `continuity-polish-events-1536x864.png` | Проверены art-directed desktop crops без чрезмерного масштаба, карта/interior слои видимы, `1521 = 1521` | [x] |
+| 390×844 | `release-{hero,menu,about,visit,events,locations}-390x844.png` | Отдельный mobile layout, читаемые карточки и CTA, `375 = 375`, без горизонтального overflow | [x] |
+| 320×568 | `release-{hero,menu,about,visit,events,locations}-320x568.png` | Safe mobile gutters, CTA не обрезаны по горизонтали; на всех шести сценах `scrollWidth = clientWidth = 305` | [x] |
 
 Дополнительные визуальные сводки:
 
@@ -36,6 +36,8 @@
 - [x] На 320px `ArrowRight` в keyboard-focusable carousel сдвигает viewport; после последовательных действий достигнута последняя карточка (`scrollLeft = max = 1061`).
 - [x] Контекстная desktop/mobile навигация, Escape в mobile menu, anchor-ссылки, phone, VK и Yandex links покрыты тестами и проверялись в браузерном проходе. В release-проходе IAB были считаны `tel:+79372355715`, `https://vk.ru/white_cup` и `https://yandex.ru/maps/org/white_cup/19381755919/menu/`.
 - [x] `prefers-reduced-motion` и no-JS Reveal contract покрыты CSS/тестами; Reveal остаётся видимым без JavaScript.
+- [x] Для Menu/About/Visit/Events/Locations подключены независимые desktop title-extract слои с measured anchors; живые `h2` остаются для accessibility и mobile.
+- [x] Между каждой парой экранов присутствует inert `SceneBridge` с responsive route-art; границы сцен больше не зависят от одной жёсткой линии. Compact rail навигации плавно переходит из hero-профиля, а deep-link получает отложенное выравнивание после загрузки media.
 
 ## Независимые проверки
 

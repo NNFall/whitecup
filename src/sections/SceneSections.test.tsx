@@ -592,8 +592,8 @@ describe('White Cup story scenes', () => {
       '/media/events-coffee-clean-480w.webp 480w, /media/events-coffee-clean-800w.webp 800w',
     ])
     expect(manifest?.foregrounds.map((entry) => entry.sizes)).toEqual([
-      '(max-width: 1023px) 80vw, 26.5vw',
-      '(max-width: 1023px) 65vw, 22.5vw',
+      '(max-width: 1023px) 80vw, 22.4vw',
+      '(max-width: 1023px) 65vw, 23.1vw',
     ])
     expect(manifest?.chalkboard.srcSet?.split(',')).toHaveLength(2)
     expect(manifest?.decoration.srcSet?.split(',')).toHaveLength(2)
@@ -639,10 +639,10 @@ describe('White Cup story scenes', () => {
       /\.events-scene__title-line--second\s*\{[^}]*margin-left:\s*0\.2vw;[^}]*transform:\s*scaleX\(1\.34\);/,
     )
     expect(globalCss).toMatch(
-      /\.events-scene__cake\s*\{[^}]*top:\s*68\.4%;[^}]*left:\s*58\.25%;[^}]*width:\s*26\.5%;/,
+      /\.events-scene__cake\s*\{[^}]*top:\s*70\.6%;[^}]*left:\s*57\.7%;[^}]*width:\s*22\.4%;/,
     )
     expect(globalCss).toMatch(
-      /\.events-scene__coffee\s*\{[^}]*top:\s*66\.84%;[^}]*left:\s*76\.4%;[^}]*width:\s*24\.48%;/,
+      /\.events-scene__coffee\s*\{[^}]*top:\s*66\.7%;[^}]*left:\s*78\.2%;[^}]*width:\s*23\.1%;/,
     )
     expect(globalCss).toMatch(
       /@media \(max-width: 1023px\)[\s\S]*?\.events-scene__title-line--first,\s*\.events-scene__title-line--second\s*\{[^}]*margin-left:\s*0;[^}]*transform:\s*none;/,

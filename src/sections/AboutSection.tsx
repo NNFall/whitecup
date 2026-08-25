@@ -3,6 +3,8 @@ import { SceneLayer } from '../components/SceneLayer'
 import { SectionFrame } from '../components/SectionFrame'
 import {
   aboutSceneLayerManifest,
+  aboutTitleReferenceLowerExtract,
+  aboutTitleReferenceUpperExtract,
   type AboutBenefitMediaId,
 } from '../data/media'
 import { siteData } from '../data/site'
@@ -29,6 +31,16 @@ export function AboutSection() {
         </>
       }
       className="about-scene"
+      referenceTitles={[
+        {
+          asset: aboutTitleReferenceUpperExtract,
+          className: 'about-scene__title-reference-upper',
+        },
+        {
+          asset: aboutTitleReferenceLowerExtract,
+          className: 'about-scene__title-reference-lower',
+        },
+      ]}
     >
       <SceneLayer
         {...aboutSceneLayerManifest.backdrop}

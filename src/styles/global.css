@@ -15,7 +15,7 @@ body {
   min-height: 100dvh;
   margin: 0;
   background-color: var(--paper);
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.13'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.055'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 7.5rem 7.5rem;
   color: var(--ink);
@@ -2467,6 +2467,19 @@ h2 {
     padding-top: 4.9rem;
   }
 
+  .hero-scene__copy {
+    gap: 0.8rem;
+  }
+
+  .hero-scene h1 {
+    font-size: clamp(2.75rem, 14.5vw, 3.1rem);
+  }
+
+  .hero-scene__lede {
+    font-size: 0.9rem;
+    line-height: 1.34;
+  }
+
   .hero-scene__actions .button-link,
   .hero-scene__actions .button-link--primary {
     min-height: 3rem;
@@ -3777,16 +3790,16 @@ h2 {
 
 .events-scene__cake {
   z-index: 3;
-  top: 68.4%;
-  left: 58.25%;
-  width: 26.5%;
+  top: 70.6%;
+  left: 57.7%;
+  width: 22.4%;
 }
 
 .events-scene__coffee {
   z-index: 4;
-  top: 66.84%;
-  left: 76.4%;
-  width: 24.48%;
+  top: 66.7%;
+  left: 78.2%;
+  width: 23.1%;
 }
 
 .events-scene .section-frame__heading {
@@ -4929,5 +4942,684 @@ h2 {
   .location-card,
   .location-card__action {
     transition: none;
+  }
+}
+
+/* Continuity convergence -------------------------------------------------
+ * The supplied scenes keep their own measured artboards. These layers are
+ * deliberately in normal document flow between them, so the visitor reads a
+ * single paper route instead of a stack of screenshots separated by rules. */
+
+.app-shell {
+  padding-bottom: 0;
+}
+
+.scene {
+  border-bottom: 0;
+}
+
+.scene-bridge {
+  --bridge-x: 50%;
+  --bridge-rotation: 0deg;
+  position: relative;
+  z-index: 1;
+  /* The connector slightly overlaps both artboards. That removes the
+     screenshot-like hard seam while keeping the bridge in normal flow. */
+  height: clamp(7rem, 9vw, 10.5rem);
+  margin-block: -1.2rem;
+  overflow: clip;
+  background: linear-gradient(
+    to bottom,
+    rgb(251 247 240 / 0),
+    var(--paper-light) 18%,
+    var(--paper-light) 82%,
+    rgb(251 247 240 / 0)
+  );
+  isolation: isolate;
+}
+
+.scene-bridge::after {
+  position: absolute;
+  z-index: -1;
+  inset: 1rem 0;
+  border-block: 1px solid rgb(182 174 163 / 0.12);
+  background:
+    radial-gradient(circle at 18% 50%, rgb(223 58 6 / 0.06), transparent 15%),
+    radial-gradient(circle at 82% 50%, rgb(18 17 15 / 0.04), transparent 19%),
+    var(--paper-light);
+  content: '';
+}
+
+.scene-bridge[data-scene-bridge='hero-menu'] {
+  --bridge-x: 68%;
+  --bridge-rotation: 1.2deg;
+}
+
+.scene-bridge[data-scene-bridge='menu-about'] {
+  --bridge-x: 31%;
+  --bridge-rotation: -1.8deg;
+}
+
+.scene-bridge[data-scene-bridge='about-visit'] {
+  --bridge-x: 62%;
+  --bridge-rotation: 0.75deg;
+}
+
+.scene-bridge[data-scene-bridge='visit-events'] {
+  --bridge-x: 37%;
+  --bridge-rotation: -1.15deg;
+}
+
+.scene-bridge[data-scene-bridge='events-locations'] {
+  --bridge-x: 70%;
+  --bridge-rotation: 1.65deg;
+}
+
+/* The former scene-specific header profiles hid or replaced the header.
+ * Keep two desktop layers for a smooth reference-to-rail handoff. The hidden
+ * layer is aria-hidden and all of its links receive tabindex=-1 in React. */
+
+.site-nav {
+  z-index: 40;
+  border-bottom: 0;
+  isolation: isolate;
+}
+
+.site-nav__reference,
+.site-nav__rail,
+.site-nav__mobile {
+  pointer-events: none;
+}
+
+.site-nav__reference,
+.site-nav__rail {
+  transition: opacity 360ms cubic-bezier(0.16, 1, 0.3, 1), transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.site-nav__reference-brand,
+.site-nav__rail-brand,
+.site-nav__mobile-brand {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.site-nav__reference-brand .brand-mark--badge,
+.site-nav__rail-brand .brand-mark--badge,
+.site-nav__mobile-brand .brand-mark--badge {
+  display: block;
+  height: auto;
+  aspect-ratio: 140 / 142;
+}
+
+.site-nav__reference .site-nav__desktop a,
+.site-nav__rail .site-nav__desktop a {
+  font-family: var(--font-body);
+  font-weight: 650;
+}
+
+@media (min-width: 1024px) {
+  .site-nav__mobile {
+    display: none;
+  }
+
+  .site-nav__reference {
+    display: flex;
+    width: calc(100% - 6.7vw);
+    min-height: 11vw;
+    align-items: flex-start;
+    gap: 1rem;
+    margin: 0 auto;
+    padding-top: 2.69vw;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .site-nav__reference[aria-hidden='true'] {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-0.9rem);
+  }
+
+  .site-nav__reference-brand {
+    display: inline-flex;
+    width: 8.37vw;
+    min-height: 2.75rem;
+    align-items: flex-start;
+  }
+
+  .site-nav__reference-brand .brand-mark--badge {
+    width: 100%;
+  }
+
+  .site-nav__reference-links {
+    margin-left: 3.2vw;
+    padding-top: 2.45vw;
+  }
+
+  .site-nav__reference-links ul {
+    gap: 4vw;
+  }
+
+  .site-nav__reference-links a {
+    min-height: 2.75rem;
+    font-size: clamp(1rem, 1.08vw, 1.3rem);
+  }
+
+  .site-nav__rail {
+    position: absolute;
+    top: 0.95rem;
+    left: 50%;
+    display: flex;
+    width: min(67.5rem, calc(100% - 4rem));
+    min-height: 4.65rem;
+    align-items: center;
+    gap: clamp(1.35rem, 3vw, 3.5rem);
+    padding: 0.45rem 0.72rem;
+    border: 1px solid rgb(18 17 15 / 0.18);
+    background: rgb(251 247 240 / 0.96);
+    box-shadow: 0 0.65rem 1.6rem rgb(74 48 30 / 0.1);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -0.8rem);
+  }
+
+  .site-nav__rail:not([aria-hidden='true']) {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, 0);
+  }
+
+  .site-nav__rail-brand {
+    display: inline-flex;
+    width: 3.45rem;
+    min-width: 3.45rem;
+    min-height: 3.45rem;
+    align-items: center;
+  }
+
+  .site-nav__rail-brand .brand-mark--badge {
+    width: 100%;
+  }
+
+  .site-nav__rail-links {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-nav__rail-links ul {
+    justify-content: space-between;
+    gap: clamp(1.05rem, 3.1vw, 3.75rem);
+  }
+
+  .site-nav__rail-links a {
+    min-height: 3.2rem;
+    font-size: clamp(0.91rem, 1vw, 1.08rem);
+    white-space: nowrap;
+  }
+
+  .site-nav__reference a[aria-current='location']::after,
+  .site-nav__rail a[aria-current='location']::after {
+    position: absolute;
+    right: 0.05rem;
+    bottom: 0.36rem;
+    left: 0.05rem;
+    height: 0.12rem;
+    background: var(--orange-action);
+    content: '';
+    transform: rotate(-1.5deg);
+  }
+}
+
+@media (max-width: 1023px) {
+  .site-nav {
+    border-bottom: 1px solid rgb(182 174 163 / 0.52);
+    background: rgb(251 247 240 / 0.97);
+  }
+
+  .site-nav__reference,
+  .site-nav__rail {
+    display: none;
+  }
+
+  .site-nav__mobile {
+    display: flex;
+    width: min(100% - 2rem, 42rem);
+    min-height: 4.5rem;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 auto;
+    pointer-events: auto;
+  }
+
+  .site-nav__mobile-brand {
+    display: inline-flex;
+    width: 3.25rem;
+    min-height: 3.25rem;
+    align-items: center;
+  }
+
+  .site-nav__mobile-brand .brand-mark--badge {
+    width: 100%;
+  }
+
+  .site-nav__toggle {
+    display: inline-flex;
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
+
+  .scene-bridge {
+    height: clamp(5.75rem, 17vw, 7.5rem);
+    margin-block: -0.85rem;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-bridge::before,
+  .site-nav__reference,
+  .site-nav__rail {
+    transition: none;
+  }
+}
+
+/* A clean variable Cyrillic face keeps the source geometry but removes the
+ * mottled Pangolin texture from every primary heading. Script stays opt-in. */
+
+.site-shell h1,
+.site-shell h2,
+.site-shell .scene-copy--large,
+.site-shell .mobile-nav__panel nav a,
+.site-footer h2 {
+  font-family: var(--font-display);
+  font-weight: 650;
+}
+
+.hero-scene h1,
+.menu-scene .section-frame__heading h2,
+.about-scene .section-frame__heading h2,
+.visit-scene .section-frame__heading h2,
+.events-scene .section-frame__heading h2,
+.locations-scene .section-frame__heading h2 {
+  font-weight: 650;
+}
+
+/* Persistent desktop navigation stays as one semantic tree. Its geometry
+ * changes with the story, but focus never lands in a hidden duplicate layer. */
+
+:root {
+  --anchor-header-offset: clamp(5rem, 5vw, 5.85rem);
+}
+
+html {
+  scroll-padding-top: var(--anchor-header-offset);
+}
+
+.scene {
+  scroll-margin-top: var(--anchor-header-offset);
+}
+
+.site-nav__desktop-shell {
+  pointer-events: auto;
+}
+
+.site-nav__desktop-brand {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.site-nav__desktop-brand .brand-mark--badge {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 140 / 142;
+}
+
+.site-nav__desktop-shell .site-nav__desktop a {
+  font-family: var(--font-body);
+  font-weight: 650;
+  letter-spacing: -0.025em;
+}
+
+@media (min-width: 1024px) {
+  .site-nav__desktop-shell {
+    position: absolute;
+    top: 0;
+    left: 2.95vw;
+    display: flex;
+    width: calc(100% - 5.9vw);
+    align-items: flex-start;
+    gap: 1rem;
+    pointer-events: auto;
+    transition:
+      opacity 260ms cubic-bezier(0.16, 1, 0.3, 1),
+      color 260ms cubic-bezier(0.16, 1, 0.3, 1),
+      min-height 260ms cubic-bezier(0.16, 1, 0.3, 1),
+      padding 260ms cubic-bezier(0.16, 1, 0.3, 1),
+      gap 260ms cubic-bezier(0.16, 1, 0.3, 1),
+      width 260ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: min-height, padding, gap, width, transform;
+  }
+
+  .site-nav__desktop-brand,
+  .site-nav__desktop,
+  .site-nav__desktop ul,
+  .site-nav__desktop a {
+    transition:
+      width 260ms cubic-bezier(0.16, 1, 0.3, 1),
+      min-height 260ms cubic-bezier(0.16, 1, 0.3, 1),
+      margin 260ms cubic-bezier(0.16, 1, 0.3, 1),
+      padding 260ms cubic-bezier(0.16, 1, 0.3, 1),
+      gap 260ms cubic-bezier(0.16, 1, 0.3, 1),
+      font-size 260ms cubic-bezier(0.16, 1, 0.3, 1),
+      color 180ms ease,
+      transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .site-nav__desktop-shell[data-nav-profile='reference'] {
+    min-height: 11vw;
+    padding-top: 2.69vw;
+  }
+
+  .site-nav__desktop-shell[data-nav-profile='reference'] .site-nav__desktop-brand {
+    display: inline-flex;
+    width: 8.37vw;
+    min-height: 2.75rem;
+    align-items: flex-start;
+  }
+
+  .site-nav__desktop-shell[data-nav-profile='reference'] .site-nav__desktop {
+    margin-left: 3.2vw;
+    padding-top: 2.45vw;
+  }
+
+  .site-nav__desktop-shell[data-nav-profile='reference'] .site-nav__desktop ul {
+    gap: 4vw;
+  }
+
+  .site-nav__desktop-shell[data-nav-profile='reference'] .site-nav__desktop a {
+    min-height: 2.75rem;
+    font-size: clamp(1rem, 1.08vw, 1.3rem);
+  }
+
+  .site-nav__desktop-shell[data-nav-profile='compact'] {
+    isolation: isolate;
+    min-height: 4.25rem;
+    align-items: center;
+    gap: clamp(1rem, 1.5vw, 1.75rem);
+    padding-top: 0.8rem;
+  }
+
+  .site-nav__desktop-shell[data-nav-profile='compact']::before {
+    position: absolute;
+    z-index: -1;
+    inset: -0.2rem -2.95vw auto;
+    height: 5.9rem;
+    background: linear-gradient(
+      to bottom,
+      rgb(251 247 240 / 0.94),
+      rgb(251 247 240 / 0.78) 62%,
+      rgb(251 247 240 / 0.08) 94%,
+      rgb(251 247 240 / 0)
+    );
+    clip-path: polygon(0 0, 100% 0, 100% 87%, 94% 91%, 87% 88%, 79% 94%, 69% 89%, 59% 93%, 48% 88%, 37% 93%, 27% 89%, 16% 94%, 7% 89%, 0 92%);
+    box-shadow: 0 0.35rem 1.1rem rgb(18 17 15 / 0.05);
+    content: '';
+    pointer-events: none;
+  }
+
+  .site-nav__desktop-shell[data-nav-profile='compact'] .site-nav__desktop-brand {
+    display: inline-flex;
+    width: 3.35rem;
+    min-width: 3.35rem;
+    min-height: 3.35rem;
+    align-items: center;
+  }
+
+  .site-nav__desktop-shell[data-nav-profile='compact'] .site-nav__desktop {
+    min-width: 0;
+    /* Keep a numeric origin so the rail can glide into place; `auto` would
+       snap at the profile boundary and make the header jump during scroll. */
+    margin-left: 3.2vw;
+    padding-top: 0;
+    transform: translateX(clamp(20rem, 54vw, 66rem));
+  }
+
+  .site-nav__desktop-shell[data-nav-profile='reference'] .site-nav__desktop {
+    transform: translateX(0);
+  }
+
+  .site-nav__desktop-shell[data-nav-profile='compact'] .site-nav__desktop ul {
+    gap: clamp(1.15rem, 3.35vw, 4rem);
+  }
+
+  .site-nav__desktop-shell[data-nav-profile='compact'] .site-nav__desktop a {
+    min-height: 3.35rem;
+    font-size: clamp(0.92rem, 1vw, 1.08rem);
+    white-space: nowrap;
+  }
+
+  .site-nav__desktop-shell .site-nav__desktop a[aria-current='location']::after {
+    position: absolute;
+    right: 0.05rem;
+    bottom: 0.36rem;
+    left: 0.05rem;
+    height: 0.12rem;
+    background: var(--orange-action);
+    content: '';
+    transform: rotate(-1.5deg);
+  }
+}
+
+@media (max-width: 1023px) {
+  .site-nav__desktop-shell {
+    display: none;
+  }
+}
+
+/* At the effective 125% zoom desktop width, keep the compact rail fully
+ * inside the paper frame instead of letting the last link disappear beyond
+ * the viewport edge. The reference profile remains unchanged. */
+@media (min-width: 1024px) and (max-width: 1600px) {
+  .site-nav__desktop-shell[data-nav-profile='compact'] .site-nav__desktop {
+    transform: translateX(clamp(15rem, 44vw, 40rem));
+  }
+
+  .site-nav__desktop-shell[data-nav-profile='compact'] .site-nav__desktop ul {
+    gap: clamp(1rem, 2.4vw, 3rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-nav__desktop-shell,
+  .site-nav__desktop-brand,
+  .site-nav__desktop,
+  .site-nav__desktop ul,
+  .site-nav__desktop a {
+    transition: none;
+    will-change: auto;
+  }
+}
+
+.scene-bridge__route {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: var(--bridge-x);
+  display: block;
+  width: min(75rem, 78vw);
+  max-width: none;
+  height: auto;
+  opacity: 0.9;
+  pointer-events: none;
+  transform: translate(-50%, -50%) rotate(var(--bridge-rotation));
+}
+
+@media (max-width: 1023px) {
+  .scene-bridge__route {
+    width: max(35rem, 150vw);
+    opacity: 0.78;
+  }
+}
+
+/* The desktop hero keeps the semantic heading in the accessibility tree while
+ * placing the supplied reference lettering on its own transparent layer. This
+ * preserves the exact handwritten contours without turning the whole scene
+ * into one opaque screenshot. */
+
+@media (min-width: 1024px) {
+  .hero-scene__copy {
+    gap: 0;
+  }
+
+  .hero-scene__copy > [data-conditional-layer='title-reference'] {
+    display: block;
+    margin: -1.7dvh 0 0.8dvh -1.08vw;
+  }
+
+  .hero-scene__title-reference {
+    display: block;
+    width: 47.85vw;
+    height: auto;
+    pointer-events: none;
+  }
+
+  .hero-scene h1,
+  .hero-scene__underline {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .hero-scene__lede {
+    margin-top: 0;
+    transform: none;
+  }
+}
+
+@media (max-width: 1023px) {
+  .hero-scene__copy > [data-conditional-layer='title-reference'] {
+    display: block;
+    width: min(100%, 24rem);
+    margin: 0 auto;
+  }
+
+  .hero-scene__title-reference {
+    display: block;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+  }
+
+  .hero-scene h1,
+  .hero-scene__underline {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+/* Menu/About keep their live headings for semantics and mobile composition;
+ * desktop uses measured transparent extracts to match supplied lettering. */
+
+@media (min-width: 1024px) {
+  .section-frame__inner {
+    isolation: isolate;
+  }
+
+  .section-frame__title-reference {
+    position: absolute;
+    z-index: 9;
+    display: block;
+    pointer-events: none;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+
+  .section-frame__title-reference-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+
+  .menu-scene__title-reference {
+    left: 10.77%;
+    top: 10.41%;
+    width: 50.48vw;
+  }
+
+  .about-scene__title-reference-upper {
+    left: 4.43%;
+    top: 14.03%;
+    width: 47.55vw;
+  }
+
+  .about-scene__title-reference-lower {
+    left: 4.43%;
+    top: 33.48%;
+    width: 52.33vw;
+  }
+
+  .visit-scene__title-reference {
+    left: 7.06%;
+    top: 14.88%;
+    width: 47.85vw;
+  }
+
+  .events-scene__title-reference {
+    left: 4.31%;
+    top: 21.04%;
+    width: 47.25vw;
+  }
+
+  .locations-scene__title-reference {
+    left: 4.43%;
+    top: 23.38%;
+    width: 46.95vw;
+  }
+
+  .menu-scene .section-frame__heading h2,
+  .about-scene .section-frame__heading h2,
+  .visit-scene .section-frame__heading h2,
+  .events-scene .section-frame__heading h2,
+  .locations-scene .section-frame__heading h2 {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 1023px) {
+  .section-frame__title-reference {
+    display: none;
+  }
+
+  /* On small screens the live headings are the visible art direction. Keep
+     their handwritten silhouette instead of falling back to a heavy display
+     face; the body/nav remain on the clean variable text family. */
+  .menu-scene .section-frame__heading h2,
+  .about-scene .section-frame__heading h2,
+  .visit-scene .section-frame__heading h2,
+  .events-scene .section-frame__heading h2,
+  .locations-scene .section-frame__heading h2 {
+    font-family: var(--font-script);
+    font-weight: 400;
+    letter-spacing: -0.025em;
   }
 }

@@ -6,11 +6,6 @@ import tokensCss from './tokens.css?raw'
 
 const localFaces = [
   {
-    family: 'White Cup Display',
-    href: '/fonts/pangolin-cyrillic.woff2',
-    weight: '400',
-  },
-  {
     family: 'White Cup Hand',
     href: '/fonts/white-cup-hand-cyrillic.woff2',
     weight: '400',
@@ -37,9 +32,11 @@ describe('deterministic local typography', () => {
     )
   })
 
-  it('routes display, handwriting, and body tokens through the bundled families', () => {
+  it('routes primary headings through the clean body family and keeps handwriting separate', () => {
+    expect(tokensCss).not.toContain("font-family: 'White Cup Display'")
+    expect(indexHtml).not.toContain('/fonts/pangolin-cyrillic.woff2')
     expect(tokensCss).toMatch(
-      /--font-display:\s*['"]White Cup Display['"][^;]*;/,
+      /--font-display:\s*['"]White Cup Body['"][^;]*;/,
     )
     expect(tokensCss).toMatch(
       /--font-script:\s*['"]White Cup Hand['"][^;]*;/,

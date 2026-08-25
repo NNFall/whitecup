@@ -30,6 +30,11 @@ export interface DecorativeMediaProvenance extends MediaProvenanceBase {
   provenanceKind: SceneLayerMediaKind
 }
 
+export interface ResponsiveDecorativeMediaProvenance extends DecorativeMediaProvenance {
+  srcSet: string
+  sizes: string
+}
+
 export type MediaProvenance = DocumentaryMediaProvenance | DecorativeMediaProvenance
 
 export interface SceneLayerManifestEntry {
@@ -141,6 +146,21 @@ export const heroUnderlineReferenceExtract: DecorativeMediaProvenance = {
     'Точный прозрачный orange-штрих под White Cup, извлечённый из предоставленного hero-референса без baked-текста и paper-фона; production WebP обрезан по alpha-bounds.',
 }
 
+export const heroTitleReferenceExtract: ResponsiveDecorativeMediaProvenance = {
+  id: 'hero-title-reference-extract',
+  src: '/media/hero-title-reference-extract-1600.webp',
+  srcSet:
+    '/media/hero-title-reference-extract-800.webp 800w, /media/hero-title-reference-extract-1600.webp 1600w',
+  sizes: '47.85vw',
+  sourceArtifactSrc: 'docs/reference/assets/hero-title-reference-crop-authoring.png',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-extract',
+  sourceLabel: 'Supplied hero reference crop + local alpha extraction',
+  provenance:
+    'Точный прозрачный заголовочный слой первого hero, извлечённый из предоставленного референса; включает рукописные контуры, orange-акцент, underline и малые marks, но не содержит paper-фона, навигации или фотографии. Это reference-extract, не документальная фотография и не сгенерированная сцена.',
+}
+
 export const heroSkylineReference: DecorativeMediaProvenance = {
   id: 'hero-skyline-reference',
   src: '/media/hero-skyline-exact.png',
@@ -200,6 +220,20 @@ export const heroRouteCupReferenceEdit: DecorativeMediaProvenance = {
     'Независимый прозрачный слой с тонким пунктирным маршрутом и маленькой чашкой, восстановленный по геометрии предоставленного hero-референса; декоративный reference-edit, не документальная фотография.',
 }
 
+export const storyRouteConnectorGenerated: ResponsiveDecorativeMediaProvenance = {
+  id: 'story-route-connector-generated',
+  src: '/media/story-route-connector-1200.webp',
+  srcSet:
+    '/media/story-route-connector-720.webp 720w, /media/story-route-connector-1200.webp 1200w, /media/story-route-connector-2400.webp 2400w',
+  sizes: '(max-width: 1023px) 150vw, 75rem',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-generated',
+  sourceLabel: 'Image Generation Skill, reference-informed decorative route',
+  provenance:
+    'Новый прозрачный декоративный маршрут с чашкой, облаками, птицами, листом и orange-штрихами, сгенерированный по линии и настроению supplied hero reference. Используется только между сценами, не является картой, документальной фотографией или фактом о White Cup.',
+}
+
 const defineSceneLayer = (
   layer: SceneLayerRole,
   asset: DecorativeMediaProvenance,
@@ -240,6 +274,21 @@ const menuCleanBaseReferenceEdit: DecorativeMediaProvenance = {
   sourceLabel: 'Image Generation Skill edit of supplied menu reference',
   provenance:
     'Чистый бумажный фон с правой линейной иллюстрацией кафе, восстановленный редактированием предоставленного menu-референса без baked-текста, карточек и интерфейса. Локальный authoring PNG не публикуется; production использует только responsive WebP. Это decorative reference-art, не документальная фотография White Cup.',
+}
+
+export const menuTitleReferenceExtract: ResponsiveDecorativeMediaProvenance = {
+  id: 'menu-title-reference-extract',
+  src: '/media/menu-title-reference-extract-1688.webp',
+  srcSet:
+    '/media/menu-title-reference-extract-844.webp 844w, /media/menu-title-reference-extract-1688.webp 1688w',
+  sizes: '50.48vw',
+  sourceArtifactSrc: 'docs/reference/assets/menu-title-reference-crop-authoring.png',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-extract',
+  sourceLabel: 'Supplied menu reference crop + local alpha extraction',
+  provenance:
+    'Точный прозрачный рукописный заголовок menu-сцены с orange-акцентом и underline, извлечённый из предоставленного референса. Используется только как desktop reference-extract поверх живого h2; не является документальной фотографией или сгенерированной сценой.',
 }
 
 const defineMenuCardReferenceEdit = (
@@ -313,6 +362,36 @@ const aboutCleanBaseReferenceEdit: DecorativeMediaProvenance = {
   sourceLabel: 'Image Generation Skill edit of supplied About reference',
   provenance:
     'Чистая бумажно-интерьерная композиция с органическим краем, восстановленная редактированием предоставленного About-референса без baked-текста, карточек, выпечки и чашки. Локальный authoring PNG не публикуется; production использует responsive WebP. Это decorative reference-art, не документальная фотография White Cup.',
+}
+
+export const aboutTitleReferenceUpperExtract: ResponsiveDecorativeMediaProvenance = {
+  id: 'about-title-reference-upper-extract',
+  src: '/media/about-title-reference-upper-extract-1590.webp',
+  srcSet:
+    '/media/about-title-reference-upper-extract-795.webp 795w, /media/about-title-reference-upper-extract-1590.webp 1590w',
+  sizes: '47.55vw',
+  sourceArtifactSrc: 'docs/reference/assets/about-title-reference-upper-crop-authoring.png',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-extract',
+  sourceLabel: 'Supplied about reference crop + local alpha extraction',
+  provenance:
+    'Точный верхний прозрачный рукописный title-layer about-сцены, извлечённый из предоставленного референса. Отделён от нижней строки для сохранения исходной сетки; не является документальной фотографией или сгенерированной сценой.',
+}
+
+export const aboutTitleReferenceLowerExtract: ResponsiveDecorativeMediaProvenance = {
+  id: 'about-title-reference-lower-extract',
+  src: '/media/about-title-reference-lower-extract-1750.webp',
+  srcSet:
+    '/media/about-title-reference-lower-extract-875.webp 875w, /media/about-title-reference-lower-extract-1750.webp 1750w',
+  sizes: '52.33vw',
+  sourceArtifactSrc: 'docs/reference/assets/about-title-reference-lower-crop-authoring.png',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-extract',
+  sourceLabel: 'Supplied about reference crop + local alpha extraction',
+  provenance:
+    'Точная нижняя прозрачная строка рукописного title-layer about-сцены с orange-акцентом, извлечённая из предоставленного референса. Не является документальной фотографией или сгенерированной сценой.',
 }
 
 const aboutPastryReferenceEdit: DecorativeMediaProvenance = {
@@ -427,6 +506,21 @@ const visitCleanBaseReferenceEdit: DecorativeMediaProvenance = {
     'Чистый тёплый бумажный фон с верхней правой линейной иллюстрацией кафе и пунктирным маршрутом, восстановленный редактированием предоставленного Visit-референса без baked-текста и карточек. Локальный authoring PNG не публикуется; production использует responsive WebP. Это decorative reference-art, не документальная фотография White Cup.',
 }
 
+export const visitTitleReferenceExtract: ResponsiveDecorativeMediaProvenance = {
+  id: 'visit-title-reference-extract',
+  src: '/media/visit-title-reference-extract-1560.webp',
+  srcSet:
+    '/media/visit-title-reference-extract-780.webp 780w, /media/visit-title-reference-extract-1560.webp 1560w',
+  sizes: '47.85vw',
+  sourceArtifactSrc: 'docs/reference/assets/visit-title-reference-crop-authoring.png',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-extract',
+  sourceLabel: 'Supplied Visit reference crop + local alpha extraction',
+  provenance:
+    'Точный прозрачный рукописный заголовок Visit-сцены с orange-акцентом и underline, извлечённый из предоставленного референса. Используется только как desktop reference-extract поверх живого h2; не является документальной фотографией или сгенерированной сценой.',
+}
+
 const defineVisitCardReferenceEdit = (
   id: string,
   filename: string,
@@ -518,6 +612,21 @@ const eventsCleanBaseReferenceEdit: DecorativeMediaProvenance = {
   sourceLabel: 'Image Generation Skill edit of supplied Events reference',
   provenance:
     'Чистая полноэкранная бумажно-интерьерная сцена с правой фотопанелью и столом, восстановленная редактированием предоставленного Events-референса без baked-текста, карточек, доски и предметов переднего плана. Production использует только responsive WebP; это decorative reference-art, не документальная фотография White Cup.',
+}
+
+export const eventsTitleReferenceExtract: ResponsiveDecorativeMediaProvenance = {
+  id: 'events-title-reference-extract',
+  src: '/media/events-title-reference-extract-1520.webp',
+  srcSet:
+    '/media/events-title-reference-extract-760.webp 760w, /media/events-title-reference-extract-1520.webp 1520w',
+  sizes: '47.25vw',
+  sourceArtifactSrc: 'docs/reference/assets/events-title-reference-crop-authoring.png',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-extract',
+  sourceLabel: 'Supplied Events reference crop + local alpha extraction',
+  provenance:
+    'Точный прозрачный рукописный заголовок Events-сцены с orange-акцентом и underline, извлечённый из предоставленного референса. Используется только как desktop reference-extract поверх живого h2; не является документальной фотографией или сгенерированной сценой.',
 }
 
 const defineEventsCardReferenceEdit = (
@@ -617,12 +726,12 @@ export const eventsSceneLayerManifest = {
     defineSceneLayer('foreground', eventsCakePlateCleanReferenceEdit, {
       srcSet:
         '/media/events-cake-plate-clean-720w.webp 720w, /media/events-cake-plate-clean-1200w.webp 1200w',
-      sizes: '(max-width: 1023px) 80vw, 26.5vw',
+      sizes: '(max-width: 1023px) 80vw, 22.4vw',
     }),
     defineSceneLayer('foreground', eventsCoffeeCleanReferenceEdit, {
       srcSet:
         '/media/events-coffee-clean-480w.webp 480w, /media/events-coffee-clean-800w.webp 800w',
-      sizes: '(max-width: 1023px) 65vw, 22.5vw',
+      sizes: '(max-width: 1023px) 65vw, 23.1vw',
     }),
   ],
   decoration: defineSceneLayer('decoration', eventsDoodlesReferenceEdit, {
@@ -646,6 +755,21 @@ const locationsMapReferenceEdit: DecorativeMediaProvenance = {
   sourceLabel: 'Image Generation Skill edit of supplied Locations reference',
   provenance:
     'Отдельный чистый акварельный слой Самары без baked-подписей и интерфейса, восстановленный по предоставленному Locations-референсу и оптимизированный в responsive WebP. Это декоративная схема, не интерактивная или географически точная карта.',
+}
+
+export const locationsTitleReferenceExtract: ResponsiveDecorativeMediaProvenance = {
+  id: 'locations-title-reference-extract',
+  src: '/media/locations-title-reference-extract-1500.webp',
+  srcSet:
+    '/media/locations-title-reference-extract-750.webp 750w, /media/locations-title-reference-extract-1500.webp 1500w',
+  sizes: '46.95vw',
+  sourceArtifactSrc: 'docs/reference/assets/locations-title-reference-crop-authoring.png',
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-extract',
+  sourceLabel: 'Supplied Locations reference crop + local alpha extraction',
+  provenance:
+    'Точный прозрачный рукописный заголовок Locations-сцены с orange-акцентом и underline, извлечённый из предоставленного референса. Используется только как desktop reference-extract поверх живого h2; не является картой, документальной фотографией или сгенерированной сценой.',
 }
 
 const locationsInteriorReferenceEdit: DecorativeMediaProvenance = {
@@ -699,12 +823,15 @@ export const locationsSceneLayerManifest = {
   map: defineSceneLayer('backdrop', locationsMapReferenceEdit, {
     srcSet:
       '/media/locations-map-reference-960w.webp 960w, /media/locations-map-reference-1672w.webp 1672w',
-    sizes: '(max-width: 1023px) 100vw, 56vw',
+    /* The map is painted as a large right-side artboard on desktop. Asking
+       for the full desktop source avoids a Chromium/WebP paint gap observed
+       at effective 125% zoom (1536 CSS px), while mobile still selects 960w. */
+    sizes: '(max-width: 1023px) 100vw, 100vw',
   }),
   interior: defineSceneLayer('foreground', locationsInteriorReferenceEdit, {
     srcSet:
       '/media/locations-interior-base-960w.webp 960w, /media/locations-interior-base-1672w.webp 1672w',
-    sizes: '(max-width: 1023px) 100vw, 56vw',
+    sizes: '(max-width: 1023px) 100vw, 100vw',
   }),
   decoration: defineSceneLayer('decoration', locationsDoodlesReferenceEdit, {
     srcSet:
@@ -737,29 +864,37 @@ export const menuLogoReferenceCrop: DecorativeMediaProvenance = {
 
 export const decorativeMedia: DecorativeMediaProvenance[] = [
   heroCleanBaseEdit,
+  heroTitleReferenceExtract,
   heroBagelReferenceEdit,
   heroCoffeeReferenceEdit,
   heroRouteCupReferenceEdit,
+  storyRouteConnectorGenerated,
   heroLogoBadge,
   menuLogoReferenceCrop,
   menuCleanBaseReferenceEdit,
+  menuTitleReferenceExtract,
   ...Object.values(menuCardReferenceEdits),
   aboutCleanBaseReferenceEdit,
+  aboutTitleReferenceUpperExtract,
+  aboutTitleReferenceLowerExtract,
   aboutPastryReferenceEdit,
   aboutCoffeeReferenceEdit,
   aboutDoodlesReferenceEdit,
   ...Object.values(aboutBenefitReferenceEdits),
   visitCleanBaseReferenceEdit,
+  visitTitleReferenceExtract,
   ...Object.values(visitCardReferenceEdits),
   visitDoodlesReferenceEdit,
   visitSkylineReferenceEdit,
   eventsCleanBaseReferenceEdit,
+  eventsTitleReferenceExtract,
   ...Object.values(eventsCardReferenceEdits),
   eventsCakePlateCleanReferenceEdit,
   eventsCoffeeCleanReferenceEdit,
   eventsDoodlesReferenceEdit,
   eventsChalkboardReferenceEdit,
   locationsMapReferenceEdit,
+  locationsTitleReferenceExtract,
   locationsInteriorReferenceEdit,
   locationsDoodlesReferenceEdit,
   ...Object.values(locationsCardIconMedia),

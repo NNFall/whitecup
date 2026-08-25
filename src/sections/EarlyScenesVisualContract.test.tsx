@@ -18,6 +18,28 @@ describe('early-scene reference convergence', () => {
     expect(lines[1]).toHaveClass('hero-scene__title-line--second')
     expect(lines[2]).toHaveClass('hero-scene__title-line--third')
 
+    const titleReference = hero.querySelector('.hero-scene__title-reference')
+    const titleReferenceSource = hero.querySelector('[data-conditional-layer="title-reference"] source[media="(min-width: 1024px)"]')
+    const titleReferenceSources = hero.querySelectorAll('[data-conditional-layer="title-reference"] source')
+    expect(titleReferenceSources).toHaveLength(2)
+    expect(titleReference).toHaveAttribute('data-layer', 'decoration')
+    expect(titleReference).toHaveAttribute('data-media-kind', 'decorative-reference-extract')
+    expect(titleReferenceSource).toHaveAttribute('media', '(min-width: 1024px)')
+    expect(titleReferenceSource).toHaveAttribute(
+      'srcset',
+      '/media/hero-title-reference-extract-800.webp 800w, /media/hero-title-reference-extract-1600.webp 1600w',
+    )
+    expect(hero.querySelector('[data-conditional-layer="title-reference"] source[media="(max-width: 1023px)"]')).toHaveAttribute(
+      'srcset',
+      '/media/hero-title-reference-extract-800.webp',
+    )
+    expect(globalCss).toMatch(
+      /\.hero-scene__title-reference\s*\{[^}]*width:\s*47\.85vw;[^}]*pointer-events:\s*none;/,
+    )
+    expect(globalCss).toMatch(
+      /@media \(max-width:\s*1023px\)[\s\S]*?\.hero-scene__title-reference\s*\{[^}]*display:\s*block;/,
+    )
+
     expect(globalCss).toMatch(
       /\.hero-scene__title-line--first\s*\{[^}]*transform:\s*translate\(-0\.42vw,\s*-0\.38dvh\)\s*scale\(1\.24,\s*1\.044\);/,
     )
@@ -89,6 +111,18 @@ describe('early-scene reference convergence', () => {
     )
     expect(globalCss).toMatch(
       /@media \(max-width:\s*1023px\)[\s\S]*?\.about-scene__title-line--place,\s*\.about-scene__title-line--return\s*\{[^}]*transform:\s*none;/,
+    )
+  })
+
+  it('keeps the compact 320px hero actions inside the first mobile frame', () => {
+    expect(globalCss).toMatch(
+      /@media \(max-width:\s*340px\)[\s\S]*?\.hero-scene__copy\s*\{[^}]*gap:\s*0\.8rem;/,
+    )
+    expect(globalCss).toMatch(
+      /@media \(max-width:\s*340px\)[\s\S]*?\.hero-scene h1\s*\{[^}]*font-size:\s*clamp\(2\.75rem,\s*14\.5vw,\s*3\.1rem\);/,
+    )
+    expect(globalCss).toMatch(
+      /@media \(max-width:\s*340px\)[\s\S]*?\.hero-scene__lede\s*\{[^}]*font-size:\s*0\.9rem;/,
     )
   })
 

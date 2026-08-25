@@ -2,6 +2,7 @@ import { useLayoutEffect } from 'react'
 
 import { StickyNav } from './components/StickyNav'
 import { Footer } from './components/Footer'
+import { SceneBridge } from './components/SceneBridge'
 import { AboutSection } from './sections/AboutSection'
 import { EventsSection } from './sections/EventsSection'
 import { HeroSection } from './sections/HeroSection'
@@ -11,6 +12,8 @@ import { VisitSection } from './sections/VisitSection'
 
 export default function App() {
   useLayoutEffect(() => {
+    let pendingAlignment: number | undefined
+
     const alignHashTarget = () => {
       const id = decodeURIComponent(window.location.hash.slice(1))
       if (!id) {
@@ -29,10 +32,32 @@ export default function App() {
       root.style.scrollBehavior = previousScrollBehavior
     }
 
-    alignHashTarget()
-    window.addEventListener('hashchange', alignHashTarget)
+    const alignAfterLayoutSettles = () => {
+      alignHashTarget()
 
-    return () => window.removeEventListener('hashchange', alignHashTarget)
+      if (pendingAlignment !== undefined) {
+        window.clearTimeout(pendingAlignment)
+      }
+
+      /* Reference scenes keep their artboards in flow, but responsive image
+       * selection can settle after the first layout pass. Re-align only the
+       * active deep link once that media/layout pass has had a chance to
+       * finish; ordinary scrolling is never touched. */
+      pendingAlignment = window.setTimeout(() => {
+        pendingAlignment = undefined
+        alignHashTarget()
+      }, 1_200)
+    }
+
+    alignAfterLayoutSettles()
+    window.addEventListener('hashchange', alignAfterLayoutSettles)
+
+    return () => {
+      window.removeEventListener('hashchange', alignAfterLayoutSettles)
+      if (pendingAlignment !== undefined) {
+        window.clearTimeout(pendingAlignment)
+      }
+    }
   }, [])
 
   return (
@@ -40,12 +65,15 @@ export default function App() {
       <StickyNav />
       <main className="app-shell">
         <HeroSection />
-
+        <SceneBridge from="hero" to="menu" />
         <MenuSection />
-
+        <SceneBridge from="menu" to="about" />
         <AboutSection />
+        <SceneBridge from="about" to="visit" />
         <VisitSection />
+        <SceneBridge from="visit" to="events" />
         <EventsSection />
+        <SceneBridge from="events" to="locations" />
         <LocationsSection />
       </main>
       <Footer />

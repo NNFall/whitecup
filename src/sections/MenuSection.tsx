@@ -2,7 +2,7 @@ import { MenuCarousel } from '../components/MenuCarousel'
 import { Reveal } from '../components/Reveal'
 import { SceneLayer } from '../components/SceneLayer'
 import { SectionFrame } from '../components/SectionFrame'
-import { menuSceneLayerManifest } from '../data/media'
+import { menuSceneLayerManifest, menuTitleReferenceExtract } from '../data/media'
 import { siteData } from '../data/site'
 
 export function MenuSection() {
@@ -21,6 +21,10 @@ export function MenuSection() {
       }
       kicker="Для утренних ритуалов, встреч и спокойных пауз"
       className="menu-scene"
+      referenceTitles={[{
+        asset: menuTitleReferenceExtract,
+        className: 'menu-scene__title-reference',
+      }]}
     >
       <SceneLayer
         {...menuSceneLayerManifest.backdrop}

@@ -13,29 +13,29 @@ describe('StickyNav', () => {
   })
 
   it.each([
-    ['hero', 'full'],
-    ['menu', 'compact-brand'],
-    ['about', 'brand-only'],
-    ['visit', 'hidden'],
-    ['events', 'full'],
-    ['locations', 'full'],
-    ['contact', 'utility'],
-  ] as const)('maps the %s scene to the %s reference profile', (scene, profile) => {
+    ['hero', 'reference'],
+    ['menu', 'compact'],
+    ['about', 'compact'],
+    ['visit', 'compact'],
+    ['events', 'compact'],
+    ['locations', 'compact'],
+    ['contact', 'compact'],
+  ] as const)('maps the %s scene to the %s continuous navigation mode', (scene, profile) => {
     expect(getNavProfile(scene)).toBe(profile)
   })
 
-  it('uses the exact compact reference logo and omits desktop links in the menu scene', () => {
+  it('keeps a compact, fully linked rail after the hero instead of removing desktop navigation', () => {
     setHash('#menu')
     render(<StickyNav />)
 
     const header = screen.getByRole('banner')
     expect(header).toHaveAttribute('data-active-scene', 'menu')
-    expect(header).toHaveAttribute('data-nav-profile', 'compact-brand')
+    expect(header).toHaveAttribute('data-nav-profile', 'compact')
     expect(within(header).getByRole('img', { name: /white cup/i })).toHaveAttribute(
       'src',
-      '/media/menu-logo-reference-crop.png',
+      '/media/hero-logo-reference.png',
     )
-    expect(within(header).queryByRole('navigation', { name: 'Основная навигация' })).not.toBeInTheDocument()
+    expect(within(header).getByRole('navigation', { name: 'Основная навигация' })).toBeInTheDocument()
   })
 
   it('switches profile and current link when the hash changes', () => {
@@ -43,7 +43,7 @@ describe('StickyNav', () => {
     render(<StickyNav />)
 
     const header = screen.getByRole('banner')
-    expect(header).toHaveAttribute('data-nav-profile', 'full')
+    expect(header).toHaveAttribute('data-nav-profile', 'reference')
 
     act(() => {
       setHash('#events')
@@ -66,6 +66,39 @@ describe('StickyNav', () => {
       'aria-current',
       'location',
     )
+  })
+
+  it('collapses the oversized hero header as soon as the visitor scrolls', () => {
+    const scrollY = vi.spyOn(window, 'scrollY', 'get').mockReturnValue(0)
+    render(<StickyNav />)
+
+    const header = screen.getByRole('banner')
+    expect(header).toHaveAttribute('data-nav-profile', 'reference')
+
+    scrollY.mockReturnValue(160)
+    act(() => {
+      fireEvent.scroll(window)
+    })
+
+    expect(header).toHaveAttribute('data-active-scene', 'hero')
+    expect(header).toHaveAttribute('data-nav-profile', 'compact')
+  })
+
+  it('keeps one desktop navigation tree and preserves its focused link across a profile change', () => {
+    setHash('#hero')
+    render(<StickyNav />)
+
+    const menuLink = screen.getByRole('link', { name: 'Меню' })
+    menuLink.focus()
+
+    act(() => {
+      setHash('#menu')
+      window.dispatchEvent(new HashChangeEvent('hashchange'))
+    })
+
+    expect(document.querySelectorAll('nav[aria-label="Основная навигация"]')).toHaveLength(1)
+    expect(document.activeElement).toBe(menuLink)
+    expect(menuLink).toHaveAttribute('aria-current', 'location')
   })
 
   it('updates from actual viewport position while scrolling', () => {
@@ -106,10 +139,10 @@ describe('StickyNav', () => {
     fireEvent.scroll(window)
 
     expect(screen.getByRole('banner')).toHaveAttribute('data-active-scene', 'menu')
-    expect(screen.getByRole('banner')).toHaveAttribute('data-nav-profile', 'compact-brand')
+    expect(screen.getByRole('banner')).toHaveAttribute('data-nav-profile', 'compact')
   })
 
-  it('activates the footer utility profile at the natural end of the document', () => {
+  it('keeps the compact navigation rail at the natural end of the document', () => {
     vi.spyOn(window, 'scrollY', 'get').mockReturnValue(1500)
     vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(1000)
     vi.spyOn(document.documentElement, 'scrollHeight', 'get').mockReturnValue(2500)
@@ -117,7 +150,8 @@ describe('StickyNav', () => {
     render(<StickyNav />)
 
     expect(screen.getByRole('banner')).toHaveAttribute('data-active-scene', 'contact')
-    expect(screen.getByRole('banner')).toHaveAttribute('data-nav-profile', 'utility')
+    expect(screen.getByRole('banner')).toHaveAttribute('data-nav-profile', 'compact')
+    expect(screen.getByRole('navigation', { name: 'Основная навигация' })).toBeInTheDocument()
   })
 
   it('opens the mobile overlay, traps focus and returns focus on Escape', () => {
