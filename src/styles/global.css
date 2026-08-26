@@ -26,6 +26,18 @@ body:has(.mobile-nav:not([hidden])) {
   overflow: hidden;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 button,
 a {
   font: inherit;
@@ -413,6 +425,10 @@ h2 {
   font-weight: 400;
   letter-spacing: -0.035em;
   line-height: 0.98;
+}
+
+.menu-scene__title {
+  display: block;
 }
 
 .menu-scene__title-line {
@@ -2277,33 +2293,36 @@ h2 {
   }
 
   .hero-backdrop {
-    top: auto;
+    top: clamp(24.5rem, calc(-6.3rem + 154vw), 40rem);
     right: 0;
-    bottom: 0;
+    bottom: auto;
     left: 0;
     width: 100%;
-    height: 44%;
+    height: clamp(17rem, calc(-5.88rem + 114.3vw), 28rem);
     object-fit: cover;
-    object-position: 72% center;
+    object-position: 77% center;
   }
 
   .hero-scene__inner {
     display: grid;
     min-height: auto;
     grid-template-columns: minmax(0, 1fr);
-    padding: 6.3rem 1.25rem 4.5rem;
+    gap: 0;
+    padding: clamp(4.9rem, calc(0.78rem + 20.6vw), 6.3rem)
+      clamp(1rem, calc(-0.14rem + 5.7vw), 1.25rem)
+      clamp(3.5rem, calc(-1.07rem + 22.86vw), 4.5rem);
   }
 
   .hero-scene__copy {
     width: 100%;
     max-width: none;
     padding: 0;
-    gap: 1.25rem;
+    gap: clamp(0.8rem, calc(-0.57rem + 6.86vw), 1.25rem);
   }
 
   .hero-scene h1 {
     max-width: 10.2ch;
-    font-size: clamp(3.45rem, 15vw, 5.7rem);
+    font-size: clamp(2.75rem, 14.5vw, 4.4rem);
     line-height: 0.9;
   }
 
@@ -2331,26 +2350,28 @@ h2 {
   .hero-scene__lede {
     max-width: 34ch;
     margin-top: 0;
-    font-size: 1.03rem;
+    font-size: clamp(0.9rem, calc(0.31rem + 2.97vw), 1.03rem);
     transform: none;
   }
 
   .hero-scene__actions {
     display: grid;
     width: 100%;
-    gap: 0.65rem;
+    gap: clamp(0.55rem, calc(0.1rem + 2.29vw), 0.65rem);
   }
 
   .hero-scene__actions .button-link,
   .hero-scene__actions .button-link--primary {
     width: 100%;
     min-width: 0;
-    min-height: 3.45rem;
+    min-height: clamp(3rem, calc(0.94rem + 10.3vw), 3.45rem);
   }
 
   .hero-scene__visual {
-    min-height: 22rem;
-    margin: 0 -1.25rem;
+    min-height: clamp(13rem, calc(-9.86rem + 114.3vw), 22rem);
+    margin-top: clamp(0.5rem, calc(-0.83rem + 6.67vw), 1rem);
+    margin-right: -1rem;
+    margin-left: -1rem;
   }
 
   .hero-doodle-layer,
@@ -2360,17 +2381,17 @@ h2 {
 
   .hero-bagel {
     top: auto;
-    bottom: -4rem;
-    left: -24vw;
-    width: min(125vw, 47rem);
+    bottom: -3.2rem;
+    left: -33vw;
+    width: min(136vw, 47rem);
   }
 
   .hero-coffee {
     top: auto;
-    right: -20vw;
-    bottom: -1.8rem;
+    right: -28vw;
+    bottom: -1.2rem;
     left: auto;
-    width: min(98vw, 38rem);
+    width: min(108vw, 38rem);
   }
 
   .hero-scene__documentary-fallback .organic-photo {
@@ -2378,133 +2399,10 @@ h2 {
   }
 
   .hero-skyline-layer {
-    bottom: 0.35rem;
-    left: 1.1rem;
-    width: min(19rem, 70vw);
-    transform: none;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-backdrop {
-    height: 36%;
-    object-position: 76% center;
-  }
-
-  .hero-bagel {
-    bottom: -4rem;
-    left: -30vw;
-    width: 130vw;
-  }
-
-  .hero-coffee {
-    right: -24vw;
-    bottom: -1.8rem;
-    width: 102vw;
-  }
-
-  .hero-skyline-layer {
     bottom: 0.3rem;
     left: 1rem;
     width: min(17rem, 68vw);
-  }
-}
-
-@media (max-width: 380px) {
-  .hero-scene__inner {
-    padding-inline: 1rem;
-  }
-
-  .hero-scene__copy {
-    gap: 1.1rem;
-  }
-
-  .hero-scene__actions {
-    gap: 0.55rem;
-  }
-
-  .hero-scene__actions .button-link,
-  .hero-scene__actions .button-link--primary {
-    min-height: 3.2rem;
-  }
-
-  .hero-scene h1 {
-    font-size: clamp(3.05rem, 15.7vw, 4.4rem);
-  }
-
-  .hero-scene__visual {
-    min-height: 18rem;
-    margin-inline: -1rem;
-  }
-
-  .hero-backdrop {
-    height: 34%;
-  }
-
-  .hero-bagel {
-    bottom: -3.2rem;
-    left: -33vw;
-    width: 136vw;
-  }
-
-  .hero-coffee {
-    right: -28vw;
-    bottom: -1.2rem;
-    width: 108vw;
-  }
-
-  .hero-doodle-layer {
-    opacity: 1;
-  }
-
-  .hero-skyline-layer {
-    width: 15.5rem;
-  }
-}
-
-@media (max-width: 340px) {
-  .hero-scene__inner {
-    padding-top: 4.9rem;
-  }
-
-  .hero-scene__copy {
-    gap: 0.8rem;
-  }
-
-  .hero-scene h1 {
-    font-size: clamp(2.75rem, 14.5vw, 3.1rem);
-  }
-
-  .hero-scene__lede {
-    font-size: 0.9rem;
-    line-height: 1.34;
-  }
-
-  .hero-scene__actions .button-link,
-  .hero-scene__actions .button-link--primary {
-    min-height: 3rem;
-  }
-
-  .hero-backdrop {
-    height: 33%;
-    object-position: 78% center;
-  }
-
-  .hero-bagel {
-    bottom: -2.9rem;
-    left: -35vw;
-    width: 140vw;
-  }
-
-  .hero-coffee {
-    right: -31vw;
-    bottom: -0.9rem;
-    width: 112vw;
-  }
-
-  .hero-skyline-layer {
-    left: 0.75rem;
-    width: 14.25rem;
+    transform: none;
   }
 }
 
@@ -5617,5 +5515,342 @@ html {
     font-family: var(--font-script);
     font-weight: 400;
     letter-spacing: -0.025em;
+  }
+}
+
+/* Tablet hero band: keep the authored single-column reading order until the
+ * desktop split has enough width for both actions and the reference lettering.
+ * The fluid values deliberately cover 721-1023px as one composition. */
+@media (min-width: 721px) and (max-width: 1023px) {
+  .hero-scene {
+    min-height: auto;
+    padding: 0;
+  }
+
+  .hero-reference-frame {
+    min-height: auto;
+    padding-bottom: clamp(2.5rem, 4vw, 4.5rem);
+  }
+
+  .hero-backdrop {
+    top: clamp(30rem, 64vw, 40rem);
+    right: 0;
+    bottom: auto;
+    left: 0;
+    width: 100%;
+    height: clamp(24rem, 54vw, 34rem);
+    object-fit: cover;
+    object-position: 77% center;
+  }
+
+  .hero-scene__inner {
+    display: grid;
+    width: 100%;
+    min-height: auto;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: clamp(5.75rem, 10vw, 7.5rem)
+      clamp(2rem, 7vw, 5.5rem)
+      clamp(4rem, 6vw, 5.5rem);
+  }
+
+  .hero-scene__copy {
+    width: min(100%, 46rem);
+    max-width: 46rem;
+    padding: 0;
+    gap: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .hero-scene__lede {
+    max-width: 36ch;
+    margin-top: 0;
+    font-size: clamp(1rem, 1.4vw, 1.18rem);
+    transform: none;
+  }
+
+  .hero-scene__actions {
+    display: flex;
+    width: min(100%, 44rem);
+    flex-wrap: wrap;
+    gap: clamp(0.75rem, 1.5vw, 1rem);
+    margin-top: 0;
+  }
+
+  .hero-scene__actions .button-link,
+  .hero-scene__actions .button-link--primary {
+    width: auto;
+    min-width: min(100%, 14rem);
+    min-height: clamp(3.35rem, 5vw, 4rem);
+    flex: 1 1 14rem;
+    white-space: nowrap;
+  }
+
+  .hero-scene__visual {
+    min-height: clamp(21rem, 45vw, 32rem);
+    margin-top: clamp(1rem, 2vw, 1.5rem);
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  .hero-doodle-layer,
+  .hero-route-layer {
+    display: none;
+  }
+
+  .hero-bagel {
+    top: auto;
+    bottom: -4rem;
+    left: clamp(11rem, 20vw, 14rem);
+    width: min(58vw, 36rem);
+  }
+
+  .hero-coffee {
+    top: auto;
+    right: clamp(1rem, 6vw, 4rem);
+    bottom: -1.5rem;
+    left: auto;
+    width: min(48vw, 31rem);
+  }
+
+  .hero-skyline-layer {
+    bottom: 0.35rem;
+    left: clamp(2rem, 6vw, 4rem);
+    width: min(27rem, 40vw);
+    transform: none;
+  }
+}
+
+/* The desktop split starts at 1024px, but the reference vw button widths fall
+ * below their nowrap labels before the paper column has become roomy. Give
+ * that short handoff band real columns whose boxes own their full contents. */
+@media (min-width: 1024px) and (max-width: 1200px) {
+  .hero-reference-frame {
+    --hero-ref-paper-split: 47.5%;
+  }
+
+  .hero-scene__actions {
+    display: grid;
+    width: 100%;
+    max-width: 27rem;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: clamp(0.55rem, 1vw, 0.75rem);
+  }
+
+  .hero-scene__actions .button-link {
+    width: 100%;
+    min-width: max-content;
+    padding-inline: clamp(0.65rem, 1vw, 0.8rem);
+    font-size: clamp(0.9rem, 1.45vw, 1rem);
+  }
+
+  .hero-scene__actions .button-link span {
+    margin-left: 0.45rem;
+    font-size: 1.15em;
+  }
+
+  .hero-scene__actions .button-link .hero-scene__pin {
+    margin-left: 0.5rem;
+  }
+}
+
+/* Wide, short desktop windows need a height-led menu composition. The title
+ * extract remains independent, while the invisible semantic title reserves a
+ * smaller flow box and the cards keep their complete text footers. */
+@media (min-width: 1024px) and (max-height: 760px) {
+  .scene.menu-scene {
+    --menu-title-flow-offset: 1.25rem;
+  }
+
+  .menu-scene .section-frame__inner {
+    padding: 1.25rem 0 0.5rem;
+  }
+
+  .menu-scene .section-frame__heading {
+    gap: 0.55rem;
+  }
+
+  .menu-scene .section-frame__heading h2 {
+    font-size: clamp(2.85rem, 3.7vw, 3.5rem);
+    line-height: 0.92;
+  }
+
+  .menu-scene__title-reference {
+    top: 7%;
+    width: min(42vw, 100dvh);
+  }
+
+  .menu-scene__intro {
+    width: min(34rem, 38%);
+    margin: calc(1.5rem + var(--menu-title-flow-offset)) 0 0 11.82%;
+  }
+
+  .menu-scene__intro .scene-copy {
+    font-size: 0.78rem;
+    line-height: 1.34;
+  }
+
+  .menu-scene__carousel {
+    margin-top: 1.4rem;
+  }
+
+  .menu-scene .menu-carousel__toolbar {
+    min-height: 2.1rem;
+  }
+
+  .menu-scene .menu-carousel__hint {
+    font-size: clamp(1.05rem, 1.25vw, 1.2rem);
+  }
+
+  .menu-scene .menu-carousel__controls {
+    top: calc(2.1rem + min(7.5vw, 8rem) - 1.5rem);
+  }
+
+  .menu-scene .menu-carousel__track {
+    grid-auto-columns: clamp(11.5rem, 15vw, 13.5rem);
+    padding-block: 0.4rem 0.35rem;
+  }
+
+  .menu-scene .menu-card__body {
+    min-height: 4.6rem;
+    gap: 0.22rem;
+    padding: 0.5rem 0.7rem;
+  }
+
+  .menu-scene .menu-card h3 {
+    font-size: clamp(1.02rem, 1.2vw, 1.18rem);
+  }
+
+  .menu-scene .menu-card__description {
+    font-size: clamp(0.67rem, 0.72vw, 0.76rem);
+    line-height: 1.25;
+  }
+
+  .menu-scene .menu-carousel__footer {
+    min-height: 2.75rem;
+  }
+
+  .menu-carousel__note {
+    font-size: 1rem;
+    line-height: 1.05;
+  }
+
+  .visit-scene .scene-kicker {
+    margin-bottom: 0;
+    font-size: clamp(0.75rem, 2.2dvh, 0.94rem);
+    line-height: 1.08;
+  }
+}
+
+/* Raster titles already use a height cap through 900px. Cap the associated
+ * forced-line copy through the last independently observed 800px boundary. */
+@media (min-width: 1024px) and (max-height: 800px) and (min-aspect-ratio: 4 / 3) {
+  .about-scene__intro {
+    gap: 1rem;
+  }
+
+  .about-scene__intro p {
+    font-size: min(1.18vw, 2.4dvh, 1.1rem);
+    line-height: 1.35;
+  }
+
+  .events-scene__intro p {
+    font-size: min(1.05vw, 2.35dvh, 1.05rem);
+    line-height: 1.34;
+  }
+
+  .locations-scene__intro p {
+    font-size: min(1.17vw, 2.35dvh, 1.08rem);
+    line-height: 1.3;
+  }
+}
+
+/* When the viewport is shorter than the authored compact composition, keep
+ * the paper scene clipped but let the document provide the missing scroll. */
+@media (min-width: 1024px) and (max-height: 680px) {
+  .scene.menu-scene {
+    height: auto;
+    min-height: max(100dvh, 42rem);
+    max-height: none;
+  }
+
+  .menu-scene .section-frame__inner {
+    height: auto;
+    min-height: max(100dvh, 42rem);
+  }
+}
+
+/* The title extract scales from viewport width while the intro offset scales
+ * from scene height. On short intermediate desktops, constrain that ratio so
+ * the actual ink ends before the copy starts and the card band stays fixed. */
+@media (min-width: 1024px) and (max-height: 900px) and (min-aspect-ratio: 4 / 3) {
+  .about-scene__title-reference-upper {
+    width: min(47.55vw, 117dvh);
+  }
+
+  .about-scene__title-reference-lower {
+    width: min(52.33vw, 85dvh);
+  }
+
+  .visit-scene__title-reference {
+    top: 11.5%;
+    width: min(41.5vw, 75dvh);
+  }
+
+  .visit-scene__intro {
+    top: 34%;
+    width: 38%;
+  }
+
+  .visit-scene__intro p {
+    font-size: clamp(0.76rem, 0.88vw, 0.9rem);
+    line-height: 1.4;
+  }
+
+  .events-scene__title-reference {
+    width: min(47.25vw, 75dvh);
+  }
+
+  .locations-scene__title-reference {
+    width: min(46.95vw, 75dvh);
+  }
+}
+
+/* At phone-like desktop heights, reserve a little more vertical runway for
+ * the intro without letting the card footers fall below the paper scene. */
+@media (min-width: 1024px) and (max-height: 640px) and (min-aspect-ratio: 4 / 3) {
+  .visit-scene__intro {
+    width: 42%;
+  }
+
+  .visit-scene__cards {
+    top: 46%;
+    height: 41%;
+  }
+}
+
+/* Wide cards inherit width-led type from the 1080px composition. Reuse the
+ * compact media split and make copy spacing height-led before text can cross
+ * the card's clipped edge. */
+@media (min-width: 1440px) and (max-height: 760px) {
+  .visit-scene__cards {
+    top: max(46%, calc(34.8% + 5.05rem));
+    height: 43%;
+  }
+
+  .visit-card {
+    grid-template-rows: 59% minmax(0, 1fr);
+  }
+
+  .visit-card__copy {
+    padding: min(0.7rem, 1.2dvh) min(1.2rem, 1vw) min(0.8rem, 1.4dvh);
+  }
+
+  .visit-card__copy h3 {
+    margin-bottom: min(0.5rem, 1.1dvh);
+  }
+
+  .visit-card__copy p {
+    font-size: clamp(0.72rem, 1.9dvh, 0.88rem);
+    line-height: 1.24;
   }
 }

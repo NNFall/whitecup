@@ -3,7 +3,54 @@ import { render, screen, within } from '@testing-library/react'
 import App from '../App'
 import globalCss from '../styles/global.css?raw'
 
+function extractCssBlocks(css: string, atRule: string) {
+  const blocks: string[] = []
+  let cursor = 0
+  while (cursor < css.length) {
+    const start = css.indexOf(atRule, cursor)
+    if (start < 0) break
+
+    const open = css.indexOf('{', start)
+    if (open < 0) {
+      throw new Error(`Unclosed CSS block ${atRule}`)
+    }
+
+    let depth = 0
+    let closed = false
+    for (let index = open; index < css.length; index += 1) {
+      if (css[index] === '{') depth += 1
+      if (css[index] === '}') {
+        depth -= 1
+        if (depth === 0) {
+          blocks.push(css.slice(start, index + 1))
+          cursor = index + 1
+          closed = true
+          break
+        }
+      }
+    }
+
+    if (!closed) {
+      throw new Error(`Unclosed CSS block ${atRule}`)
+    }
+  }
+
+  return blocks
+}
+
+function extractCssBlock(css: string, atRule: string, marker: string) {
+  const block = extractCssBlocks(css, atRule).find((candidate) => candidate.includes(marker))
+  if (block) return block
+  throw new Error(`Missing CSS block ${atRule} containing ${marker}`)
+}
+
 describe('early-scene reference convergence', () => {
+  it('fails fast when a CSS at-rule is not closed', () => {
+    expect(() => extractCssBlocks('@media (max-width: 1px) { .hero { color: red; }', '@media (max-width: 1px)')).toThrow(
+      'Unclosed CSS block @media (max-width: 1px)',
+    )
+  })
+
   it('locks the measured Hero copy, underline, and skyline geometry without moving the CTAs', () => {
     render(<App />)
 
@@ -75,12 +122,6 @@ describe('early-scene reference convergence', () => {
       /\.hero-scene__actions \.button-link\s*\{[^}]*font-weight:\s*625;/,
     )
     expect(globalCss).toMatch(
-      /@media \(max-width:\s*340px\)[\s\S]*?\.hero-scene__actions \.button-link[^}]*min-height:\s*3rem;/,
-    )
-    expect(globalCss).toMatch(
-      /@media \(max-width:\s*340px\)[\s\S]*?\.hero-scene__inner\s*\{[^}]*padding-top:\s*4\.9rem;/,
-    )
-    expect(globalCss).toMatch(
       /\.hero-reference-frame\s*\{[^}]*--hero-bagel-left:\s*42\.1%;[^}]*--hero-bagel-top:\s*51\.8%;[^}]*--hero-bagel-width:\s*35\.2%;/,
     )
     expect(globalCss).toMatch(
@@ -114,16 +155,73 @@ describe('early-scene reference convergence', () => {
     )
   })
 
-  it('keeps the compact 320px hero actions inside the first mobile frame', () => {
-    expect(globalCss).toMatch(
-      /@media \(max-width:\s*340px\)[\s\S]*?\.hero-scene__copy\s*\{[^}]*gap:\s*0\.8rem;/,
+  it('keeps the entire 320-720 mobile hero on one fluid title and action range', () => {
+    const mobileCss = extractCssBlock(globalCss, '@media (max-width: 720px)', '.hero-backdrop')
+
+    expect(mobileCss).toMatch(
+      /\.hero-scene__inner\s*\{[^}]*padding:\s*clamp\(4\.9rem,\s*calc\(0\.78rem\s*\+\s*20\.6vw\),\s*6\.3rem\)\s+clamp\(1rem,\s*calc\(-0\.14rem\s*\+\s*5\.7vw\),\s*1\.25rem\)\s+clamp\(3\.5rem,\s*calc\(-1\.07rem\s*\+\s*22\.86vw\),\s*4\.5rem\);/s,
     )
-    expect(globalCss).toMatch(
-      /@media \(max-width:\s*340px\)[\s\S]*?\.hero-scene h1\s*\{[^}]*font-size:\s*clamp\(2\.75rem,\s*14\.5vw,\s*3\.1rem\);/,
+    expect(mobileCss).toMatch(/\.hero-scene__inner\s*\{[^}]*gap:\s*0;/s)
+    expect(mobileCss).toMatch(
+      /\.hero-scene__copy\s*\{[^}]*gap:\s*clamp\(0\.8rem,\s*calc\(-0\.57rem\s*\+\s*6\.86vw\),\s*1\.25rem\);/s,
     )
-    expect(globalCss).toMatch(
-      /@media \(max-width:\s*340px\)[\s\S]*?\.hero-scene__lede\s*\{[^}]*font-size:\s*0\.9rem;/,
+    expect(mobileCss).toMatch(
+      /\.hero-scene h1\s*\{[^}]*font-size:\s*clamp\(2\.75rem,\s*14\.5vw,\s*4\.4rem\);/s,
     )
+    expect(mobileCss).toMatch(
+      /\.hero-scene__lede\s*\{[^}]*font-size:\s*clamp\(0\.9rem,\s*calc\(0\.31rem\s*\+\s*2\.97vw\),\s*1\.03rem\);/s,
+    )
+    expect(mobileCss).toMatch(
+      /\.hero-scene__actions\s*\{[^}]*gap:\s*clamp\(0\.55rem,\s*calc\(0\.1rem\s*\+\s*2\.29vw\),\s*0\.65rem\);/s,
+    )
+    expect(mobileCss).toMatch(
+      /\.hero-scene__actions \.button-link,\s*\.hero-scene__actions \.button-link--primary\s*\{[^}]*min-height:\s*clamp\(3rem,\s*calc\(0\.94rem\s*\+\s*10\.3vw\),\s*3\.45rem\);/s,
+    )
+  })
+
+  it('keeps one positive media handoff and forbids narrow hero geometry resets', () => {
+    const mobileCss = extractCssBlock(globalCss, '@media (max-width: 720px)', '.hero-backdrop')
+    const narrowBlocks = [
+      ...extractCssBlocks(globalCss, '@media (max-width: 340px)'),
+      ...extractCssBlocks(globalCss, '@media (max-width: 380px)'),
+      ...extractCssBlocks(globalCss, '@media (max-width: 480px)'),
+    ]
+
+    expect(mobileCss).toMatch(
+      /\.hero-scene__visual\s*\{[^}]*min-height:\s*clamp\(13rem,\s*calc\(-9\.86rem\s*\+\s*114\.3vw\),\s*22rem\);[^}]*margin-top:\s*clamp\(0\.5rem,\s*calc\(-0\.83rem\s*\+\s*6\.67vw\),\s*1rem\);/s,
+    )
+    expect(mobileCss).not.toMatch(
+      /\.hero-scene__visual\s*\{[^}]*margin-top:\s*-/s,
+    )
+    expect(mobileCss).toMatch(
+      /\.hero-backdrop\s*\{[^}]*top:\s*clamp\(24\.5rem,\s*calc\(-6\.3rem\s*\+\s*154vw\),\s*40rem\);[^}]*bottom:\s*auto;[^}]*height:\s*clamp\(17rem,\s*calc\(-5\.88rem\s*\+\s*114\.3vw\),\s*28rem\);/s,
+    )
+    expect(narrowBlocks.every((block) => !/\.hero-scene__visual|\.hero-backdrop/.test(block))).toBe(true)
+  })
+
+  it('keeps the 721-1023 tablet hero single-column until the desktop split is safe', () => {
+    const tabletCss = extractCssBlock(
+      globalCss,
+      '@media (min-width: 721px) and (max-width: 1023px)',
+      '.hero-scene__inner',
+    )
+
+    expect(tabletCss).toMatch(
+      /\.hero-reference-frame\s*\{[^}]*min-height:\s*auto;[^}]*padding-bottom:\s*clamp\(2\.5rem,\s*4vw,\s*4\.5rem\);/s,
+    )
+    expect(tabletCss).toMatch(
+      /\.hero-scene__inner\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\);[^}]*gap:\s*0;[^}]*padding:\s*clamp\(5\.75rem,\s*10vw,\s*7\.5rem\)\s+clamp\(2rem,\s*7vw,\s*5\.5rem\)\s+clamp\(4rem,\s*6vw,\s*5\.5rem\);/s,
+    )
+    expect(tabletCss).toMatch(
+      /\.hero-scene__actions\s*\{[^}]*display:\s*flex;[^}]*width:\s*min\(100%,\s*44rem\);[^}]*flex-wrap:\s*wrap;/s,
+    )
+    expect(tabletCss).toMatch(
+      /\.hero-scene__actions \.button-link,\s*\.hero-scene__actions \.button-link--primary\s*\{[^}]*width:\s*auto;[^}]*min-width:\s*min\(100%,\s*14rem\);[^}]*flex:\s*1 1 14rem;[^}]*white-space:\s*nowrap;/s,
+    )
+    expect(tabletCss).toMatch(
+      /\.hero-scene__visual\s*\{[^}]*min-height:\s*clamp\(21rem,\s*45vw,\s*32rem\);[^}]*margin-top:\s*clamp\(1rem,\s*2vw,\s*1\.5rem\);/s,
+    )
+    expect(tabletCss).not.toMatch(/grid-template-columns:\s*var\(--hero-ref-paper-split\)/)
   })
 
   it('raises and restores the Visit display type while constraining cards to the reference grid', () => {

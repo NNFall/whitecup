@@ -1,8 +1,43 @@
 .site-footer {
+  position: relative;
+  isolation: isolate;
   margin-top: clamp(2rem, 5vw, 5rem);
   padding: clamp(2.5rem, 6vw, 5.5rem) max(1.25rem, calc((100% - 107.5rem) / 2 + 1.25rem)) 1.25rem;
   background: var(--ink-soft);
   color: var(--paper-light);
+}
+
+.site-footer::before {
+  position: absolute;
+  z-index: -1;
+  right: 0;
+  bottom: calc(100% - 1px);
+  left: 0;
+  height: clamp(2.6rem, 4.5vw, 4.8rem);
+  background: var(--ink-soft);
+  clip-path: polygon(0 48%, 5% 31%, 11% 43%, 18% 25%, 26% 39%, 34% 22%, 42% 36%, 51% 19%, 60% 35%, 69% 24%, 78% 41%, 87% 27%, 94% 39%, 100% 23%, 100% 100%, 0 100%);
+  content: '';
+  pointer-events: none;
+}
+
+.site-footer::after {
+  position: absolute;
+  z-index: 0;
+  top: clamp(-1.65rem, -1.8vw, -1rem);
+  left: 17%;
+  width: 66%;
+  border-top: 2px dashed var(--orange-action);
+  content: '';
+  opacity: 0.82;
+  pointer-events: none;
+  transform: rotate(-0.35deg);
+  transform-origin: center;
+}
+
+.site-footer__inner,
+.site-footer__meta {
+  position: relative;
+  z-index: 1;
 }
 
 .site-footer__inner {
@@ -121,8 +156,18 @@
 
 @media (max-width: 720px) {
   .site-footer {
-    margin-top: 1rem;
+    margin-top: 2.8rem;
     padding-inline: 1.25rem;
+  }
+
+  .site-footer::before {
+    height: 2.8rem;
+  }
+
+  .site-footer::after {
+    top: -0.85rem;
+    left: 10%;
+    width: 80%;
   }
 
   .site-footer__inner {

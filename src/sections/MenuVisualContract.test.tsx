@@ -4,6 +4,24 @@ import { MenuSection } from './MenuSection'
 import globalCss from '../styles/global.css?raw'
 
 describe('Menu reference visual contract', () => {
+  it('exposes the menu heading as one continuous accessible name', () => {
+    const { container } = render(<MenuSection />)
+    const menu = container.querySelector<HTMLElement>('#menu')
+
+    expect(menu).not.toBeNull()
+    if (!menu) throw new Error('Menu section is missing')
+
+    const heading = within(menu).getByRole('heading', { level: 2 })
+    expect(heading).toHaveAccessibleName('Завтраки, ради которых хочется заглянуть')
+    expect(heading.querySelector('.menu-scene__title')).toHaveAttribute('aria-hidden', 'true')
+    expect(heading.querySelector('.sr-only')).toHaveTextContent('Завтраки, ради которых хочется заглянуть')
+    expect(heading.querySelector('.menu-scene__title')).not.toHaveAttribute('aria-label')
+    expect(menu).toHaveAccessibleName('Завтраки, ради которых хочется заглянуть')
+    expect(globalCss).toMatch(
+      /\.sr-only\s*\{[^}]*position:\s*absolute;[^}]*width:\s*1px;[^}]*height:\s*1px;[^}]*clip-path:\s*inset\(50%\);/s,
+    )
+  })
+
   it('keeps provenance and prices accessible without drawing extra rows over the reference scene', () => {
     const { container } = render(<MenuSection />)
     const menu = container.querySelector<HTMLElement>('#menu')

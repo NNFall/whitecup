@@ -396,13 +396,17 @@ Expected: no whitespace errors.
 
 - [x] **Step 4: Verify fixed server, links, console and all four final viewports in the in-app Browser**
 
-Record HTTP 200, zero unexpected console errors, working phone/VK/Yandex anchors, keyboard menu/carousel behavior and final screenshot paths.
+Record HTTP 200, zero unexpected console errors, working phone/VK/Yandex anchors, keyboard menu/carousel behavior and final screenshot paths. Current IAB evidence additionally covers 721/1024 tablet hero and low-height desktop 1440/1536/1920 at 568/640/720/800; no authored horizontal overflow, CTA collision, title-to-intro overlap or clipped Visit card copy was found.
 
 - [x] **Step 5: Update provenance/deviation/release documentation**
 
 List every ImageGen prompt/asset, Remove Background run, generated/reference/documentary classification and justified visual difference.
 
+Current release verification was refreshed to the latest gate: 18 files / 111 tests, focused desktop follow-up 7 files / 56 tests, current in-app Browser matrix and low-height evidence. Antigravity remains explicitly recorded as attempted without a PASS result.
+
 - [ ] **Step 6: Commit and push**
+
+Pending parent release staging. The visual refinements, focused tests and selected evidence are in the shared worktree, but this step is not complete until the exact intended paths are staged and committed, followed by the authorized push.
 
 Run: `git add -A && git status --short`
 
@@ -413,6 +417,8 @@ Run: `git commit -m "feat: deliver layered White Cup reference reconstruction"`
 Run: `git push origin master`
 
 - [ ] **Step 7: Verify remote publication evidence**
+
+Pending the commit and push above. Do not mark complete from local build or Browser evidence alone.
 
 Run: `git rev-parse HEAD && git rev-parse origin/master && git status --short`
 

@@ -4,12 +4,13 @@
 
 ## Автоматические проверки
 
-Последний полный прогон 25 августа 2026 после финальных послойных правок, точных title-extract слоёв для всех сцен, чистки ассетов, About plate v2 и mobile-проверок:
+Последний полный прогон 26 августа 2026 после mobile-rhythm и desktop-continuity правок, low-height guards для всех сцен и финальной проверки переходов:
 
-- [x] `npm.cmd test -- --run --pool=threads --maxWorkers=1` — 17 файлов, 97 тестов прошли.
-- [x] `npm.cmd run build` — TypeScript + Vite production build прошли.
+- [x] `npm.cmd test -- --run --pool=threads --maxWorkers=1` — 18 файлов, 111 тестов прошли.
+- [x] Focused desktop continuity follow-up — 7 файлов, 56 тестов прошли.
+- [x] `npm.cmd run build` — TypeScript + Vite production build прошли в release gate.
 - [x] `git diff --check` — прошёл; показал только ожидаемые предупреждения LF→CRLF, whitespace-ошибок нет.
-- [x] Проверка manifest-ассетов — 65 явных `/media/...` URL из `src/data/media.ts` и 7 шаблонов динамических путей разрешаются без пропусков; retired POC/old pastry-файлы отсутствуют в `public/media`.
+- [x] Проверка manifest-ассетов — runtime-ссылки и responsive/dynamic templates из `src/data/media.ts` разрешаются без пропусков; retired POC/old pastry-файлы отсутствуют в `public/media`.
 
 ## Встроенный браузер Codex
 
@@ -17,14 +18,17 @@
 
 | Viewport | Evidence | Фактически проверено | Статус |
 | --- | --- | --- | --- |
-| 1920×1080 | `release-{hero,menu,about,visit,events,locations}-1920x1080.png`, `continuity-polish-hero-1920x1080.png`, `recheck-hero-1920x1080.png`, `recheck-bridge-soft-1920x1080.png` | Шесть desktop-сцен, title-extract слои и видимые foreground-слои загрузились; `clientWidth = scrollWidth = 1905`, один H1 | [x] |
-| 1536×864 (эквивалент 1920×1080 при 125% zoom) | `release-{hero,menu,about,visit,events,locations}-1536x864.png`, `continuity-polish-locations-1536x864.png`, `recheck-locations-1536x864.png` | Проверены art-directed desktop crops без чрезмерного масштаба, карта/interior слои видимы, `1521 = 1521` | [x] |
-| 390×844 | `release-{hero,menu,about,visit,events,locations}-390x844.png`, `recheck-events-390x844.png` и `recheck-locations-390x844.png` | Отдельный mobile layout, читаемые карточки и CTA, `375 = 375`, без горизонтального overflow | [x] |
-| 320×568 | `release-{hero,menu,about,visit,events,locations}-320x568.png`, `recheck-menu-anchor-fixed-320x568.png` | Safe mobile gutters, CTA не обрезаны по горизонтали; на всех шести сценах `scrollWidth = clientWidth = 305`, `#menu` начинается ровно под header offset | [x] |
+| 1920×1080 | `release-{hero,menu,about,visit,events,locations}-1920x1080.png`, `final-check-hero-1920x1080.png`, `final-check-contact-1920x1080.png` | Шесть desktop-сцен, title-extract слои, foreground-слои и footer bridge загрузились; `clientWidth = scrollWidth = 1905`, один H1 | [x] |
+| 1536×864 (эквивалент 1920×1080 при 125% zoom) | `release-hero-1536x864.png`, `release-menu-1536x864.png`, `release-visit-1536x864.png`, `recheck-locations-1536x864.png` | Проверены art-directed desktop crops без чрезмерного масштаба, карта/interior слои видимы, `1521 = 1521` | [x] |
+| 390×844 | `final-check-clean-hero-390x844.png`, `final-check-clean-menu-390x844.png`, `final-check-clean-about-390x844.png`, `final-check-clean-visit-390x844.png`, `final-check-clean-events-390x844.png`, `final-check-clean-locations-390x844.png`, `final-check-clean-contact-390x844.png` | Отдельная mobile-композиция, читаемые карточки и CTA, `375 = 375`, без горизонтального overflow | [x] |
+| 320×568 | `final-check-hero-320x568.png`, `recheck-menu-320x568.png` | Safe mobile gutters, обе hero CTA доступны, `scrollWidth = clientWidth = 305`; `#menu` начинается под header offset | [x] |
+| 721×900 и 1024×900 | `final-check-hero-721x900.png`, `final-check-hero-1024x900.png` | Tablet/compact-desktop breakpoint переходят в цельную композицию без CTA collision и page overflow | [x] |
+| 1440/1536/1920 × 568/640/720/800 | IAB metric sweep, low-height guard pass | Для About, Events, Locations и Visit title→intro, intro→cards и card-copy gaps положительные; Visit descriptions остаются внутри карточек, authored overflow отсутствует | [x] |
 
 Дополнительные визуальные сводки:
 
-- release-серия: 24 `release-*.png` кадра, по шесть сцен на каждом из четырёх viewport;
+- историческая `release-*.png` серия сохранена как базовая сводка, а current final frames для этого прохода перечислены выше;
+- отдельные low-height after-fix кадры: `final-check-about-1920x720-after.png`, `final-check-events-1920x720-after.png`, `final-check-locations-1920x720-after.png`, `final-check-visit-1920x720-after.png`;
 - финальная доступность карусели подтверждена во встроенном браузере на 320px: `scrollLeft = maxScroll = 1061`, фокус остаётся на viewport.
 
 ### Поведение и доступность
@@ -38,6 +42,8 @@
 - [x] `prefers-reduced-motion` и no-JS Reveal contract покрыты CSS/тестами; Reveal остаётся видимым без JavaScript.
 - [x] Для Menu/About/Visit/Events/Locations подключены независимые desktop title-extract слои с measured anchors; живые `h2` остаются для accessibility и mobile.
 - [x] Между каждой парой экранов присутствует inert `SceneBridge` с responsive route-art и мягким fade вместо жёсткого divider; compact rail навигации плавно переходит из hero-профиля, а deep-link получает единый header offset и отложенное выравнивание после загрузки media.
+- [x] На 320/390/721/1024px проверены authored overflow, CTA collision и вертикальный порядок hero; на 320px страница сохраняет safe gutters и не создаёт горизонтального scroll.
+- [x] На desktop low-height 1440/1536/1920px проверены границы About, Events, Locations и Visit; все текстовые блоки и карточки остаются достижимыми, без clipping.
 
 ## Независимые проверки
 
