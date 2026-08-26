@@ -404,9 +404,9 @@ List every ImageGen prompt/asset, Remove Background run, generated/reference/doc
 
 Current release verification was refreshed to the latest gate: 18 files / 111 tests, focused desktop follow-up 7 files / 56 tests, current in-app Browser matrix and low-height evidence. Antigravity remains explicitly recorded as attempted without a PASS result.
 
-- [ ] **Step 6: Commit and push**
+- [x] **Step 6: Commit and push**
 
-Pending parent release staging. The visual refinements, focused tests and selected evidence are in the shared worktree, but this step is not complete until the exact intended paths are staged and committed, followed by the authorized push.
+The exact intended paths were staged after inspection, committed as the responsive-continuity release, and pushed to `origin/master`. Browser/tool artifacts and unrelated working PNGs were excluded.
 
 Run: `git add -A && git status --short`
 
@@ -416,9 +416,9 @@ Run: `git commit -m "feat: deliver layered White Cup reference reconstruction"`
 
 Run: `git push origin master`
 
-- [ ] **Step 7: Verify remote publication evidence**
+- [x] **Step 7: Verify remote publication evidence**
 
-Pending the commit and push above. Do not mark complete from local build or Browser evidence alone.
+After the authorized push, `git ls-remote origin refs/heads/master` matched the local `HEAD`; the fixed local server returned HTTP 200. Final release evidence is recorded in `docs/verification.md`.
 
 Run: `git rev-parse HEAD && git rev-parse origin/master && git status --short`
 

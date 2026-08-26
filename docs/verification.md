@@ -55,3 +55,9 @@
 - VK-группа остаётся внешним CTA: VK-only факты и цены не используются без визуальной проверки доступных публикаций.
 - Декоративные reference edits/extracts и ImageGen assets не являются документальными фотографиями заведения или меню. Документальные Yandex фото описаны отдельно в `src/data/media.ts`.
 - Наличие, цены и второй график должны уточняться перед коммерческой публикацией.
+
+## Публикация
+
+- [x] Intended runtime, source, test and selected evidence paths were staged explicitly; unrelated baseline/authoring PNGs remain outside the release commit.
+- [x] `origin/master` was pushed and then verified with `git ls-remote`; the returned SHA matched the local `HEAD`.
+- [x] Fixed local verification server remains available at `http://127.0.0.1:4175/` and returned HTTP 200 after publication.
