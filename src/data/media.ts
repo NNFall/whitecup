@@ -7,6 +7,21 @@ export type MediaKind = 'documentary' | 'decorative'
 export type MediaSceneRole = 'hero' | 'about' | 'events' | 'locations'
 export type SceneLayerRole = 'backdrop' | 'foreground' | 'decoration'
 
+/**
+ * Resolve public media through Vite's deployment base.  The local dev server
+ * keeps the familiar `/media/...` paths, while nested static deployments such
+ * as `/site/whitecup/` receive the same prefix as Vite's hashed assets.
+ */
+const mediaBase = (import.meta.env.BASE_URL || '/').replace(/\/$/, '')
+
+export const mediaUrl = (path: string): string => {
+  if (!path.startsWith('/')) return path
+  return `${mediaBase}${path}`
+}
+
+export const mediaSrcSet = (srcSet: string): string =>
+  srcSet.replaceAll('/media/', `${mediaBase}/media/`)
+
 interface MediaProvenanceBase {
   id: string
   src: string
@@ -50,7 +65,7 @@ const yandexGallerySource = 'Yandex Maps public gallery photo'
 export const mediaAssets = {
   'interior-01': {
     id: 'interior-01',
-    src: '/media/interior-01.webp',
+    src: mediaUrl('/media/interior-01.webp'),
     alt: 'Интерьер White Cup с красным потолком, диваном и чашками кофе на столах',
     kind: 'documentary',
     sceneRoles: ['hero'],
@@ -62,7 +77,7 @@ export const mediaAssets = {
   },
   'interior-02': {
     id: 'interior-02',
-    src: '/media/interior-02.webp',
+    src: mediaUrl('/media/interior-02.webp'),
     alt: 'Зал White Cup с красным потолком, картой на потолке и креслами',
     kind: 'documentary',
     sceneRoles: ['locations'],
@@ -74,7 +89,7 @@ export const mediaAssets = {
   },
   'interior-03': {
     id: 'interior-03',
-    src: '/media/interior-03.webp',
+    src: mediaUrl('/media/interior-03.webp'),
     alt: 'Зал White Cup с креслами, столами и посетительницей у окна',
     kind: 'documentary',
     sceneRoles: ['events'],
@@ -86,7 +101,7 @@ export const mediaAssets = {
   },
   'interior-04': {
     id: 'interior-04',
-    src: '/media/interior-04.webp',
+    src: mediaUrl('/media/interior-04.webp'),
     alt: 'Барная стойка White Cup и зал с характерной сеткой проводов на потолке',
     kind: 'documentary',
     sceneRoles: ['locations'],
@@ -98,7 +113,7 @@ export const mediaAssets = {
   },
   'interior-05': {
     id: 'interior-05',
-    src: '/media/interior-05.webp',
+    src: mediaUrl('/media/interior-05.webp'),
     alt: 'Зона с диванами, художественными работами и столиками в White Cup',
     kind: 'documentary',
     sceneRoles: ['about'],
@@ -125,7 +140,7 @@ export const documentarySceneMedia: Record<MediaSceneRole, readonly DocumentaryM
 
 export const heroDoodlesReference: DecorativeMediaProvenance = {
   id: 'hero-doodles-reference',
-  src: '/media/hero-doodles-exact.png',
+  src: mediaUrl('/media/hero-doodles-exact.png'),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-extract',
@@ -136,7 +151,7 @@ export const heroDoodlesReference: DecorativeMediaProvenance = {
 
 export const heroUnderlineReferenceExtract: DecorativeMediaProvenance = {
   id: 'hero-underline-reference-extract',
-  src: '/media/hero-underline-reference-extract-tight.webp',
+  src: mediaUrl('/media/hero-underline-reference-extract-tight.webp'),
   sourceArtifactSrc: 'docs/reference/assets/hero-underline-reference-crop-authoring.png',
   alt: '',
   kind: 'decorative',
@@ -148,9 +163,8 @@ export const heroUnderlineReferenceExtract: DecorativeMediaProvenance = {
 
 export const heroTitleReferenceExtract: ResponsiveDecorativeMediaProvenance = {
   id: 'hero-title-reference-extract',
-  src: '/media/hero-title-reference-extract-1600.webp',
-  srcSet:
-    '/media/hero-title-reference-extract-800.webp 800w, /media/hero-title-reference-extract-1600.webp 1600w',
+  src: mediaUrl('/media/hero-title-reference-extract-1600.webp'),
+  srcSet: mediaSrcSet('/media/hero-title-reference-extract-800.webp 800w, /media/hero-title-reference-extract-1600.webp 1600w'),
   sizes: '47.85vw',
   sourceArtifactSrc: 'docs/reference/assets/hero-title-reference-crop-authoring.png',
   alt: '',
@@ -163,7 +177,7 @@ export const heroTitleReferenceExtract: ResponsiveDecorativeMediaProvenance = {
 
 export const heroSkylineReference: DecorativeMediaProvenance = {
   id: 'hero-skyline-reference',
-  src: '/media/hero-skyline-exact.png',
+  src: mediaUrl('/media/hero-skyline-exact.png'),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-extract',
@@ -174,7 +188,7 @@ export const heroSkylineReference: DecorativeMediaProvenance = {
 
 export const heroCleanBaseEdit: DecorativeMediaProvenance = {
   id: 'hero-clean-base-edit',
-  src: '/media/hero-clean-base-v2-1672.webp',
+  src: mediaUrl('/media/hero-clean-base-v2-1672.webp'),
   sourceArtifactSrc: 'docs/reference/assets/hero-clean-base-v2-authoring.png',
   alt: '',
   kind: 'decorative',
@@ -186,7 +200,7 @@ export const heroCleanBaseEdit: DecorativeMediaProvenance = {
 
 export const heroBagelReferenceEdit: DecorativeMediaProvenance = {
   id: 'hero-bagel-reference-edit',
-  src: '/media/hero-bagel-plate-reference-edit-1200.webp',
+  src: mediaUrl('/media/hero-bagel-plate-reference-edit-1200.webp'),
   sourceArtifactSrc: 'docs/reference/assets/hero-bagel-plate-magenta-authoring.png',
   alt: '',
   kind: 'decorative',
@@ -198,7 +212,7 @@ export const heroBagelReferenceEdit: DecorativeMediaProvenance = {
 
 export const heroCoffeeReferenceEdit: DecorativeMediaProvenance = {
   id: 'hero-coffee-reference-edit',
-  src: '/media/hero-coffee-cutout-1200.webp',
+  src: mediaUrl('/media/hero-coffee-cutout-1200.webp'),
   sourceArtifactSrc: 'docs/reference/assets/hero-coffee-cutout-authoring.png',
   alt: '',
   kind: 'decorative',
@@ -210,7 +224,7 @@ export const heroCoffeeReferenceEdit: DecorativeMediaProvenance = {
 
 export const heroRouteCupReferenceEdit: DecorativeMediaProvenance = {
   id: 'hero-route-cup-reference-edit',
-  src: '/media/hero-route-cup-1672.webp',
+  src: mediaUrl('/media/hero-route-cup-1672.webp'),
   sourceArtifactSrc: 'docs/reference/assets/hero-route-cup-authoring.png',
   alt: '',
   kind: 'decorative',
@@ -222,9 +236,8 @@ export const heroRouteCupReferenceEdit: DecorativeMediaProvenance = {
 
 export const storyRouteConnectorGenerated: ResponsiveDecorativeMediaProvenance = {
   id: 'story-route-connector-generated',
-  src: '/media/story-route-connector-1200.webp',
-  srcSet:
-    '/media/story-route-connector-720.webp 720w, /media/story-route-connector-1200.webp 1200w, /media/story-route-connector-2400.webp 2400w',
+  src: mediaUrl('/media/story-route-connector-1200.webp'),
+  srcSet: mediaSrcSet('/media/story-route-connector-720.webp 720w, /media/story-route-connector-1200.webp 1200w, /media/story-route-connector-2400.webp 2400w'),
   sizes:
     '(max-width: 433px) 155vw, (max-width: 1023px) 42rem, (max-width: 1304px) 92vw, 75rem',
   alt: '',
@@ -243,19 +256,16 @@ const defineSceneLayer = (
 
 export const heroSceneLayerManifest = {
   backdrop: defineSceneLayer('backdrop', heroCleanBaseEdit, {
-    srcSet:
-      '/media/hero-clean-base-v2-960.webp 960w, /media/hero-clean-base-v2-1672.webp 1672w',
+    srcSet: mediaSrcSet('/media/hero-clean-base-v2-960.webp 960w, /media/hero-clean-base-v2-1672.webp 1672w'),
     sizes: '100vw',
   }),
   foregrounds: [
     defineSceneLayer('foreground', heroBagelReferenceEdit, {
-      srcSet:
-        '/media/hero-bagel-plate-reference-edit-720.webp 720w, /media/hero-bagel-plate-reference-edit-1200.webp 1200w',
+      srcSet: mediaSrcSet('/media/hero-bagel-plate-reference-edit-720.webp 720w, /media/hero-bagel-plate-reference-edit-1200.webp 1200w'),
       sizes: '(max-width: 480px) 130vw, (max-width: 720px) 125vw, 40vw',
     }),
     defineSceneLayer('foreground', heroCoffeeReferenceEdit, {
-      srcSet:
-        '/media/hero-coffee-cutout-720.webp 720w, /media/hero-coffee-cutout-1200.webp 1200w',
+      srcSet: mediaSrcSet('/media/hero-coffee-cutout-720.webp 720w, /media/hero-coffee-cutout-1200.webp 1200w'),
       sizes: '(max-width: 480px) 102vw, (max-width: 720px) 98vw, 30vw',
     }),
   ],
@@ -268,7 +278,7 @@ export const heroSceneLayerManifest = {
 
 const menuCleanBaseReferenceEdit: DecorativeMediaProvenance = {
   id: 'menu-clean-base-reference-edit',
-  src: '/media/menu-clean-base-1672.webp',
+  src: mediaUrl('/media/menu-clean-base-1672.webp'),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -279,9 +289,8 @@ const menuCleanBaseReferenceEdit: DecorativeMediaProvenance = {
 
 export const menuTitleReferenceExtract: ResponsiveDecorativeMediaProvenance = {
   id: 'menu-title-reference-extract',
-  src: '/media/menu-title-reference-extract-1688.webp',
-  srcSet:
-    '/media/menu-title-reference-extract-844.webp 844w, /media/menu-title-reference-extract-1688.webp 1688w',
+  src: mediaUrl('/media/menu-title-reference-extract-1688.webp'),
+  srcSet: mediaSrcSet('/media/menu-title-reference-extract-844.webp 844w, /media/menu-title-reference-extract-1688.webp 1688w'),
   sizes: '50.48vw',
   sourceArtifactSrc: 'docs/reference/assets/menu-title-reference-crop-authoring.png',
   alt: '',
@@ -298,7 +307,7 @@ const defineMenuCardReferenceEdit = (
   description: string,
 ): DecorativeMediaProvenance => ({
   id: `menu-${id}-reference-edit`,
-  src: `/media/menu-${filename}-768.webp`,
+  src: mediaUrl(`/media/menu-${filename}-768.webp`),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -338,15 +347,14 @@ export type MenuCardMediaId = keyof typeof menuCardReferenceEdits
 
 export const menuSceneLayerManifest = {
   backdrop: defineSceneLayer('backdrop', menuCleanBaseReferenceEdit, {
-    srcSet:
-      '/media/menu-clean-base-960.webp 960w, /media/menu-clean-base-1672.webp 1672w',
+    srcSet: mediaSrcSet('/media/menu-clean-base-960.webp 960w, /media/menu-clean-base-1672.webp 1672w'),
     sizes: '100vw',
   }),
   cards: Object.fromEntries(
     Object.entries(menuCardReferenceEdits).map(([id, asset]) => [
       id,
       defineSceneLayer('foreground', asset, {
-        srcSet: `/media/menu-${id}-480.webp 480w, /media/menu-${id}-768.webp 768w`,
+        srcSet: mediaSrcSet(`/media/menu-${id}-480.webp 480w, /media/menu-${id}-768.webp 768w`),
         sizes: '(max-width: 480px) 82vw, (max-width: 1679px) 20vw, 17vw',
       }),
     ]),
@@ -356,7 +364,7 @@ export const menuSceneLayerManifest = {
 
 const aboutCleanBaseReferenceEdit: DecorativeMediaProvenance = {
   id: 'about-clean-base-reference-edit',
-  src: '/media/about-clean-base-1672.webp',
+  src: mediaUrl('/media/about-clean-base-1672.webp'),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -367,9 +375,8 @@ const aboutCleanBaseReferenceEdit: DecorativeMediaProvenance = {
 
 export const aboutTitleReferenceUpperExtract: ResponsiveDecorativeMediaProvenance = {
   id: 'about-title-reference-upper-extract',
-  src: '/media/about-title-reference-upper-extract-1590.webp',
-  srcSet:
-    '/media/about-title-reference-upper-extract-795.webp 795w, /media/about-title-reference-upper-extract-1590.webp 1590w',
+  src: mediaUrl('/media/about-title-reference-upper-extract-1590.webp'),
+  srcSet: mediaSrcSet('/media/about-title-reference-upper-extract-795.webp 795w, /media/about-title-reference-upper-extract-1590.webp 1590w'),
   sizes: '47.55vw',
   sourceArtifactSrc: 'docs/reference/assets/about-title-reference-upper-crop-authoring.png',
   alt: '',
@@ -382,9 +389,8 @@ export const aboutTitleReferenceUpperExtract: ResponsiveDecorativeMediaProvenanc
 
 export const aboutTitleReferenceLowerExtract: ResponsiveDecorativeMediaProvenance = {
   id: 'about-title-reference-lower-extract',
-  src: '/media/about-title-reference-lower-extract-1750.webp',
-  srcSet:
-    '/media/about-title-reference-lower-extract-875.webp 875w, /media/about-title-reference-lower-extract-1750.webp 1750w',
+  src: mediaUrl('/media/about-title-reference-lower-extract-1750.webp'),
+  srcSet: mediaSrcSet('/media/about-title-reference-lower-extract-875.webp 875w, /media/about-title-reference-lower-extract-1750.webp 1750w'),
   sizes: '52.33vw',
   sourceArtifactSrc: 'docs/reference/assets/about-title-reference-lower-crop-authoring.png',
   alt: '',
@@ -397,7 +403,7 @@ export const aboutTitleReferenceLowerExtract: ResponsiveDecorativeMediaProvenanc
 
 const aboutPastryReferenceEdit: DecorativeMediaProvenance = {
   id: 'about-pastry-plate-reference-edit-v2',
-  src: '/media/about-pastry-plate-reference-edit-v2-1200.webp',
+  src: mediaUrl('/media/about-pastry-plate-reference-edit-v2-1200.webp'),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -408,7 +414,7 @@ const aboutPastryReferenceEdit: DecorativeMediaProvenance = {
 
 const aboutCoffeeReferenceEdit: DecorativeMediaProvenance = {
   id: 'about-coffee-reference-edit',
-  src: '/media/about-coffee-cutout-1200.webp',
+  src: mediaUrl('/media/about-coffee-cutout-1200.webp'),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -419,7 +425,7 @@ const aboutCoffeeReferenceEdit: DecorativeMediaProvenance = {
 
 const aboutDoodlesReferenceEdit: DecorativeMediaProvenance = {
   id: 'about-doodles-reference-edit',
-  src: '/media/about-doodles-reference-edit-1672.webp',
+  src: mediaUrl('/media/about-doodles-reference-edit-1672.webp'),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -434,7 +440,7 @@ const defineAboutBenefitReferenceEdit = (
   description: string,
 ): DecorativeMediaProvenance => ({
   id: `about-benefit-${id}-reference-edit`,
-  src: `/media/about-benefit-${filename}-480.webp`,
+  src: mediaUrl(`/media/about-benefit-${filename}-480.webp`),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -469,19 +475,16 @@ export type AboutBenefitMediaId = keyof typeof aboutBenefitReferenceEdits
 
 export const aboutSceneLayerManifest = {
   backdrop: defineSceneLayer('backdrop', aboutCleanBaseReferenceEdit, {
-    srcSet:
-      '/media/about-clean-base-960.webp 960w, /media/about-clean-base-1672.webp 1672w',
+    srcSet: mediaSrcSet('/media/about-clean-base-960.webp 960w, /media/about-clean-base-1672.webp 1672w'),
     sizes: '100vw',
   }),
   foregrounds: [
     defineSceneLayer('foreground', aboutPastryReferenceEdit, {
-      srcSet:
-        '/media/about-pastry-plate-reference-edit-v2-720.webp 720w, /media/about-pastry-plate-reference-edit-v2-1200.webp 1200w',
+      srcSet: mediaSrcSet('/media/about-pastry-plate-reference-edit-v2-720.webp 720w, /media/about-pastry-plate-reference-edit-v2-1200.webp 1200w'),
       sizes: '(max-width: 1023px) 128vw, 23vw',
     }),
     defineSceneLayer('foreground', aboutCoffeeReferenceEdit, {
-      srcSet:
-        '/media/about-coffee-cutout-720.webp 720w, /media/about-coffee-cutout-1200.webp 1200w',
+      srcSet: mediaSrcSet('/media/about-coffee-cutout-720.webp 720w, /media/about-coffee-cutout-1200.webp 1200w'),
       sizes: '(max-width: 1023px) 88vw, 32vw',
     }),
   ],
@@ -498,7 +501,7 @@ export const aboutSceneLayerManifest = {
 
 const visitCleanBaseReferenceEdit: DecorativeMediaProvenance = {
   id: 'visit-clean-base-reference-edit',
-  src: '/media/rhythm-clean-base-desktop.webp',
+  src: mediaUrl('/media/rhythm-clean-base-desktop.webp'),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -509,9 +512,8 @@ const visitCleanBaseReferenceEdit: DecorativeMediaProvenance = {
 
 export const visitTitleReferenceExtract: ResponsiveDecorativeMediaProvenance = {
   id: 'visit-title-reference-extract',
-  src: '/media/visit-title-reference-extract-1560.webp',
-  srcSet:
-    '/media/visit-title-reference-extract-780.webp 780w, /media/visit-title-reference-extract-1560.webp 1560w',
+  src: mediaUrl('/media/visit-title-reference-extract-1560.webp'),
+  srcSet: mediaSrcSet('/media/visit-title-reference-extract-780.webp 780w, /media/visit-title-reference-extract-1560.webp 1560w'),
   sizes: '47.85vw',
   sourceArtifactSrc: 'docs/reference/assets/visit-title-reference-crop-authoring.png',
   alt: '',
@@ -528,7 +530,7 @@ const defineVisitCardReferenceEdit = (
   description: string,
 ): DecorativeMediaProvenance => ({
   id: `visit-${id}-reference-edit`,
-  src: `/media/rhythm-${filename}-reference-edit-800.webp`,
+  src: mediaUrl(`/media/rhythm-${filename}-reference-edit-800.webp`),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -558,7 +560,7 @@ export type VisitCardMediaId = keyof typeof visitCardReferenceEdits
 
 const visitDoodlesReferenceEdit: DecorativeMediaProvenance = {
   id: 'visit-doodles-reference-edit',
-  src: '/media/rhythm-doodles-reference-edit-1672.webp',
+  src: mediaUrl('/media/rhythm-doodles-reference-edit-1672.webp'),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -569,7 +571,7 @@ const visitDoodlesReferenceEdit: DecorativeMediaProvenance = {
 
 const visitSkylineReferenceEdit: DecorativeMediaProvenance = {
   id: 'visit-skyline-reference-edit',
-  src: '/media/rhythm-skyline-reference-edit-1200w.webp',
+  src: mediaUrl('/media/rhythm-skyline-reference-edit-1200w.webp'),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -580,8 +582,7 @@ const visitSkylineReferenceEdit: DecorativeMediaProvenance = {
 
 export const visitSceneLayerManifest = {
   backdrop: defineSceneLayer('backdrop', visitCleanBaseReferenceEdit, {
-    srcSet:
-      '/media/rhythm-clean-base-mobile-960.webp 960w, /media/rhythm-clean-base-desktop.webp 1672w',
+    srcSet: mediaSrcSet('/media/rhythm-clean-base-mobile-960.webp 960w, /media/rhythm-clean-base-desktop.webp 1672w'),
     sizes: '100vw',
   }),
   cards: Object.fromEntries(
@@ -593,20 +594,18 @@ export const visitSceneLayerManifest = {
     ]),
   ) as Record<VisitCardMediaId, SceneLayerManifestEntry>,
   decoration: defineSceneLayer('decoration', visitDoodlesReferenceEdit, {
-    srcSet:
-      '/media/rhythm-doodles-reference-edit-960.webp 960w, /media/rhythm-doodles-reference-edit-1672.webp 1672w',
+    srcSet: mediaSrcSet('/media/rhythm-doodles-reference-edit-960.webp 960w, /media/rhythm-doodles-reference-edit-1672.webp 1672w'),
     sizes: '100vw',
   }),
   skyline: defineSceneLayer('decoration', visitSkylineReferenceEdit, {
-    srcSet:
-      '/media/rhythm-skyline-reference-edit-720w.webp 720w, /media/rhythm-skyline-reference-edit-1200w.webp 1200w',
+    srcSet: mediaSrcSet('/media/rhythm-skyline-reference-edit-720w.webp 720w, /media/rhythm-skyline-reference-edit-1200w.webp 1200w'),
     sizes: '(max-width: 1023px) 92vw, 47vw',
   }),
 } as const
 
 const eventsCleanBaseReferenceEdit: DecorativeMediaProvenance = {
   id: 'events-clean-base-reference-edit',
-  src: '/media/events-clean-base-1672w.webp',
+  src: mediaUrl('/media/events-clean-base-1672w.webp'),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -617,9 +616,8 @@ const eventsCleanBaseReferenceEdit: DecorativeMediaProvenance = {
 
 export const eventsTitleReferenceExtract: ResponsiveDecorativeMediaProvenance = {
   id: 'events-title-reference-extract',
-  src: '/media/events-title-reference-extract-1520.webp',
-  srcSet:
-    '/media/events-title-reference-extract-760.webp 760w, /media/events-title-reference-extract-1520.webp 1520w',
+  src: mediaUrl('/media/events-title-reference-extract-1520.webp'),
+  srcSet: mediaSrcSet('/media/events-title-reference-extract-760.webp 760w, /media/events-title-reference-extract-1520.webp 1520w'),
   sizes: '47.25vw',
   sourceArtifactSrc: 'docs/reference/assets/events-title-reference-crop-authoring.png',
   alt: '',
@@ -636,7 +634,7 @@ const defineEventsCardReferenceEdit = (
   description: string,
 ): DecorativeMediaProvenance => ({
   id: `events-${id}-reference-edit`,
-  src: `/media/events-card-${filename}-800w.webp`,
+  src: mediaUrl(`/media/events-card-${filename}-800w.webp`),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -666,7 +664,7 @@ export type EventsCardMediaId = keyof typeof eventsCardReferenceEdits
 
 const eventsCakePlateCleanReferenceEdit: DecorativeMediaProvenance = {
   id: 'events-cake-plate-clean-reference-edit',
-  src: '/media/events-cake-plate-clean-1200w.webp',
+  src: mediaUrl('/media/events-cake-plate-clean-1200w.webp'),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -677,7 +675,7 @@ const eventsCakePlateCleanReferenceEdit: DecorativeMediaProvenance = {
 
 const eventsCoffeeCleanReferenceEdit: DecorativeMediaProvenance = {
   id: 'events-coffee-clean-reference-edit',
-  src: '/media/events-coffee-clean-800w.webp',
+  src: mediaUrl('/media/events-coffee-clean-800w.webp'),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -688,7 +686,7 @@ const eventsCoffeeCleanReferenceEdit: DecorativeMediaProvenance = {
 
 const eventsDoodlesReferenceEdit: DecorativeMediaProvenance = {
   id: 'events-doodles-reference-edit',
-  src: '/media/events-doodles-reference-edit-1672.webp',
+  src: mediaUrl('/media/events-doodles-reference-edit-1672.webp'),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -699,7 +697,7 @@ const eventsDoodlesReferenceEdit: DecorativeMediaProvenance = {
 
 const eventsChalkboardReferenceEdit: DecorativeMediaProvenance = {
   id: 'events-chalkboard-reference-edit',
-  src: '/media/events-chalkboard-reference-edit-480w.webp',
+  src: mediaUrl('/media/events-chalkboard-reference-edit-480w.webp'),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -710,8 +708,7 @@ const eventsChalkboardReferenceEdit: DecorativeMediaProvenance = {
 
 export const eventsSceneLayerManifest = {
   backdrop: defineSceneLayer('backdrop', eventsCleanBaseReferenceEdit, {
-    srcSet:
-      '/media/events-clean-base-960w.webp 960w, /media/events-clean-base-1672w.webp 1672w',
+    srcSet: mediaSrcSet('/media/events-clean-base-960w.webp 960w, /media/events-clean-base-1672w.webp 1672w'),
     sizes: '100vw',
   }),
   cards: Object.fromEntries(
@@ -725,31 +722,27 @@ export const eventsSceneLayerManifest = {
   ) as Record<EventsCardMediaId, SceneLayerManifestEntry>,
   foregrounds: [
     defineSceneLayer('foreground', eventsCakePlateCleanReferenceEdit, {
-      srcSet:
-        '/media/events-cake-plate-clean-720w.webp 720w, /media/events-cake-plate-clean-1200w.webp 1200w',
+      srcSet: mediaSrcSet('/media/events-cake-plate-clean-720w.webp 720w, /media/events-cake-plate-clean-1200w.webp 1200w'),
       sizes: '(max-width: 1023px) 80vw, 22.4vw',
     }),
     defineSceneLayer('foreground', eventsCoffeeCleanReferenceEdit, {
-      srcSet:
-        '/media/events-coffee-clean-480w.webp 480w, /media/events-coffee-clean-800w.webp 800w',
+      srcSet: mediaSrcSet('/media/events-coffee-clean-480w.webp 480w, /media/events-coffee-clean-800w.webp 800w'),
       sizes: '(max-width: 1023px) 65vw, 23.1vw',
     }),
   ],
   decoration: defineSceneLayer('decoration', eventsDoodlesReferenceEdit, {
-    srcSet:
-      '/media/events-doodles-reference-edit-960.webp 960w, /media/events-doodles-reference-edit-1672.webp 1672w',
+    srcSet: mediaSrcSet('/media/events-doodles-reference-edit-960.webp 960w, /media/events-doodles-reference-edit-1672.webp 1672w'),
     sizes: '100vw',
   }),
   chalkboard: defineSceneLayer('decoration', eventsChalkboardReferenceEdit, {
-    srcSet:
-      '/media/events-chalkboard-reference-edit-300w.webp 300w, /media/events-chalkboard-reference-edit-480w.webp 480w',
+    srcSet: mediaSrcSet('/media/events-chalkboard-reference-edit-300w.webp 300w, /media/events-chalkboard-reference-edit-480w.webp 480w'),
     sizes: '(max-width: 1023px) 30vw, 10vw',
   }),
 } as const
 
 const locationsMapReferenceEdit: DecorativeMediaProvenance = {
   id: 'locations-map-reference-edit',
-  src: '/media/locations-map-reference-1672w.webp',
+  src: mediaUrl('/media/locations-map-reference-1672w.webp'),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -760,9 +753,8 @@ const locationsMapReferenceEdit: DecorativeMediaProvenance = {
 
 export const locationsTitleReferenceExtract: ResponsiveDecorativeMediaProvenance = {
   id: 'locations-title-reference-extract',
-  src: '/media/locations-title-reference-extract-1500.webp',
-  srcSet:
-    '/media/locations-title-reference-extract-750.webp 750w, /media/locations-title-reference-extract-1500.webp 1500w',
+  src: mediaUrl('/media/locations-title-reference-extract-1500.webp'),
+  srcSet: mediaSrcSet('/media/locations-title-reference-extract-750.webp 750w, /media/locations-title-reference-extract-1500.webp 1500w'),
   sizes: '46.95vw',
   sourceArtifactSrc: 'docs/reference/assets/locations-title-reference-crop-authoring.png',
   alt: '',
@@ -775,7 +767,7 @@ export const locationsTitleReferenceExtract: ResponsiveDecorativeMediaProvenance
 
 const locationsInteriorReferenceEdit: DecorativeMediaProvenance = {
   id: 'locations-interior-reference-edit',
-  src: '/media/locations-interior-base-1672w.webp',
+  src: mediaUrl('/media/locations-interior-base-1672w.webp'),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -786,7 +778,7 @@ const locationsInteriorReferenceEdit: DecorativeMediaProvenance = {
 
 const locationsDoodlesReferenceEdit: DecorativeMediaProvenance = {
   id: 'locations-doodles-reference-edit',
-  src: '/media/locations-doodles-reference-edit-1672.webp',
+  src: mediaUrl('/media/locations-doodles-reference-edit-1672.webp'),
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-edit',
@@ -803,7 +795,7 @@ function defineLocationCardIcon(
 ): DecorativeMediaProvenance {
   return {
     id: `locations-icon-${name}`,
-    src: `/media/locations-icon-${name}.webp`,
+    src: mediaUrl(`/media/locations-icon-${name}.webp`),
     alt: '',
     kind: 'decorative',
     provenanceKind: 'decorative-reference-edit',
@@ -822,28 +814,25 @@ export const locationsCardIconMedia = {
 
 export const locationsSceneLayerManifest = {
   map: defineSceneLayer('backdrop', locationsMapReferenceEdit, {
-    srcSet:
-      '/media/locations-map-reference-960w.webp 960w, /media/locations-map-reference-1672w.webp 1672w',
+    srcSet: mediaSrcSet('/media/locations-map-reference-960w.webp 960w, /media/locations-map-reference-1672w.webp 1672w'),
     /* The map is painted as a large right-side artboard on desktop. Asking
        for the full desktop source avoids a Chromium/WebP paint gap observed
        at effective 125% zoom (1536 CSS px), while mobile still selects 960w. */
     sizes: '(max-width: 1023px) 100vw, 100vw',
   }),
   interior: defineSceneLayer('foreground', locationsInteriorReferenceEdit, {
-    srcSet:
-      '/media/locations-interior-base-960w.webp 960w, /media/locations-interior-base-1672w.webp 1672w',
+    srcSet: mediaSrcSet('/media/locations-interior-base-960w.webp 960w, /media/locations-interior-base-1672w.webp 1672w'),
     sizes: '(max-width: 1023px) 100vw, 100vw',
   }),
   decoration: defineSceneLayer('decoration', locationsDoodlesReferenceEdit, {
-    srcSet:
-      '/media/locations-doodles-reference-edit-960.webp 960w, /media/locations-doodles-reference-edit-1672.webp 1672w',
+    srcSet: mediaSrcSet('/media/locations-doodles-reference-edit-960.webp 960w, /media/locations-doodles-reference-edit-1672.webp 1672w'),
     sizes: '100vw',
   }),
 } as const
 
 export const heroLogoBadge: DecorativeMediaProvenance = {
   id: 'hero-logo-badge',
-  src: '/media/hero-logo-reference.png',
+  src: mediaUrl('/media/hero-logo-reference.png'),
   alt: 'White Cup',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-extract',
@@ -854,7 +843,7 @@ export const heroLogoBadge: DecorativeMediaProvenance = {
 
 export const menuLogoReferenceCrop: DecorativeMediaProvenance = {
   id: 'menu-logo-reference-crop',
-  src: '/media/menu-logo-reference-crop.png',
+  src: mediaUrl('/media/menu-logo-reference-crop.png'),
   alt: 'White Cup',
   kind: 'decorative',
   provenanceKind: 'decorative-reference-extract',
