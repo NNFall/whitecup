@@ -199,9 +199,16 @@ three fonts verified); `git diff --check` — PASS. IAB checks covered
 1024×720, 1100×720, 390×844 and 320×568 with no document overflow and
 positive title/copy gaps.
 
-- [ ] **Step 4: Stage only intended files and publish**
+- [x] **Step 4: Stage only intended files and publish**
 
 Inspect `git status --short`, stage source/docs/evidence for this pass only,
 refresh local commit AuthorDate/CommitDate before push, commit, push `master`,
 verify `git ls-remote origin refs/heads/master`, deploy `/root/whitecup`, and
 run a final In-app Browser smoke on the public URL.
+
+Completed 28 August 2026: intended source/docs/evidence were staged without
+authoring-only assets; release commit `cbbc471eb53c37b8aab4f5714ebe37b52739fd7d`
+was pushed to `origin/master`, and the unchanged static build was deployed to
+`/root/whitecup`. Public HTTP and Codex In-app Browser smoke passed at
+1920×1080, 1920×640, 1920×568, 390×844 and 320×568; fonts loaded, headings
+were live DOM text, and document overflow remained zero.

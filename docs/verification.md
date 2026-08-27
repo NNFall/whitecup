@@ -121,12 +121,13 @@ Supporting frames в `docs/evidence/layered-reconstruction/` остаются л
   коммитов; старый production SHA не используется как evidence для текущего
   source tree.
 - [x] Production build с base `/site/whitecup/` распакован в `/root/whitecup`;
-  `nginx -t` успешен и reload выполнен. Nginx вывел только существующие
-  duplicate-server-name warnings, без ошибок конфигурации.
+  `nginx -t` успешен; для неизменяемого static alias reload не требовался.
+  Nginx вывел только существующие duplicate-server-name warnings, без ошибок
+  конфигурации.
 - [x] Public smoke (heading-refinement release):
   `https://kaigo.space/site/whitecup/` отвечает HTTP 200 и отдаёт
-  `/site/whitecup/assets/index-DeOGeb5K.js` и
-  `/site/whitecup/assets/index-PbAPXVif.css`; обе ссылки отвечают HTTP 200.
+  `/site/whitecup/assets/index-CXUElulJ.js` и
+  `/site/whitecup/assets/index-DBiOSl7I.css`; обе ссылки отвечают HTTP 200.
 - [x] Опубликованный URL повторно проверен только в Codex IAB: 1920×1080 —
   full-bleed rail x=0/y=0, h=64, display-фразы и script-акцент загружены;
   390×844 — live-heading, обе CTA и mobile reset. На обоих размерах overflow
@@ -134,5 +135,5 @@ Supporting frames в `docs/evidence/layered-reconstruction/` остаются л
 - [x] Публичные узкие desktop viewport 1024×720 и 1100×720 проверены в IAB:
   Events/Locations internal overflow `0`, document overflow `0`.
 - [x] GitHub/remote SHA проверен после push и совпал с локальным release HEAD
-  на момент проверки; точный SHA передан в финальном handoff.
+  на момент проверки: `cbbc471eb53c37b8aab4f5714ebe37b52739fd7d`.
   Локальный сервер для повторной проверки — `http://127.0.0.1:4175/`.
