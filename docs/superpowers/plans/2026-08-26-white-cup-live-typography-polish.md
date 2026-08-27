@@ -261,6 +261,9 @@ Current IAB proof covers Hero at `1920x1080`, `1536x864`, `390x844`, and `320x56
 
 Record that former text extracts are retained as authoring evidence only; record the installed OFL display font source/licence and intentional visual deviations in the current documentation updates.
 
-- [ ] **Step 5: Review, stage exact paths, commit and push** *(pending; no commit or push has been made for the current polish worktree)*
+- [x] **Step 5: Review, stage exact paths, commit and push** — commit
+  `1f87141bacd002300ff8a0576c168f0c56dd62f7` is pushed to `origin/master` and
+  matches the remote SHA. The local server remains at
+  `http://127.0.0.1:4175/` (no separate hosting provider is configured).
 
 Run: `git diff --check`, inspect `git diff --cached --name-status`, create a commit with current local author/committer timestamps, `git push origin master`, and verify `git ls-remote origin refs/heads/master` equals `git rev-parse HEAD`.

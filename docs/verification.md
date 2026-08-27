@@ -86,5 +86,7 @@ runway и mobile-carousel правок:
 
 - [x] Локальные test, build и diff-check gates пройдены; перечисленные
   supporting evidence paths существуют в `docs/evidence/layered-reconstruction/`.
-- [ ] Commit/push и проверка remote SHA/public URL — pending. Текущий polish
-  остаётся в рабочем tree; публикация из этого состояния не заявляется.
+- [x] Commit/push и проверка remote SHA — `1f87141bacd002300ff8a0576c168f0c56dd62f7`
+  совпадает с `git ls-remote origin refs/heads/master`. Локальная проверка
+  остаётся доступна на `http://127.0.0.1:4175/`; отдельный hosting-провайдер
+  для этого репозитория не настроен.
