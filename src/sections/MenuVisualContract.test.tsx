@@ -13,8 +13,11 @@ describe('Menu reference visual contract', () => {
 
     const heading = within(menu).getByRole('heading', { level: 2 })
     expect(heading).toHaveAccessibleName('Завтраки, ради которых хочется заглянуть')
-    expect(heading.querySelector('.menu-scene__title')).toHaveAttribute('aria-hidden', 'true')
-    expect(heading.querySelector('.sr-only')).toHaveTextContent('Завтраки, ради которых хочется заглянуть')
+    // The title is live text now: it participates in the heading's accessible
+    // name instead of being a decorative raster layer hidden from assistive
+    // technology.
+    expect(heading.querySelector('.menu-scene__title')).not.toHaveAttribute('aria-hidden')
+    expect(heading.querySelector('.sr-only')).not.toBeInTheDocument()
     expect(heading.querySelector('.menu-scene__title')).not.toHaveAttribute('aria-label')
     expect(menu).toHaveAccessibleName('Завтраки, ради которых хочется заглянуть')
     expect(globalCss).toMatch(

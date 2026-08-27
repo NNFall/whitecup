@@ -1,0 +1,275 @@
+/*
+ * The final typography layer is intentionally kept separate from the long
+ * reference-reconstruction stylesheet. It is imported after global.css so
+ * semantic headings remain the only title source at every breakpoint.
+ */
+
+.hero-scene h1,
+.section-frame__heading h2 {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 400;
+  text-rendering: optimizeLegibility;
+}
+
+/* The display face is reserved for prominent title text. Body, navigation,
+ * cards, and short UI labels continue to use the readable Golos face. */
+.site-shell .site-nav__desktop a,
+.site-shell .mobile-nav__panel nav a,
+.site-shell .scene-kicker,
+.site-shell .scene-copy--large,
+.site-shell .menu-carousel__hint,
+.site-shell .menu-carousel__note,
+.site-shell .menu-card h3,
+.site-shell .visit-card__copy h3,
+.site-shell .events-card__copy h3,
+.site-shell .location-card__address h3,
+.site-shell .locations-scene__map-copy,
+.site-footer__phone {
+  font-family: var(--font-body);
+}
+
+.site-shell .brand-mark {
+  font-family: var(--font-script);
+}
+
+.hero-scene h1 {
+  max-width: 11ch;
+  font-family: var(--font-display);
+  font-size: clamp(3.6rem, 5vw, 6rem);
+  letter-spacing: -0.035em;
+  line-height: 0.88;
+  text-wrap: balance;
+}
+
+.hero-scene__title-line,
+.about-scene__title-line,
+.visit-scene__title-line,
+.events-scene__title-line {
+  max-width: 100%;
+  transform: none;
+  transform-origin: left top;
+}
+
+.hero-scene__title-line {
+  width: fit-content;
+  white-space: nowrap;
+}
+
+.hero-scene h1 em {
+  font-family: var(--font-script);
+}
+
+/* This element is a flow-sized hook for a CSS stroke, not an image. */
+.hero-scene__underline {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  width: clamp(9rem, 13vw, 15rem);
+  height: 0.7rem;
+  margin: -0.35rem 0 -0.25rem clamp(1rem, 2vw, 2rem);
+  padding: 0;
+  overflow: visible;
+  pointer-events: none;
+  transform: none;
+}
+
+.hero-scene__underline::after {
+  position: absolute;
+  right: 0;
+  bottom: 0.08rem;
+  left: 0;
+  height: clamp(0.16rem, 0.2vw, 0.24rem);
+  border-radius: 50%;
+  content: '';
+  background: var(--orange-action);
+  transform: rotate(-2deg);
+  transform-origin: left center;
+}
+
+.about-scene__title-line--brand {
+  margin-left: 0;
+  font-family: var(--font-script);
+  font-size: 0.95em;
+  letter-spacing: -0.04em;
+  transform: rotate(-0.7deg);
+}
+
+.about-scene__title-line--place,
+.about-scene__title-line--return {
+  margin-left: 0;
+}
+
+.locations-scene .section-frame__heading h2 {
+  transform: none;
+}
+
+@media (min-width: 1024px) {
+  /* Restore the real DOM titles after legacy reference-art hiding rules. */
+  .hero-scene h1 {
+    position: relative;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    clip: auto;
+    clip-path: none;
+    white-space: normal;
+  }
+
+  .hero-scene__title-line {
+    width: fit-content;
+    white-space: nowrap;
+  }
+
+  .hero-scene__underline {
+    position: relative;
+    width: clamp(9rem, 13vw, 15rem);
+    height: 0.7rem;
+    margin: -0.35rem 0 -0.25rem clamp(1rem, 2vw, 2rem);
+    overflow: visible;
+    clip: auto;
+    clip-path: none;
+  }
+
+  .menu-scene .section-frame__heading h2,
+  .about-scene .section-frame__heading h2,
+  .visit-scene .section-frame__heading h2,
+  .events-scene .section-frame__heading h2,
+  .locations-scene .section-frame__heading h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    opacity: 1;
+    visibility: visible;
+    max-width: 100%;
+    overflow: visible;
+    transform: none;
+    text-wrap: balance;
+  }
+
+  .menu-scene .section-frame__heading h2 {
+    font-size: clamp(3.5rem, 4.6vw, 5.5rem);
+    line-height: 0.9;
+  }
+
+  .about-scene .section-frame__heading h2 {
+    font-size: clamp(3.5rem, 4.3vw, 5.2rem);
+    line-height: 0.92;
+  }
+
+  .visit-scene .section-frame__heading h2 {
+    font-size: clamp(3.5rem, 4.7vw, 5.65rem);
+    line-height: 0.9;
+  }
+
+  .events-scene .section-frame__heading h2 {
+    font-size: clamp(3.4rem, 4.45vw, 5.35rem);
+    line-height: 0.92;
+  }
+
+  .locations-scene .section-frame__heading h2 {
+    width: auto;
+    font-size: clamp(3.6rem, 4.8vw, 5.8rem);
+    line-height: 0.92;
+    white-space: normal;
+  }
+
+  .menu-scene__title-line,
+  .about-scene__title-line,
+  .visit-scene__title-line,
+  .events-scene__title-line {
+    width: fit-content;
+    white-space: nowrap;
+  }
+
+  /* Legacy menu lettering used viewport offsets and transforms. The live
+   * heading is flow content, so clear those rules at every desktop width. */
+  .menu-scene .menu-scene__title-line,
+  .menu-scene .menu-scene__title-line:first-child,
+  .menu-scene .menu-scene__title-line:nth-child(2),
+  .menu-scene .menu-scene__title-initial {
+    position: static;
+    top: auto;
+    left: auto;
+    transform: none;
+  }
+}
+
+@media (max-width: 1023px) {
+  .hero-scene h1,
+  .menu-scene .section-frame__heading h2,
+  .about-scene .section-frame__heading h2,
+  .visit-scene .section-frame__heading h2,
+  .events-scene .section-frame__heading h2,
+  .locations-scene .section-frame__heading h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    position: relative;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    clip-path: none;
+    opacity: 1;
+    visibility: visible;
+    text-wrap: balance;
+    transform: none;
+  }
+
+  .hero-scene h1 {
+    font-size: clamp(2.75rem, 14vw, 3.5rem);
+    line-height: 0.9;
+  }
+
+  .hero-scene__title-line,
+  .about-scene__title-line,
+  .visit-scene__title-line,
+  .events-scene__title-line {
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
+    transform: none;
+  }
+
+  .hero-scene__underline {
+    width: clamp(8rem, 42vw, 12rem);
+    height: 0.6rem;
+    margin: -0.22rem 0 -0.1rem clamp(0.5rem, 5vw, 1.25rem);
+    overflow: visible;
+    clip: auto;
+    clip-path: none;
+  }
+
+  .scene .section-frame__heading h2 {
+    font-size: clamp(2.75rem, 12vw, 3.5rem);
+    line-height: 0.92;
+  }
+
+  .about-scene__title-line--brand {
+    font-size: 0.9em;
+  }
+
+  .locations-scene .section-frame__heading h2 {
+    width: 100%;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero-scene h1 {
+    font-size: clamp(2.75rem, 14vw, 3.5rem);
+  }
+
+  .scene .section-frame__heading h2 {
+    font-size: clamp(2.75rem, 12vw, 3.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-scene__underline::after {
+    transform: none;
+  }
+}

@@ -225,7 +225,8 @@ export const storyRouteConnectorGenerated: ResponsiveDecorativeMediaProvenance =
   src: '/media/story-route-connector-1200.webp',
   srcSet:
     '/media/story-route-connector-720.webp 720w, /media/story-route-connector-1200.webp 1200w, /media/story-route-connector-2400.webp 2400w',
-  sizes: '(max-width: 1023px) 150vw, 75rem',
+  sizes:
+    '(max-width: 433px) 155vw, (max-width: 1023px) 42rem, (max-width: 1304px) 92vw, 75rem',
   alt: '',
   kind: 'decorative',
   provenanceKind: 'decorative-generated',

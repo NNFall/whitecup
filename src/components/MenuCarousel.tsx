@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 're
 
 import { menuSceneLayerManifest, type MenuCardMediaId } from '../data/media'
 import type { MenuItem } from '../data/site'
+import '../styles/menu-carousel-polish.css'
 
 export interface MenuCarouselProps {
   items: readonly MenuItem[]
@@ -11,6 +12,61 @@ export interface MenuCarouselProps {
 
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true
+
+type MenuScrollBehavior = 'auto' | 'smooth'
+
+const PROGRAMMATIC_SCROLL_FALLBACK_MS = 1000
+
+const getNativeScrollTarget = (viewport: HTMLDivElement, card: HTMLLIElement) => {
+  // The isolated track stylesheet adds enough trailing range for every card
+  // to align to this exact native offset. Do not clamp here: doing so would
+  // collapse later dot positions whenever layout is measured before the
+  // trailing range has settled, and the browser natively clamps impossible
+  // values at the true scroll boundary.
+  return Math.max(0, card.offsetLeft - viewport.offsetLeft)
+}
+
+const getNearestCardIndex = (
+  viewport: HTMLDivElement,
+  cards: readonly (HTMLLIElement | null)[],
+  itemCount: number,
+) => {
+  const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth)
+  const currentScroll = Math.max(0, Math.min(viewport.scrollLeft, maxScroll || viewport.scrollLeft))
+  const offsets = cards.slice(0, itemCount).map((card) =>
+    card ? Math.max(0, card.offsetLeft - viewport.offsetLeft) : null,
+  )
+  const measuredOffsets = offsets.filter((offset): offset is number => offset !== null)
+  const hasDistinctCardOffsets = measuredOffsets.some(
+    (offset, index) => index > 0 && Math.abs(offset - measuredOffsets[0]) > 1,
+  )
+
+  // Several cards can legitimately share the maximum snap position when the
+  // viewport intentionally shows multiple cards. The boundary itself still
+  // represents the final item for controls, dots, and assistive technology.
+  if (itemCount > 1 && maxScroll > 1 && currentScroll >= maxScroll - 1) return itemCount - 1
+
+  // Layout metrics are unavailable in JSDOM. Progress is a safe fallback for
+  // that case and still maps the real maximum scroll boundary to the final
+  // item when a browser exposes no individual card offsets.
+  if (!hasDistinctCardOffsets) {
+    if (maxScroll <= 1 || itemCount <= 1) return 0
+    return Math.max(0, Math.min(itemCount - 1, Math.round((currentScroll / maxScroll) * (itemCount - 1))))
+  }
+
+  return offsets.reduce<number>((nearestIndex, offset, index) => {
+    if (offset === null) return nearestIndex
+
+    const target = maxScroll > 0 ? Math.min(offset, maxScroll) : offset
+    const nearestOffset = offsets[nearestIndex]
+    if (nearestOffset === null) return index
+
+    const nearestTarget = maxScroll > 0 ? Math.min(nearestOffset, maxScroll) : nearestOffset
+    return Math.abs(target - currentScroll) < Math.abs(nearestTarget - currentScroll)
+      ? index
+      : nearestIndex
+  }, 0)
+}
 
 /**
  * The menu intentionally uses native overflow instead of a transform carousel.
@@ -50,32 +106,115 @@ function DecorativeMenuSliver({ item, side }: { item: MenuItem; side: 'left' | '
 export function MenuCarousel({ items, fullMenuUrl, provenanceDescriptionId }: MenuCarouselProps) {
   const viewportRef = useRef<HTMLDivElement>(null)
   const cardRefs = useRef<Array<HTMLLIElement | null>>([])
-  const requestedIndexRef = useRef<number | null>(null)
+  const pendingIndexRef = useRef<number | null>(null)
+  const pendingFallbackTimerRef = useRef<number | null>(null)
   const [activeIndex, setActiveIndex] = useState(0)
 
   useEffect(() => {
     setActiveIndex((currentIndex) => Math.min(currentIndex, Math.max(0, items.length - 1)))
   }, [items.length])
 
+  const reconcileViewport = useCallback(() => {
+    const viewport = viewportRef.current
+    if (!viewport || viewport.clientWidth === 0) return
+
+    setActiveIndex(getNearestCardIndex(viewport, cardRefs.current, items.length))
+  }, [items.length])
+
+  const clearPendingFallbackTimer = useCallback(() => {
+    if (pendingFallbackTimerRef.current === null) return
+
+    if (typeof window !== 'undefined') {
+      window.clearTimeout(pendingFallbackTimerRef.current)
+    }
+    pendingFallbackTimerRef.current = null
+  }, [])
+
+  const clearPendingProgrammaticTarget = useCallback(
+    (reconcile = false) => {
+      pendingIndexRef.current = null
+      clearPendingFallbackTimer()
+      if (reconcile) reconcileViewport()
+    },
+    [clearPendingFallbackTimer, reconcileViewport],
+  )
+
+  const schedulePendingFallback = useCallback(() => {
+    clearPendingFallbackTimer()
+    if (typeof window === 'undefined') return
+
+    pendingFallbackTimerRef.current = window.setTimeout(() => {
+      pendingFallbackTimerRef.current = null
+      pendingIndexRef.current = null
+      reconcileViewport()
+    }, PROGRAMMATIC_SCROLL_FALLBACK_MS)
+  }, [clearPendingFallbackTimer, reconcileViewport])
+
   const moveTo = useCallback(
     (index: number) => {
       if (items.length === 0) return
 
       const nextIndex = Math.max(0, Math.min(index, items.length - 1))
-      requestedIndexRef.current = nextIndex
       setActiveIndex(nextIndex)
 
+      const viewport = viewportRef.current
       const card = cardRefs.current[nextIndex]
-      if (!card) return
+      if (!viewport || !card) {
+        clearPendingProgrammaticTarget()
+        return
+      }
 
-      card.scrollIntoView?.({
-        behavior: prefersReducedMotion() ? 'auto' : 'smooth',
-        block: 'nearest',
-        inline: 'start',
-      })
+      pendingIndexRef.current = nextIndex
+      schedulePendingFallback()
+
+      const behavior: MenuScrollBehavior = prefersReducedMotion() ? 'auto' : 'smooth'
+      const targetLeft = getNativeScrollTarget(viewport, card)
+
+      if (typeof viewport.scrollTo === 'function') {
+        viewport.scrollTo({ left: targetLeft, behavior })
+      } else {
+        // scrollTo is supported by target browsers; this keeps the control
+        // useful in older engines without hijacking touch or wheel scrolling.
+        viewport.scrollLeft = targetLeft
+      }
     },
-    [items.length],
+    [clearPendingProgrammaticTarget, items.length, schedulePendingFallback],
   )
+
+  useEffect(() => {
+    const viewport = viewportRef.current
+    if (!viewport || typeof ResizeObserver === 'undefined') return
+
+    const observer = new ResizeObserver(() => {
+      const pendingIndex = pendingIndexRef.current
+      if (pendingIndex !== null) {
+        // Recalculate a pending target after responsive geometry changes so a
+        // viewport resize cannot leave the requested card at a stale offset.
+        const card = cardRefs.current[pendingIndex]
+        if (!card) {
+          clearPendingProgrammaticTarget(true)
+          return
+        }
+
+        const targetLeft = getNativeScrollTarget(viewport, card)
+        const behavior: MenuScrollBehavior = prefersReducedMotion() ? 'auto' : 'smooth'
+        if (typeof viewport.scrollTo === 'function') {
+          viewport.scrollTo({ left: targetLeft, behavior })
+        } else {
+          viewport.scrollLeft = targetLeft
+        }
+        schedulePendingFallback()
+        return
+      }
+
+      reconcileViewport()
+    })
+
+    observer.observe(viewport)
+    return () => observer.disconnect()
+  }, [clearPendingProgrammaticTarget, reconcileViewport, schedulePendingFallback])
+
+  useEffect(() => () => clearPendingFallbackTimer(), [clearPendingFallbackTimer])
 
   const handleViewportKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
@@ -93,24 +232,21 @@ export function MenuCarousel({ items, fullMenuUrl, provenanceDescriptionId }: Me
     const viewport = viewportRef.current
     if (!viewport || viewport.clientWidth === 0) return
 
-    // Wide desktop layouts can expose almost the entire track: the final card
-    // then reaches max-scroll without ever aligning to the leading edge. Keep
-    // explicit arrow/dot choices stable, and reconcile manual scrolling by
-    // normalized track progress so both boundaries remain reachable.
-    if (requestedIndexRef.current !== null) {
-      setActiveIndex(requestedIndexRef.current)
+    const pendingIndex = pendingIndexRef.current
+    if (pendingIndex !== null) {
+      setActiveIndex(pendingIndex)
       return
     }
 
-    const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth)
-    if (maxScroll <= 1) return
-
-    const progress = Math.max(0, Math.min(viewport.scrollLeft / maxScroll, 1))
-    setActiveIndex(Math.round(progress * (items.length - 1)))
+    reconcileViewport()
   }
 
-  const handleManualScrollIntent = () => {
-    requestedIndexRef.current = null
+  const handleViewportScrollEnd = () => {
+    clearPendingProgrammaticTarget(true)
+  }
+
+  const handleNativeScrollIntent = () => {
+    clearPendingProgrammaticTarget(true)
   }
 
   if (items.length === 0) {
@@ -154,9 +290,10 @@ export function MenuCarousel({ items, fullMenuUrl, provenanceDescriptionId }: Me
           tabIndex={0}
           onKeyDown={handleViewportKeyDown}
           onScroll={handleViewportScroll}
-          onWheel={handleManualScrollIntent}
-          onPointerDown={handleManualScrollIntent}
-          onTouchStart={handleManualScrollIntent}
+          onScrollEnd={handleViewportScrollEnd}
+          onWheel={handleNativeScrollIntent}
+          onPointerDown={handleNativeScrollIntent}
+          onTouchStart={handleNativeScrollIntent}
           aria-label="Позиции меню, используйте стрелки для навигации"
         >
           <ul className="menu-carousel__track" aria-label="Позиции меню">

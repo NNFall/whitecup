@@ -5,8 +5,6 @@ import { siteData } from '../data/site'
 import {
   documentarySceneMedia,
   heroSceneLayerManifest,
-  heroTitleReferenceExtract,
-  heroUnderlineReferenceExtract,
 } from '../data/media'
 import { OrganicPhoto } from '../components/OrganicPhoto'
 import { Reveal } from '../components/Reveal'
@@ -52,27 +50,6 @@ export function HeroSection() {
 
         <div className="hero-scene__inner">
           <Reveal className="hero-scene__copy">
-            <picture data-conditional-layer="title-reference" aria-hidden="true">
-              <source
-                media="(max-width: 1023px)"
-                srcSet="/media/hero-title-reference-extract-800.webp"
-                sizes="100vw"
-              />
-              <source
-                media="(min-width: 1024px)"
-                srcSet={heroTitleReferenceExtract.srcSet}
-                sizes={heroTitleReferenceExtract.sizes}
-              />
-              <SceneLayer
-                className="hero-scene__title-reference"
-                asset={heroTitleReferenceExtract}
-                layer="decoration"
-                src={heroTitleReferenceExtract.src}
-                decoding="async"
-                draggable="false"
-                onError={hideBrokenDecorativeLayer}
-              />
-            </picture>
             <h1 id="hero-title" aria-label="Завтраки, кофе и свой вайб в White Cup">
               <span className="hero-scene__title-line hero-scene__title-line--first">
                 Завтраки,
@@ -87,14 +64,10 @@ export function HeroSection() {
                 </span>
               </span>
             </h1>
-            <SceneLayer
+            <span
               className="hero-scene__underline"
-              asset={heroUnderlineReferenceExtract}
-              layer="decoration"
-              src={heroUnderlineReferenceExtract.src}
+              aria-hidden="true"
               data-doodle
-              decoding="async"
-              draggable="false"
             />
             <p className="hero-scene__lede">
               Спешелти кофе, свежие завтраки

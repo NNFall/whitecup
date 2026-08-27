@@ -35,6 +35,70 @@ function extractCssBlock(css: string, atRule: string, marker: string) {
   throw new Error(`Missing CSS block ${atRule} containing ${marker}`)
 }
 
+type ParsedStyleRule = {
+  conditions: string[]
+  declarations: Record<string, string>
+  selectors: string[]
+}
+
+function parseStyleRules(css: string) {
+  const styleElement = document.createElement('style')
+  styleElement.textContent = css
+  document.head.append(styleElement)
+
+  const parsedRules: ParsedStyleRule[] = []
+  const sheet = styleElement.sheet
+
+  if (!sheet) {
+    styleElement.remove()
+    throw new Error('Expected the global stylesheet to produce a CSSStyleSheet')
+  }
+
+  const visitRules = (rules: CSSRuleList, conditions: string[] = []) => {
+    for (const rule of Array.from(rules)) {
+      if (rule.type === CSSRule.STYLE_RULE) {
+        const styleRule = rule as CSSStyleRule
+        const declarations: Record<string, string> = {}
+
+        for (let index = 0; index < styleRule.style.length; index += 1) {
+          const property = styleRule.style.item(index)
+          declarations[property] = styleRule.style
+            .getPropertyValue(property)
+            .trim()
+        }
+
+        parsedRules.push({
+          conditions,
+          declarations,
+          selectors: styleRule.selectorText
+            .split(',')
+            .map((selector) => selector.trim()),
+        })
+        continue
+      }
+
+      const groupingRule = rule as CSSRule & {
+        conditionText?: string
+        cssRules?: CSSRuleList
+      }
+
+      if (!groupingRule.cssRules) continue
+
+      visitRules(
+        groupingRule.cssRules,
+        groupingRule.conditionText
+          ? [...conditions, groupingRule.conditionText]
+          : conditions,
+      )
+    }
+  }
+
+  visitRules(sheet.cssRules)
+  styleElement.remove()
+
+  return parsedRules
+}
+
 describe('desktop continuity guards', () => {
   it('fails fast when a matched CSS at-rule is not closed', () => {
     expect(extractCssBlock.toString()).toContain('let closed = false')
@@ -45,6 +109,77 @@ describe('desktop continuity guards', () => {
         '.hero-scene__actions',
       ),
     ).toThrow('Unclosed CSS block @media (max-width: 1px)')
+  })
+
+  it('keeps live title ink visible and flow-sized in the global style layer', () => {
+    const titleSelectors = new Set([
+      '.hero-scene h1',
+      '.hero-scene__underline',
+      '.menu-scene .section-frame__heading h2',
+      '.about-scene .section-frame__heading h2',
+      '.visit-scene .section-frame__heading h2',
+      '.events-scene .section-frame__heading h2',
+      '.locations-scene .section-frame__heading h2',
+    ])
+    const titleRules = parseStyleRules(globalCss).filter((rule) =>
+      rule.selectors.some((selector) => titleSelectors.has(selector)),
+    )
+    const hiddenTitleRules = titleRules.filter(({ declarations }) => {
+      const collapsesFlow =
+        declarations.position === 'absolute' &&
+        declarations.width === '1px' &&
+        declarations.height === '1px' &&
+        declarations.overflow === 'hidden' &&
+        declarations.clip === 'rect(0px)'
+
+      return (
+        collapsesFlow ||
+        declarations.display === 'none' ||
+        declarations.opacity === '0' ||
+        declarations.visibility === 'hidden'
+      )
+    })
+    const rasterTitleRules = parseStyleRules(globalCss).filter((rule) =>
+      rule.selectors.some(
+        (selector) =>
+          selector.includes('title-reference') ||
+          selector.includes("data-conditional-layer='title-reference'"),
+      ),
+    )
+
+    expect(titleRules.flatMap((rule) => rule.selectors)).toEqual(
+      expect.arrayContaining([...titleSelectors]),
+    )
+    expect(hiddenTitleRules).toEqual([])
+    expect(rasterTitleRules).toEqual([])
+  })
+
+  it('moves live title bands clear of copy on short desktop heights', () => {
+    const shortAboutTitle = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1024px) and (max-height: 800px) and (min-aspect-ratio: 4 / 3)',
+      '.about-scene .section-frame__heading',
+    )
+    const shortVisitTitle = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1024px) and (max-height: 800px) and (min-aspect-ratio: 4 / 3)',
+      '.visit-scene .section-frame__heading',
+    )
+    const shortEventsTitle = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1024px) and (max-height: 800px) and (min-aspect-ratio: 4 / 3)',
+      '.events-scene .section-frame__heading',
+    )
+
+    expect(shortAboutTitle).toMatch(
+      /\.about-scene \.section-frame__heading\s*\{[^}]*top:\s*9\.5%;/s,
+    )
+    expect(shortVisitTitle).toMatch(
+      /\.visit-scene \.section-frame__heading\s*\{[^}]*top:\s*0%;/s,
+    )
+    expect(shortEventsTitle).toMatch(
+      /\.events-scene \.section-frame__heading\s*\{[^}]*top:\s*18%;/s,
+    )
   })
 
   it('gives the narrow desktop hero intrinsic-safe action columns', () => {
@@ -79,7 +214,7 @@ describe('desktop continuity guards', () => {
       /\.menu-scene \.section-frame__inner\s*\{[^}]*padding:\s*1\.25rem 0 0\.5rem;/s,
     )
     expect(shortMenu).toMatch(
-      /\.menu-scene__title-reference\s*\{[^}]*top:\s*7%;[^}]*width:\s*min\(42vw,\s*100dvh\);/s,
+      /\.menu-scene \.section-frame__heading h2\s*\{[^}]*font-size:\s*clamp\(2\.85rem,\s*3\.7vw,\s*3\.5rem\);[^}]*line-height:\s*0\.92;/s,
     )
     expect(shortMenu).toMatch(
       /\.menu-scene \.menu-carousel__track\s*\{[^}]*grid-auto-columns:\s*clamp\(11\.5rem,\s*15vw,\s*13\.5rem\);/s,
@@ -101,25 +236,22 @@ describe('desktop continuity guards', () => {
     )
 
     expect(extraShortMenu).toMatch(
-      /\.scene\.menu-scene\s*\{[^}]*height:\s*auto;[^}]*min-height:\s*max\(100dvh,\s*42rem\);[^}]*max-height:\s*none;/s,
+      /\.scene\.menu-scene\s*\{[^}]*height:\s*auto;[^}]*min-height:\s*max\(100dvh,\s*48rem\);[^}]*max-height:\s*none;/s,
     )
     expect(extraShortMenu).toMatch(
-      /\.menu-scene \.section-frame__inner\s*\{[^}]*height:\s*auto;[^}]*min-height:\s*max\(100dvh,\s*42rem\);/s,
+      /\.menu-scene \.section-frame__inner\s*\{[^}]*height:\s*auto;[^}]*min-height:\s*max\(100dvh,\s*48rem\);/s,
     )
   })
 
-  it('separates Visit title ink from the intro on wide short desktops', () => {
+  it('keeps the Visit intro clear of its cards on wide short desktops', () => {
     const shortVisit = extractCssBlock(
       globalCss,
       '@media (min-width: 1024px) and (max-height: 900px) and (min-aspect-ratio: 4 / 3)',
-      '.visit-scene__title-reference',
+      '.visit-scene__intro',
     )
 
     expect(shortVisit).toMatch(
-      /\.visit-scene__title-reference\s*\{[^}]*top:\s*11\.5%;[^}]*width:\s*min\(41\.5vw,\s*75dvh\);/s,
-    )
-    expect(shortVisit).toMatch(
-      /\.visit-scene__intro\s*\{[^}]*top:\s*34%;[^}]*width:\s*38%;/s,
+      /\.visit-scene__intro\s*\{[^}]*top:\s*30\.5%;[^}]*width:\s*38%;/s,
     )
     expect(shortVisit).toMatch(
       /\.visit-scene__intro p\s*\{[^}]*font-size:\s*clamp\(0\.76rem,\s*0\.88vw,\s*0\.9rem\);[^}]*line-height:\s*1\.4;/s,
@@ -143,7 +275,7 @@ describe('desktop continuity guards', () => {
     )
   })
 
-  it('keeps the Visit kicker above the raster title on short desktops', () => {
+  it('keeps the Visit kicker compact on short desktops', () => {
     const shortVisitKicker = extractCssBlock(
       globalCss,
       '@media (min-width: 1024px) and (max-height: 760px)',
@@ -155,20 +287,147 @@ describe('desktop continuity guards', () => {
     )
   })
 
-  it('keeps the About title and intro above the benefit cards on short desktops', () => {
-    const shortAboutTitle = extractCssBlock(
+  it('moves the Visit intro above its card band on short desktop heights', () => {
+    const shortVisitIntro = extractCssBlock(
       globalCss,
       '@media (min-width: 1024px) and (max-height: 900px) and (min-aspect-ratio: 4 / 3)',
-      '.about-scene__title-reference-lower',
+      '.visit-scene__intro',
     )
 
-    expect(shortAboutTitle).toMatch(
-      /\.about-scene__title-reference-upper\s*\{[^}]*width:\s*min\(47\.55vw,\s*117dvh\);/s,
+    expect(shortVisitIntro).toMatch(
+      /\.visit-scene__intro\s*\{[^}]*top:\s*30\.5%;/s,
     )
-    expect(shortAboutTitle).toMatch(
-      /\.about-scene__title-reference-lower\s*\{[^}]*width:\s*min\(52\.33vw,\s*85dvh\);/s,
+  })
+
+  it('keeps the Visit kicker compact through the 800px height guard', () => {
+    const shortVisitKicker = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1024px) and (max-height: 800px) and (min-aspect-ratio: 4 / 3)',
+      '.visit-scene .scene-kicker',
     )
 
+    expect(shortVisitKicker).toMatch(
+      /\.visit-scene \.scene-kicker\s*\{[^}]*margin-bottom:\s*0;[^}]*font-size:\s*clamp\(0\.75rem,\s*2\.2dvh,\s*0\.94rem\);[^}]*line-height:\s*1\.08;/s,
+    )
+  })
+
+  it('gives every fixed desktop scene a scrollable runway below 680px', () => {
+    const extraShortScenes = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1024px) and (max-height: 680px)',
+      '.scene.about-scene',
+    )
+    const extraShortInners = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1024px) and (max-height: 680px)',
+      '.about-scene .section-frame__inner',
+    )
+
+    expect(extraShortScenes).toMatch(
+      /\.scene\.about-scene,\s*\.scene\.visit-scene,\s*\.scene\.events-scene,\s*\.scene\.locations-scene\s*\{[^}]*height:\s*auto;[^}]*min-height:\s*max\(100dvh,\s*42rem\);[^}]*max-height:\s*none;/s,
+    )
+    expect(extraShortInners).toMatch(
+      /\.about-scene \.section-frame__inner,\s*\.visit-scene \.section-frame__inner,\s*\.events-scene \.section-frame__inner,\s*\.locations-scene \.section-frame__inner\s*\{[^}]*height:\s*auto;[^}]*min-height:\s*max\(100dvh,\s*42rem\);/s,
+    )
+  })
+
+  it('keeps the short desktop Menu footer inside its paper runway', () => {
+    const menuExtraShort = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1024px) and (max-height: 680px)',
+      '.scene.menu-scene',
+    )
+    const menuExtraShortInner = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1024px) and (max-height: 680px)',
+      '.menu-scene .section-frame__inner',
+    )
+
+    expect(menuExtraShort).toMatch(
+      /\.scene\.menu-scene\s*\{[^}]*height:\s*auto;[^}]*min-height:\s*max\(100dvh,\s*48rem\);[^}]*max-height:\s*none;/s,
+    )
+    expect(menuExtraShortInner).toMatch(
+      /\.menu-scene \.section-frame__inner\s*\{[^}]*height:\s*auto;[^}]*min-height:\s*max\(100dvh,\s*48rem\);/s,
+    )
+  })
+
+  it('adds a wide low-height guard for About, Visit and Events', () => {
+    const wideExtraShortAbout = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1600px) and (max-height: 680px)',
+      '.about-scene .section-frame__heading',
+    )
+    const wideExtraShortVisit = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1600px) and (max-height: 680px)',
+      '.visit-scene__intro',
+    )
+    const wideExtraShortEvents = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1600px) and (max-height: 680px)',
+      '.scene.events-scene',
+    )
+
+    expect(wideExtraShortAbout).toMatch(
+      /\.about-scene \.section-frame__heading\s*\{[^}]*top:\s*7%;/s,
+    )
+    expect(wideExtraShortVisit).toMatch(
+      /\.visit-scene__intro\s*\{[^}]*top:\s*31\.5%;/s,
+    )
+    expect(wideExtraShortEvents).toMatch(
+      /\.scene\.events-scene\s*\{[^}]*height:\s*auto;[^}]*min-height:\s*max\(100dvh,\s*55rem\);[^}]*max-height:\s*none;/s,
+    )
+  })
+
+  it('extends Menu and Events scenes when short desktop cards would outgrow the viewport', () => {
+    const wideShortScenes = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1600px) and (min-height: 681px) and (max-height: 800px)',
+      '.scene.menu-scene,\n  .scene.events-scene',
+    )
+    const compactShortScenes = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1024px) and (max-width: 1599px) and (min-height: 681px) and (max-height: 800px)',
+      '.scene.menu-scene,\n  .scene.events-scene',
+    )
+
+    expect(wideShortScenes).toMatch(
+      /\.scene\.menu-scene,\s*\.scene\.events-scene\s*\{[^}]*height:\s*auto;[^}]*min-height:\s*max\(100dvh,\s*66rem\);[^}]*max-height:\s*none;/s,
+    )
+    expect(compactShortScenes).toMatch(
+      /\.scene\.menu-scene,\s*\.scene\.events-scene\s*\{[^}]*height:\s*auto;[^}]*min-height:\s*max\(100dvh,\s*52rem\);[^}]*max-height:\s*none;/s,
+    )
+  })
+
+  it('keeps the 720px card bands below their intro copy', () => {
+    const tightAboutCards = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1024px) and (min-height: 681px) and (max-height: 720px) and (min-aspect-ratio: 4 / 3)',
+      '.about-scene .benefits-list',
+    )
+    const tightEventsCards = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1024px) and (min-height: 681px) and (max-height: 720px) and (min-aspect-ratio: 4 / 3)',
+      '.events-scene__cards',
+    )
+    const tightLocationsCards = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1024px) and (min-height: 681px) and (max-height: 720px) and (min-aspect-ratio: 4 / 3)',
+      '.locations-scene__cards',
+    )
+
+    expect(tightAboutCards).toMatch(
+      /\.about-scene \.benefits-list\s*\{[^}]*bottom:\s*6\.2%;/s,
+    )
+    expect(tightEventsCards).toMatch(
+      /\.events-scene__cards\s*\{[^}]*top:\s*60\.1%;/s,
+    )
+    expect(tightLocationsCards).toMatch(
+      /\.locations-scene__cards\s*\{[^}]*top:\s*54\.3%;/s,
+    )
+  })
+
+  it('keeps the About intro above the benefit cards on short desktops', () => {
     const shortAboutFlow = extractCssBlock(
       globalCss,
       '@media (min-width: 1024px) and (max-height: 800px) and (min-aspect-ratio: 4 / 3)',
@@ -183,17 +442,7 @@ describe('desktop continuity guards', () => {
     )
   })
 
-  it('keeps the Events title and intro clear of its cards on short desktops', () => {
-    const shortEventsTitle = extractCssBlock(
-      globalCss,
-      '@media (min-width: 1024px) and (max-height: 900px) and (min-aspect-ratio: 4 / 3)',
-      '.events-scene__title-reference',
-    )
-
-    expect(shortEventsTitle).toMatch(
-      /\.events-scene__title-reference\s*\{[^}]*width:\s*min\(47\.25vw,\s*75dvh\);/s,
-    )
-
+  it('keeps the Events intro clear of its cards on short desktops', () => {
     const shortEventsFlow = extractCssBlock(
       globalCss,
       '@media (min-width: 1024px) and (max-height: 800px) and (min-aspect-ratio: 4 / 3)',
@@ -205,17 +454,7 @@ describe('desktop continuity guards', () => {
     )
   })
 
-  it('keeps the Locations title and intro clear of its cards on short desktops', () => {
-    const shortLocationsTitle = extractCssBlock(
-      globalCss,
-      '@media (min-width: 1024px) and (max-height: 900px) and (min-aspect-ratio: 4 / 3)',
-      '.locations-scene__title-reference',
-    )
-
-    expect(shortLocationsTitle).toMatch(
-      /\.locations-scene__title-reference\s*\{[^}]*width:\s*min\(46\.95vw,\s*75dvh\);/s,
-    )
-
+  it('keeps the Locations intro clear of its cards on short desktops', () => {
     const shortLocationsFlow = extractCssBlock(
       globalCss,
       '@media (min-width: 1024px) and (max-height: 800px) and (min-aspect-ratio: 4 / 3)',

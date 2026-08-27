@@ -1,15 +1,9 @@
 import type { HTMLAttributes, ReactNode } from 'react'
 
-import {
-  ReferenceTitleLayer,
-  type ReferenceTitleLayerProps,
-} from './ReferenceTitleLayer'
-
 export interface SectionFrameProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> {
   id: string
   title: ReactNode
   kicker?: string
-  referenceTitles?: readonly ReferenceTitleLayerProps[]
   children: ReactNode
 }
 
@@ -21,7 +15,6 @@ export function SectionFrame({
   id,
   title,
   kicker,
-  referenceTitles,
   children,
   className,
   ...rest
@@ -37,12 +30,6 @@ export function SectionFrame({
       data-scene={id}
     >
       <div className="section-frame__inner">
-        {referenceTitles?.map((referenceTitle) => (
-          <ReferenceTitleLayer
-            key={referenceTitle.asset.id}
-            {...referenceTitle}
-          />
-        ))}
         <div className="section-frame__heading">
           {kicker ? <p className="scene-kicker">{kicker}</p> : null}
           <h2 id={titleId}>{title}</h2>

@@ -11,6 +11,40 @@ from the local FontTools distribution at
 
 ## Included families
 
+### Neucha / White Cup Display
+
+- Webfont: `public/fonts/white-cup-display-cyrillic.woff2`
+- Official Google Fonts GitHub source commit: [`6a003b5eb672dc8bf5bff5937cf5863f8b175445`](https://github.com/google/fonts/commit/6a003b5eb672dc8bf5bff5937cf5863f8b175445).
+- Immutable source blobs: [`Neucha.ttf`](https://github.com/google/fonts/blob/6a003b5eb672dc8bf5bff5937cf5863f8b175445/ofl/neucha/Neucha.ttf)
+  and [`OFL.txt`](https://github.com/google/fonts/blob/6a003b5eb672dc8bf5bff5937cf5863f8b175445/ofl/neucha/OFL.txt).
+- Source metadata: Neucha Regular, weight 400; Google Fonts metadata lists
+  Cyrillic and Latin coverage.
+- Copyright: Copyright (c) 2008-2010 by Jovanny Lemonad
+  (`http://www.jovanny.ru`).
+- License: SIL Open Font License 1.1; the upstream license text and URL are
+  preserved in the source repository.
+- CSS family: the local subset is exposed as `White Cup Display`; the original
+  Neucha family is used only as the upstream attribution/source name.
+- Coverage: Basic Latin, Latin-1, combining marks, basic Cyrillic including
+  Russian `Ё/ё`, common punctuation, euro, numero, four navigation arrows,
+  minus, and filled dot; unsupported symbols such as the ruble sign and heart
+  suit use the browser fallback face.
+- Packaging command (FontTools 4.61.1 + Brotli 1.1.0; run from the downloaded
+  source directory):
+
+  ```sh
+  curl -L --fail --retry 3 -o Neucha.ttf \
+    https://raw.githubusercontent.com/google/fonts/6a003b5eb672dc8bf5bff5937cf5863f8b175445/ofl/neucha/Neucha.ttf
+  pyftsubset Neucha.ttf --output-file=white-cup-display-cyrillic.woff2 \
+    --flavor=woff2 \
+    --unicodes='U+0020-00FF,U+0300-036F,U+0400-045F,U+2000-206F,U+20BD,U+20AC,U+2116,U+2190-2193,U+2212,U+25CF'
+  ```
+
+  The subset name table is then exposed as `White Cup Display` with FontTools
+  before copying it to `public/fonts/`. SHA-256 of the delivered WOFF2,
+  independently checked with `Get-FileHash -Algorithm SHA256`, is
+  `16634F2A5A397867ABD3E9A30A8F54A7F37CEC44D1808FE108065CF8044DEB6C`.
+
 ### Pangolin
 
 - Webfont: `public/fonts/pangolin-cyrillic.woff2`
@@ -66,7 +100,7 @@ from the local FontTools distribution at
 
 ## Subset ranges
 
-The deterministic Unicode selection used for all three files is:
+The deterministic Unicode selection used for the local subsets is:
 
 `U+0020-00FF,U+0300-036F,U+0400-045F,U+2000-206F,U+20BD,U+20AC,U+2116,U+2190-2193,U+2212,U+25CF`
 

@@ -1,7 +1,9 @@
 import { render, screen, within } from '@testing-library/react'
 
 import App from '../App'
+import heroSource from './HeroSection.tsx?raw'
 import globalCss from '../styles/global.css?raw'
+import liveTypographyCss from '../styles/live-typography.css?raw'
 
 function extractCssBlocks(css: string, atRule: string) {
   const blocks: string[] = []
@@ -51,7 +53,7 @@ describe('early-scene reference convergence', () => {
     )
   })
 
-  it('locks the measured Hero copy, underline, and skyline geometry without moving the CTAs', () => {
+  it('keeps the live Hero title visible and the underline as CSS decoration without moving the CTAs', () => {
     render(<App />)
 
     const hero = screen.getByRole('region', {
@@ -65,53 +67,31 @@ describe('early-scene reference convergence', () => {
     expect(lines[1]).toHaveClass('hero-scene__title-line--second')
     expect(lines[2]).toHaveClass('hero-scene__title-line--third')
 
-    const titleReference = hero.querySelector('.hero-scene__title-reference')
-    const titleReferenceSource = hero.querySelector('[data-conditional-layer="title-reference"] source[media="(min-width: 1024px)"]')
-    const titleReferenceSources = hero.querySelectorAll('[data-conditional-layer="title-reference"] source')
-    expect(titleReferenceSources).toHaveLength(2)
-    expect(titleReference).toHaveAttribute('data-layer', 'decoration')
-    expect(titleReference).toHaveAttribute('data-media-kind', 'decorative-reference-extract')
-    expect(titleReferenceSource).toHaveAttribute('media', '(min-width: 1024px)')
-    expect(titleReferenceSource).toHaveAttribute(
-      'srcset',
-      '/media/hero-title-reference-extract-800.webp 800w, /media/hero-title-reference-extract-1600.webp 1600w',
+    expect(heading).toHaveTextContent('Завтраки, кофе и свой вайб в White Cup')
+    expect(hero.querySelector('[data-conditional-layer*="title-reference"]')).not.toBeInTheDocument()
+    expect(hero.querySelector('[class*="title-reference"]')).not.toBeInTheDocument()
+    expect(heroSource).not.toMatch(
+      /ReferenceTitleLayer|title-reference|TitleReferenceExtract|heroUnderlineReferenceExtract/i,
     )
-    expect(hero.querySelector('[data-conditional-layer="title-reference"] source[media="(max-width: 1023px)"]')).toHaveAttribute(
-      'srcset',
-      '/media/hero-title-reference-extract-800.webp',
+    expect(liveTypographyCss).toMatch(
+      /\.hero-scene h1\s*\{[^}]*font-family:\s*var\(--font-display\);[^}]*font-size:\s*clamp\(3\.6rem,\s*5vw,\s*6rem\);/s,
     )
-    expect(globalCss).toMatch(
-      /\.hero-scene__title-reference\s*\{[^}]*width:\s*47\.85vw;[^}]*pointer-events:\s*none;/,
+    expect(liveTypographyCss).toMatch(
+      /@media \(min-width:\s*1024px\)[\s\S]*?\.hero-scene h1\s*\{[^}]*width:\s*auto;[^}]*height:\s*auto;[^}]*overflow:\s*visible;[^}]*clip:\s*auto;/s,
     )
-    expect(globalCss).toMatch(
-      /@media \(max-width:\s*1023px\)[\s\S]*?\.hero-scene__title-reference\s*\{[^}]*display:\s*block;/,
-    )
-
-    expect(globalCss).toMatch(
-      /\.hero-scene__title-line--first\s*\{[^}]*transform:\s*translate\(-0\.42vw,\s*-0\.38dvh\)\s*scale\(1\.24,\s*1\.044\);/,
-    )
-    expect(globalCss).toMatch(
-      /\.hero-scene__title-line--second\s*\{[^}]*transform:\s*translate\(-0\.23vw,\s*-0\.08dvh\)\s*scale\(1\.27,\s*1\.013\);/,
-    )
-    expect(globalCss).toMatch(
-      /\.hero-scene__title-line--third\s*\{[^}]*transform:\s*translate\(-0\.17vw,\s*0\.04dvh\)\s*scale\(1\.19,\s*0\.969\);/,
+    expect(liveTypographyCss).toMatch(
+      /\.hero-scene__title-line,\s*\.about-scene__title-line,[\s\S]*?transform:\s*none;/s,
     )
 
     const underline = hero.querySelector('.hero-scene__underline')
-    expect(underline).toBeInstanceOf(HTMLImageElement)
-    expect(underline).toHaveAttribute('src', '/media/hero-underline-reference-extract-tight.webp')
-    expect(underline).toHaveAttribute('alt', '')
+    expect(underline).toBeInstanceOf(HTMLSpanElement)
     expect(underline).toHaveAttribute('aria-hidden', 'true')
-    expect(underline).toHaveAttribute('data-layer', 'decoration')
-    expect(underline).toHaveAttribute('data-media-kind', 'decorative-reference-extract')
-    expect(hero.querySelector('svg.hero-scene__underline')).not.toBeInTheDocument()
-    expect(globalCss).toMatch(
-      /\.hero-scene__underline\s*\{[^}]*transform:\s*translate\(-0\.31vw,\s*-0\.85dvh\)\s*scale\(1\.017,\s*2\.9\);/,
+    expect(underline).toHaveAttribute('data-doodle')
+    expect(underline).not.toHaveAttribute('src')
+    expect(hero.querySelector('img.hero-scene__underline')).not.toBeInTheDocument()
+    expect(liveTypographyCss).toMatch(
+      /\.hero-scene__underline::after\s*\{[^}]*content:\s*'';[^}]*background:\s*var\(--orange-action\);/s,
     )
-    expect(globalCss).toMatch(
-      /\.hero-scene__underline\s*\{[^}]*width:\s*23\.386vw;[^}]*height:\s*1\.026dvh;[^}]*padding-top:\s*0\.44rem;/,
-    )
-    expect(globalCss).not.toMatch(/\.hero-scene__underline::(?:before|after)/)
     expect(globalCss).toMatch(
       /\.hero-scene__lede\s*\{[^}]*transform:\s*translate\(0\.26vw,\s*-0\.83dvh\)\s*scale\(1\.281,\s*1\.334\);/,
     )

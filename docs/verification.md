@@ -1,63 +1,90 @@
 # White Cup — проверка релизной сборки
 
-Это запись фактических проверок финальной послойной реконструкции шести supplied-reference экранов. Browser-доказательства сняты только во встроенном браузере Codex с локального сервера `http://127.0.0.1:4175/`.
+Это запись фактических проверок текущей live-typography polish для послойной
+реконструкции White Cup. Browser-доказательства сняты во встроенном браузере
+Codex с локального сервера `http://127.0.0.1:4175/`. Отдельная папка
+`docs/evidence/live-typography-polish/` не создавалась; ниже перечислены только
+существующие supporting frames, а свежие проверки без сохранённого PNG помечены
+как текущий IAB proof.
 
 ## Автоматические проверки
 
-Последний полный прогон 26 августа 2026 после mobile-rhythm и desktop-continuity правок, low-height guards для всех сцен и финальной проверки переходов:
+Последний полный прогон — 27 августа 2026 после live typography, Menu/Events
+runway и mobile-carousel правок:
 
-- [x] `npm.cmd test -- --run --pool=threads --maxWorkers=1` — 18 файлов, 111 тестов прошли.
-- [x] Focused desktop continuity follow-up — 7 файлов, 56 тестов прошли.
-- [x] `npm.cmd run build` — TypeScript + Vite production build прошли в release gate.
-- [x] `git diff --check` — прошёл; показал только ожидаемые предупреждения LF→CRLF, whitespace-ошибок нет.
-- [x] Проверка manifest-ассетов — runtime-ссылки и responsive/dynamic templates из `src/data/media.ts` разрешаются без пропусков; retired POC/old pastry-файлы отсутствуют в `public/media`.
+- [x] `npm.cmd test -- --run --pool=threads --maxWorkers=1` — 25 файлов, 170 тестов прошли.
+- [x] `npm.cmd run build` — prebuild подтвердил 3 обязательных font assets; TypeScript и Vite production build прошли.
+- [x] `git diff --check` — код возврата 0; только ожидаемые предупреждения LF→CRLF, whitespace-ошибок нет.
 
 ## Встроенный браузер Codex
 
-Для каждого viewport каждая сцена открывалась отдельным hash URL, дожидалась завершения отрисовки и фиксировалась в `docs/evidence/layered-reconstruction/`.
+### Standard IAB Hero
 
-| Viewport | Evidence | Фактически проверено | Статус |
+| Viewport | Существующий supporting frame | Фактически проверено | Статус |
 | --- | --- | --- | --- |
-| 1920×1080 | `release-{hero,menu,about,visit,events,locations}-1920x1080.png`, `final-check-hero-1920x1080.png`, `final-check-contact-1920x1080.png` | Шесть desktop-сцен, title-extract слои, foreground-слои и footer bridge загрузились; `clientWidth = scrollWidth = 1905`, один H1 | [x] |
-| 1536×864 (эквивалент 1920×1080 при 125% zoom) | `release-hero-1536x864.png`, `release-menu-1536x864.png`, `release-visit-1536x864.png`, `recheck-locations-1536x864.png` | Проверены art-directed desktop crops без чрезмерного масштаба, карта/interior слои видимы, `1521 = 1521` | [x] |
-| 390×844 | `final-check-clean-hero-390x844.png`, `final-check-clean-menu-390x844.png`, `final-check-clean-about-390x844.png`, `final-check-clean-visit-390x844.png`, `final-check-clean-events-390x844.png`, `final-check-clean-locations-390x844.png`, `final-check-clean-contact-390x844.png` | Отдельная mobile-композиция, читаемые карточки и CTA, `375 = 375`, без горизонтального overflow | [x] |
-| 320×568 | `final-check-hero-320x568.png`, `recheck-menu-320x568.png` | Safe mobile gutters, обе hero CTA доступны, `scrollWidth = clientWidth = 305`; `#menu` начинается под header offset | [x] |
-| 721×900 и 1024×900 | `final-check-hero-721x900.png`, `final-check-hero-1024x900.png` | Tablet/compact-desktop breakpoint переходят в цельную композицию без CTA collision и page overflow | [x] |
-| 1440/1536/1920 × 568/640/720/800 | IAB metric sweep, low-height guard pass | Для About, Events, Locations и Visit title→intro, intro→cards и card-copy gaps положительные; Visit descriptions остаются внутри карточек, authored overflow отсутствует | [x] |
+| 1920×1080 | `docs/evidence/layered-reconstruction/continuity-polish-hero-1920x1080.png` | Hero IAB pass: живой H1, слои и header без title/copy overlap | [x] |
+| 1536×864 | `docs/evidence/layered-reconstruction/continuity-final-hero-1536x864.png` | Hero IAB pass на desktop zoom-equivalent viewport, без clipping | [x] |
+| 390×844 | `docs/evidence/layered-reconstruction/continuity-polish-hero-390x844.png` | Отдельная mobile-композиция, живой H1, safe gutters и без horizontal overflow | [x] |
+| 320×568 | `docs/evidence/layered-reconstruction/continuity-polish-hero-320x568.png` | Compact mobile hero, CTA доступны, заголовок не обрезается | [x] |
 
-Дополнительные визуальные сводки:
+### Carousel и low-height runways
 
-- историческая `release-*.png` серия сохранена как базовая сводка, а current final frames для этого прохода перечислены выше;
-- отдельные low-height after-fix кадры: `final-check-about-1920x720-after.png`, `final-check-events-1920x720-after.png`, `final-check-locations-1920x720-after.png`, `final-check-visit-1920x720-after.png`;
-- финальная доступность карусели подтверждена во встроенном браузере на 320px: `scrollLeft = maxScroll = 1061`, фокус остаётся на viewport.
+- [x] Mobile carousel next pass подтверждён во встроенном браузере на 320×568 и
+  390×844; на 320×568 обе 44px стрелки полностью попадают в первый viewport;
+  существующие supporting frames:
+  `docs/evidence/layered-reconstruction/recheck-menu-320x568.png` и
+  `docs/evidence/layered-reconstruction/recheck-menu-390x844.png`.
+- [x] Low-height IAB metric sweep после Menu/Events runway правок:
+  `1920×800`, `1920×720`, `1920×640`, `1920×568`, `1536×720`, `1536×640`
+  и `1440×568`. На каждом viewport
+  title→intro, intro→cards и card-copy gaps положительные; title/intro/card
+  overlap и clipping не обнаружены.
+- [x] Для `1920×720` сохранены существующие after-fix кадры:
+  `docs/evidence/layered-reconstruction/final-check-about-1920x720-after.png`,
+  `docs/evidence/layered-reconstruction/final-check-events-1920x720-after.png`,
+  `docs/evidence/layered-reconstruction/final-check-locations-1920x720-after.png`
+  и `docs/evidence/layered-reconstruction/final-check-visit-1920x720-after.png`.
+  Для `1920×800`, `1536×720` и `1440×568` текущий proof — IAB metric output
+  без отдельного сохранённого PNG.
 
-### Поведение и доступность
+## Поведение и доступность
 
-- [x] Hero собран независимыми слоями: reference-directed clean backdrop, bagel/plate, latte, logo, doodles, route, skyline и отдельный прозрачный underline. Full supplied screenshot не используется как runtime-scene.
-- [x] Финальное подчёркивание — alpha-extract оранжевого штриха из supplied hero-reference: `hero-underline-reference-extract-tight.webp`; в hero не осталось SVG.
-- [x] Нормальный hero-путь не монтирует documentary fallback и не загружает старый optional food fallback.
-- [x] Обычные HTTP изображения каждой видимой сцены имеют `complete=true` и ненулевые natural dimensions. Невидимые lazy duplicate/sliver-карточки меню могут оставаться незагруженными до прокрутки — это не влияет на видимые позиции.
-- [x] На 320px `ArrowRight` в keyboard-focusable carousel сдвигает viewport; после последовательных действий достигнута последняя карточка (`scrollLeft = max = 1061`).
-- [x] Контекстная desktop/mobile навигация, Escape в mobile menu, anchor-ссылки, phone, VK и Yandex links покрыты тестами и проверялись в браузерном проходе. В release-проходе IAB были считаны `tel:+79372355715`, `https://vk.ru/white_cup` и `https://yandex.ru/maps/org/white_cup/19381755919/menu/`.
-- [x] `prefers-reduced-motion` и no-JS Reveal contract покрыты CSS/тестами; Reveal остаётся видимым без JavaScript.
-- [x] Для Menu/About/Visit/Events/Locations подключены независимые desktop title-extract слои с measured anchors; живые `h2` остаются для accessibility и mobile.
-- [x] Между каждой парой экранов присутствует inert `SceneBridge` с responsive route-art и мягким fade вместо жёсткого divider; compact rail навигации плавно переходит из hero-профиля, а deep-link получает единый header offset и отложенное выравнивание после загрузки media.
-- [x] На 320/390/721/1024px проверены authored overflow, CTA collision и вертикальный порядок hero; на 320px страница сохраняет safe gutters и не создаёт горизонтального scroll.
-- [x] На desktop low-height 1440/1536/1920px проверены границы About, Events, Locations и Visit; все текстовые блоки и карточки остаются достижимыми, без clipping.
+- [x] Все шесть сцен используют живые DOM `h1`/`h2`; бывшие
+  `title-reference`/title-extract слои не монтируются runtime. Extract/crop
+  файлы остаются только authoring/provenance evidence.
+- [x] Display headings загружают локальный `White Cup Display` (Neucha,
+  Cyrillic WOFF2); body/nav и короткие script-акценты сохраняют свои локальные
+  family tokens. Provenance и OFL-лицензия записаны в `docs/font-licenses.md`.
+- [x] Hero underline рисуется DOM/CSS-декорацией под живым текстом; прежний
+  underline image больше не является runtime-источником.
+- [x] Menu carousel использует реальный offset следующей карточки, сохраняет
+  keyboard/arrow controls и проходит mobile next-card IAB check.
+- [x] Scene bridges остаются inert, header/anchor continuity и reduced-motion
+  contracts покрыты текущим тестовым прогоном.
+- [x] На standard IAB Hero и low-height runways не обнаружены title/intro/card
+  overlap, clipping или authored horizontal overflow.
 
 ## Независимые проверки
 
-- [x] Независимые subagent-ревью провели отдельную проверку Hero, Menu, Events и Locations; принятые P1 по hero-тексту, underline, foreground geometry, mobile overflow и map/card icons устранены до финального IAB-прохода.
-- [x] Antigravity Worker запускался трижды в read-only режиме. Первые и третий job завершились внутренней ошибкой без output, второй был отклонён менеджером из-за несовместимой пары model/effort; `doctor` подтвердил установленный runner. Это **не** считается Antigravity PASS и не подменяет независимые subagent/IAB проверки.
+- [x] Локальный полный тестовый прогон и IAB проверки выполнены; отдельные
+  review notes учитывались в текущем worktree.
+- Antigravity Worker — только attempted/terminated: запуски не дали пригодного
+  результата (ошибка/отклонение/завершение без output). Это не Antigravity PASS и
+  не заменяет локальные тесты или IAB proof.
 
 ## Ограничения достоверности
 
-- VK-группа остаётся внешним CTA: VK-only факты и цены не используются без визуальной проверки доступных публикаций.
-- Декоративные reference edits/extracts и ImageGen assets не являются документальными фотографиями заведения или меню. Документальные Yandex фото описаны отдельно в `src/data/media.ts`.
-- Наличие, цены и второй график должны уточняться перед коммерческой публикацией.
+- VK-группа остаётся внешним CTA: VK-only факты и цены не используются без
+  визуальной проверки доступных публикаций.
+- Декоративные reference edits/extracts и ImageGen assets не являются
+  документальными фотографиями заведения или меню. Документальные Yandex фото
+  описаны отдельно в `src/data/media.ts`.
+- Наличие, цены и второй график должны уточняться перед коммерческой
+  публикацией.
 
 ## Публикация
 
-- [x] Intended runtime, source, test and selected evidence paths were staged explicitly; unrelated baseline/authoring PNGs remain outside the release commit.
-- [x] `origin/master` was pushed and then verified with `git ls-remote`; the returned SHA matched the local `HEAD`.
-- [x] Fixed local verification server remains available at `http://127.0.0.1:4175/` and returned HTTP 200 after publication.
+- [x] Локальные test, build и diff-check gates пройдены; перечисленные
+  supporting evidence paths существуют в `docs/evidence/layered-reconstruction/`.
+- [ ] Commit/push и проверка remote SHA/public URL — pending. Текущий polish
+  остаётся в рабочем tree; публикация из этого состояния не заявляется.

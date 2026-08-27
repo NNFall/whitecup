@@ -1,115 +1,94 @@
 import { render } from '@testing-library/react'
 
-import {
-  aboutTitleReferenceLowerExtract,
-  aboutTitleReferenceUpperExtract,
-  eventsTitleReferenceExtract,
-  locationsTitleReferenceExtract,
-  menuTitleReferenceExtract,
-  visitTitleReferenceExtract,
-} from '../data/media'
+import aboutSource from './AboutSection.tsx?raw'
+import eventsSource from './EventsSection.tsx?raw'
+import heroSource from './HeroSection.tsx?raw'
+import locationsSource from './LocationsSection.tsx?raw'
+import menuSource from './MenuSection.tsx?raw'
+import visitSource from './VisitSection.tsx?raw'
+import sectionFrameSource from '../components/SectionFrame.tsx?raw'
+import liveTypographyCss from '../styles/live-typography.css?raw'
+
 import { AboutSection } from './AboutSection'
 import { EventsSection } from './EventsSection'
 import { LocationsSection } from './LocationsSection'
 import { MenuSection } from './MenuSection'
 import { VisitSection } from './VisitSection'
-import globalCss from '../styles/global.css?raw'
 
-describe('section reference title visual contract', () => {
-  it('renders the menu title extract as one desktop-only provenance layer beside a live h2', () => {
-    const { container } = render(<MenuSection />)
-    const menu = container.querySelector('#menu') as HTMLElement
-    const picture = menu.querySelector(
-      '[data-conditional-layer="title-reference-menu-title-reference-extract"]',
-    )
-    const source = picture?.querySelector('source')
+const runtimeSceneSources = [
+  sectionFrameSource,
+  heroSource,
+  menuSource,
+  aboutSource,
+  visitSource,
+  eventsSource,
+  locationsSource,
+]
 
-    expect(picture).toHaveClass('menu-scene__title-reference')
-    expect(picture).toHaveAttribute('data-media-kind', 'decorative-reference-extract')
-    expect(source).toHaveAttribute('srcset', menuTitleReferenceExtract.srcSet)
-    expect(source).toHaveAttribute('sizes', menuTitleReferenceExtract.sizes)
-    expect(source).toHaveAttribute('media', '(min-width: 1024px)')
-    expect(menu.querySelector('h2#menu-title')).toHaveTextContent('Завтраки')
-    expect(globalCss).toMatch(
-      /\.menu-scene__title-reference\s*\{[^}]*left:\s*10\.77%;[^}]*top:\s*10\.41%;[^}]*width:\s*50\.48vw;/s,
+const sceneContracts = [
+  {
+    id: 'menu',
+    title: 'Завтраки, ради которых хочется заглянуть',
+    render: <MenuSection />,
+  },
+  {
+    id: 'about',
+    title: 'О White Cup — место, в которое хочется возвращаться',
+    render: <AboutSection />,
+  },
+  {
+    id: 'visit',
+    title: 'У нас есть место для вашего ритма',
+    render: <VisitSection />,
+  },
+  {
+    id: 'events',
+    title: 'Завтраки, встречи и тёплые события',
+    render: <EventsSection />,
+  },
+  {
+    id: 'locations',
+    title: 'Как нас найти',
+    render: <LocationsSection />,
+  },
+] as const
+
+describe('section live title visual contract', () => {
+  it('renders every scene title as one visible semantic h2 without a raster layer', () => {
+    for (const { id, title, render: scene } of sceneContracts) {
+      const { container } = render(scene)
+      const section = container.querySelector(`#${id}`)
+      const heading = section?.querySelector('h2')
+
+      expect(section).toBeInTheDocument()
+      expect(heading).toBeInTheDocument()
+      expect(heading).toBeVisible()
+      expect(heading).toHaveTextContent(title)
+      expect(heading).not.toHaveAttribute('aria-hidden', 'true')
+      expect(section?.querySelector('[data-conditional-layer*="title-reference"]')).not.toBeInTheDocument()
+      expect(section?.querySelector('[class*="title-reference"]')).not.toBeInTheDocument()
+    }
+  })
+
+  it('removes title-reference imports and runtime paths from all scene sources', () => {
+    expect(runtimeSceneSources.join('\n')).not.toMatch(
+      /ReferenceTitleLayer|title-reference|TitleReferenceExtract|heroUnderlineReferenceExtract/i,
     )
   })
 
-  it('keeps the about title split into measured upper and lower extracts with one live h2', () => {
-    const { container } = render(<AboutSection />)
-    const about = container.querySelector('#about') as HTMLElement
-    const upper = about.querySelector(
-      '[data-conditional-layer="title-reference-about-title-reference-upper-extract"]',
+  it('keeps the live display hierarchy visible at desktop and mobile scales', () => {
+    expect(liveTypographyCss).toMatch(
+      /\.section-frame__heading h2\s*\{[^}]*font-family:\s*var\(--font-display\);/s,
     )
-    const lower = about.querySelector(
-      '[data-conditional-layer="title-reference-about-title-reference-lower-extract"]',
+    expect(liveTypographyCss).toMatch(
+      /@media\s*\(min-width:\s*1024px\)[\s\S]*?\.menu-scene \.section-frame__heading h2[\s\S]*?font-size:\s*clamp\(3\.5rem,\s*4\.6vw,\s*5\.5rem\);/s,
     )
-
-    expect(upper).toHaveClass('about-scene__title-reference-upper')
-    expect(lower).toHaveClass('about-scene__title-reference-lower')
-    expect(upper?.querySelector('source')).toHaveAttribute(
-      'srcset',
-      aboutTitleReferenceUpperExtract.srcSet,
+    expect(liveTypographyCss).toMatch(
+      /@media\s*\(min-width:\s*1024px\)[\s\S]*?\.locations-scene \.section-frame__heading h2[\s\S]*?font-size:\s*clamp\(3\.6rem,\s*4\.8vw,\s*5\.8rem\);/s,
     )
-    expect(lower?.querySelector('source')).toHaveAttribute(
-      'srcset',
-      aboutTitleReferenceLowerExtract.srcSet,
+    expect(liveTypographyCss).toMatch(
+      /@media\s*\(max-width:\s*1023px\)[\s\S]*?\.menu-scene \.section-frame__heading h2,\s*\.about-scene \.section-frame__heading h2,\s*\.visit-scene \.section-frame__heading h2,\s*\.events-scene \.section-frame__heading h2,\s*\.locations-scene \.section-frame__heading h2\s*\{[^}]*font-family:\s*var\(--font-display\);[^}]*font-weight:\s*400;[^}]*overflow:\s*visible;[^}]*opacity:\s*1;[^}]*visibility:\s*visible;/s,
     )
-    expect(about.querySelectorAll('h2#about-title')).toHaveLength(1)
-    expect(about.querySelector('h2#about-title')).toHaveTextContent('О White Cup')
-    expect(globalCss).toMatch(
-      /\.about-scene__title-reference-upper\s*\{[^}]*left:\s*4\.43%;[^}]*top:\s*14\.03%;[^}]*width:\s*47\.55vw;/s,
-    )
-    expect(globalCss).toMatch(
-      /\.about-scene__title-reference-lower\s*\{[^}]*left:\s*4\.43%;[^}]*top:\s*33\.48%;[^}]*width:\s*52\.33vw;/s,
-    )
-  })
-
-  it.each([
-    {
-      id: 'visit',
-      className: 'visit-scene__title-reference',
-      asset: visitTitleReferenceExtract,
-      render: <VisitSection />,
-      title: 'У нас есть место',
-      geometry: /\.visit-scene__title-reference\s*\{[^}]*left:\s*7\.06%;[^}]*top:\s*14\.88%;[^}]*width:\s*47\.85vw;/s,
-    },
-    {
-      id: 'events',
-      className: 'events-scene__title-reference',
-      asset: eventsTitleReferenceExtract,
-      render: <EventsSection />,
-      title: 'Завтраки, встречи',
-      geometry: /\.events-scene__title-reference\s*\{[^}]*left:\s*4\.31%;[^}]*top:\s*21\.04%;[^}]*width:\s*47\.25vw;/s,
-    },
-    {
-      id: 'locations',
-      className: 'locations-scene__title-reference',
-      asset: locationsTitleReferenceExtract,
-      render: <LocationsSection />,
-      title: 'Как нас найти',
-      geometry: /\.locations-scene__title-reference\s*\{[^}]*left:\s*4\.43%;[^}]*top:\s*23\.38%;[^}]*width:\s*46\.95vw;/s,
-    },
-  ])('uses a measured desktop title extract for $id while retaining a live h2', ({
-    id,
-    className,
-    asset,
-    render: scene,
-    title,
-    geometry,
-  }) => {
-    const { container } = render(scene)
-    const section = container.querySelector(`#${id}`) as HTMLElement
-    const picture = section.querySelector(
-      `[data-conditional-layer="title-reference-${asset.id}"]`,
-    )
-
-    expect(picture).toHaveClass(className)
-    expect(picture).toHaveAttribute('data-media-kind', 'decorative-reference-extract')
-    expect(picture?.querySelector('source')).toHaveAttribute('srcset', asset.srcSet)
-    expect(picture?.querySelector('source')).toHaveAttribute('sizes', asset.sizes)
-    expect(picture?.querySelector('source')).toHaveAttribute('media', '(min-width: 1024px)')
-    expect(section.querySelector('h2')).toHaveTextContent(title)
-    expect(globalCss).toMatch(geometry)
+    expect(liveTypographyCss).not.toContain('title-reference')
   })
 })

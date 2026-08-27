@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/verify-font-assets.mjs",
     "build": "tsc -b && vite build",
     "test": "vitest",
     "preview": "vite preview"

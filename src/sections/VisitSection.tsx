@@ -2,7 +2,6 @@ import { Reveal } from '../components/Reveal'
 import { SceneLayer } from '../components/SceneLayer'
 import { SectionFrame } from '../components/SectionFrame'
 import {
-  visitTitleReferenceExtract,
   visitSceneLayerManifest,
   type VisitCardMediaId,
 } from '../data/media'
@@ -30,7 +29,6 @@ export function VisitSection() {
         </>
       }
       kicker={'Для утренних ритуалов,\nвстреч и спокойных пауз'}
-      referenceTitles={[{ asset: visitTitleReferenceExtract, className: 'visit-scene__title-reference' }]}
       className="visit-scene"
     >
       <SceneLayer

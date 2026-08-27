@@ -2,7 +2,7 @@ import { MenuCarousel } from '../components/MenuCarousel'
 import { Reveal } from '../components/Reveal'
 import { SceneLayer } from '../components/SceneLayer'
 import { SectionFrame } from '../components/SectionFrame'
-import { menuSceneLayerManifest, menuTitleReferenceExtract } from '../data/media'
+import { menuSceneLayerManifest } from '../data/media'
 import { siteData } from '../data/site'
 
 export function MenuSection() {
@@ -10,24 +10,17 @@ export function MenuSection() {
     <SectionFrame
       id="menu"
       title={
-        <>
-          <span className="sr-only">Завтраки, ради которых хочется заглянуть</span>
-          <span className="menu-scene__title" aria-hidden="true">
-            <span className="menu-scene__title-line">
-              <span className="menu-scene__title-initial">З</span>автраки, ради которых
-            </span>{' '}
-            <span className="menu-scene__title-line">
-              хочется <span className="menu-scene__accent">заглянуть</span>
-            </span>
+        <span className="menu-scene__title">
+          <span className="menu-scene__title-line">
+            <span className="menu-scene__title-initial">З</span>автраки, ради которых
+          </span>{' '}
+          <span className="menu-scene__title-line">
+            хочется <span className="menu-scene__accent">заглянуть</span>
           </span>
-        </>
+        </span>
       }
       kicker="Для утренних ритуалов, встреч и спокойных пауз"
       className="menu-scene"
-      referenceTitles={[{
-        asset: menuTitleReferenceExtract,
-        className: 'menu-scene__title-reference',
-      }]}
     >
       <SceneLayer
         {...menuSceneLayerManifest.backdrop}

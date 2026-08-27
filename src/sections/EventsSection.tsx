@@ -2,7 +2,6 @@ import { Reveal } from '../components/Reveal'
 import { SceneLayer } from '../components/SceneLayer'
 import { SectionFrame } from '../components/SectionFrame'
 import {
-  eventsTitleReferenceExtract,
   eventsSceneLayerManifest,
   type EventsCardMediaId,
 } from '../data/media'
@@ -24,7 +23,6 @@ export function EventsSection() {
           </span>
         </>
       }
-      referenceTitles={[{ asset: eventsTitleReferenceExtract, className: 'events-scene__title-reference' }]}
       className="events-scene"
     >
       <div className="events-scene__art">

@@ -1,0 +1,169 @@
+/* Native carousel geometry. This file intentionally stays scoped to the
+   menu component so the scene's other horizontal compositions are untouched. */
+
+.menu-carousel__viewport {
+  container-type: inline-size;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
+  scroll-padding-inline: 0;
+  scroll-snap-type: x mandatory;
+  scrollbar-color: transparent transparent;
+  scrollbar-width: none;
+}
+
+.menu-carousel__viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.menu-carousel__track {
+  display: grid;
+  width: max-content;
+  grid-auto-flow: column;
+  margin: 0;
+  list-style: none;
+}
+
+.scene.menu-scene .menu-carousel .menu-card {
+  min-width: 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+}
+
+.scene.menu-scene .menu-carousel__control {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* The track itself now supplies the next-card sliver. The former decorative
+   copies would duplicate cards at the viewport edges on touch layouts. */
+.scene.menu-scene .menu-carousel__sliver {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .scene.menu-scene .menu-carousel__viewport {
+    --menu-carousel-card-width: clamp(18rem, 23vw, 27rem);
+    --menu-carousel-viewport-width: min(calc(100vw - 8vw), 104rem);
+    --menu-carousel-trailing-padding: max(0px, calc(var(--menu-carousel-viewport-width) - var(--menu-carousel-card-width)));
+
+    width: var(--menu-carousel-viewport-width);
+    margin-inline: auto;
+    scroll-padding-inline: 0;
+  }
+
+  .scene.menu-scene .menu-carousel__track {
+    grid-auto-columns: var(--menu-carousel-card-width);
+    gap: clamp(0.9rem, 1.2vw, 1.4rem);
+    padding-inline-start: 0;
+    padding-inline-end: max(0px, var(--menu-carousel-trailing-padding));
+  }
+}
+
+@media (min-width: 721px) and (max-width: 1023px) {
+  .scene.menu-scene .menu-carousel__viewport {
+    --menu-carousel-card-width: clamp(18rem, 34vw, 24rem);
+    --menu-gutter: clamp(1.25rem, 4vw, 2rem);
+    --menu-carousel-viewport-width: calc(100vw - var(--menu-gutter) - var(--menu-gutter));
+    --menu-carousel-trailing-padding: max(0px, calc(var(--menu-carousel-viewport-width) - var(--menu-carousel-card-width)));
+
+    width: var(--menu-carousel-viewport-width);
+    margin-inline: var(--menu-gutter);
+    scroll-padding-inline: 0;
+  }
+
+  .scene.menu-scene .menu-carousel__track {
+    grid-auto-columns: var(--menu-carousel-card-width);
+    gap: clamp(0.9rem, 1.5vw, 1.1rem);
+    padding-inline-start: 0;
+    padding-inline-end: max(0px, var(--menu-carousel-trailing-padding));
+  }
+
+  .scene.menu-scene .menu-carousel__control {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 720px) {
+  .scene.menu-scene .menu-carousel__viewport {
+    --menu-carousel-gap: clamp(0.75rem, 3vw, 1rem);
+    --menu-carousel-sliver: clamp(48px, 13vw, 96px);
+    --menu-gutter: clamp(1rem, 4vw, 1.25rem);
+    /* Explicit fallback for engines without container query units. Keeping
+       this viewport-sized expression out of the max-content track avoids a
+       cyclic percentage basis while preserving the intended sliver. */
+    --menu-carousel-card-width: calc(100vw - var(--menu-gutter) - var(--menu-gutter) - var(--menu-carousel-gap) - var(--menu-carousel-sliver));
+    --menu-carousel-trailing-padding: calc(var(--menu-carousel-gap) + var(--menu-carousel-sliver));
+
+    width: calc(100% - var(--menu-gutter) - var(--menu-gutter));
+    margin-inline: var(--menu-gutter);
+    scroll-padding-inline: 0;
+  }
+
+  .scene.menu-scene .menu-carousel__track {
+    grid-auto-columns: var(--menu-carousel-card-width);
+    gap: var(--menu-carousel-gap);
+    padding-inline-start: 0;
+    padding-inline-end: max(0px, var(--menu-carousel-trailing-padding));
+  }
+
+  .scene.menu-scene .menu-carousel__control {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
+  }
+}
+
+@supports (width: 1cqw) {
+  @media (min-width: 1024px) {
+    .scene.menu-scene .menu-carousel__viewport {
+      --menu-carousel-trailing-padding: max(0px, calc(100cqw - var(--menu-carousel-card-width)));
+    }
+
+    .scene.menu-scene .menu-carousel__track {
+      padding-inline-end: max(0px, calc(100cqw - var(--menu-carousel-card-width)));
+    }
+  }
+
+  @media (min-width: 721px) and (max-width: 1023px) {
+    .scene.menu-scene .menu-carousel__viewport {
+      --menu-carousel-trailing-padding: max(0px, calc(100cqw - var(--menu-carousel-card-width)));
+    }
+
+    .scene.menu-scene .menu-carousel__track {
+      padding-inline-end: max(0px, calc(100cqw - var(--menu-carousel-card-width)));
+    }
+  }
+
+  @media (max-width: 720px) {
+    .scene.menu-scene .menu-carousel__viewport {
+      --menu-carousel-card-width: calc(100cqw - var(--menu-carousel-gap) - var(--menu-carousel-sliver));
+      --menu-carousel-trailing-padding: calc(100cqw - var(--menu-carousel-card-width));
+    }
+
+    .scene.menu-scene .menu-carousel__track {
+      padding-inline-end: max(0px, calc(100cqw - var(--menu-carousel-card-width)));
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene.menu-scene .menu-carousel__viewport {
+    scroll-behavior: auto;
+    scroll-snap-type: none;
+  }
+
+  .scene.menu-scene .menu-carousel .menu-card article,
+  .scene.menu-scene .menu-carousel .menu-card__art img,
+  .scene.menu-scene .menu-carousel__control,
+  .scene.menu-scene .menu-carousel__dot,
+  .scene.menu-scene .menu-carousel__dot span {
+    transition: none;
+  }
+}

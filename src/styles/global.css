@@ -5359,39 +5359,12 @@ html {
   }
 }
 
-/* The desktop hero keeps the semantic heading in the accessibility tree while
- * placing the supplied reference lettering on its own transparent layer. This
- * preserves the exact handwritten contours without turning the whole scene
- * into one opaque screenshot. */
+/* Keep the live desktop hero title and CSS underline in normal flow while
+ * preserving the measured copy rhythm. */
 
 @media (min-width: 1024px) {
   .hero-scene__copy {
     gap: 0;
-  }
-
-  .hero-scene__copy > [data-conditional-layer='title-reference'] {
-    display: block;
-    margin: -1.7dvh 0 0.8dvh -1.08vw;
-  }
-
-  .hero-scene__title-reference {
-    display: block;
-    width: 47.85vw;
-    height: auto;
-    pointer-events: none;
-  }
-
-  .hero-scene h1,
-  .hero-scene__underline {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    border: 0;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
   }
 
   .hero-scene__lede {
@@ -5400,110 +5373,15 @@ html {
   }
 }
 
-@media (max-width: 1023px) {
-  .hero-scene__copy > [data-conditional-layer='title-reference'] {
-    display: block;
-    width: min(100%, 24rem);
-    margin: 0 auto;
-  }
-
-  .hero-scene__title-reference {
-    display: block;
-    width: 100%;
-    height: auto;
-    pointer-events: none;
-  }
-
-  .hero-scene h1,
-  .hero-scene__underline {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    border: 0;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-  }
-}
-
-/* Menu/About keep their live headings for semantics and mobile composition;
- * desktop uses measured transparent extracts to match supplied lettering. */
+/* Section titles remain live DOM headings at every breakpoint. */
 
 @media (min-width: 1024px) {
   .section-frame__inner {
     isolation: isolate;
   }
-
-  .section-frame__title-reference {
-    position: absolute;
-    z-index: 9;
-    display: block;
-    pointer-events: none;
-    backface-visibility: hidden;
-    transform: translateZ(0);
-  }
-
-  .section-frame__title-reference-image {
-    display: block;
-    width: 100%;
-    height: auto;
-    pointer-events: none;
-    backface-visibility: hidden;
-    transform: translateZ(0);
-  }
-
-  .menu-scene__title-reference {
-    left: 10.77%;
-    top: 10.41%;
-    width: 50.48vw;
-  }
-
-  .about-scene__title-reference-upper {
-    left: 4.43%;
-    top: 14.03%;
-    width: 47.55vw;
-  }
-
-  .about-scene__title-reference-lower {
-    left: 4.43%;
-    top: 33.48%;
-    width: 52.33vw;
-  }
-
-  .visit-scene__title-reference {
-    left: 7.06%;
-    top: 14.88%;
-    width: 47.85vw;
-  }
-
-  .events-scene__title-reference {
-    left: 4.31%;
-    top: 21.04%;
-    width: 47.25vw;
-  }
-
-  .locations-scene__title-reference {
-    left: 4.43%;
-    top: 23.38%;
-    width: 46.95vw;
-  }
-
-  .menu-scene .section-frame__heading h2,
-  .about-scene .section-frame__heading h2,
-  .visit-scene .section-frame__heading h2,
-  .events-scene .section-frame__heading h2,
-  .locations-scene .section-frame__heading h2 {
-    opacity: 0;
-  }
 }
 
 @media (max-width: 1023px) {
-  .section-frame__title-reference {
-    display: none;
-  }
-
   /* On small screens the live headings are the visible art direction. Keep
      their handwritten silhouette instead of falling back to a heavy display
      face; the body/nav remain on the clean variable text family. */
@@ -5653,9 +5531,8 @@ html {
   }
 }
 
-/* Wide, short desktop windows need a height-led menu composition. The title
- * extract remains independent, while the invisible semantic title reserves a
- * smaller flow box and the cards keep their complete text footers. */
+/* Wide, short desktop windows need a height-led menu composition. The live
+ * title keeps a compact flow box and the cards retain complete text footers. */
 @media (min-width: 1024px) and (max-height: 760px) {
   .scene.menu-scene {
     --menu-title-flow-offset: 1.25rem;
@@ -5672,11 +5549,6 @@ html {
   .menu-scene .section-frame__heading h2 {
     font-size: clamp(2.85rem, 3.7vw, 3.5rem);
     line-height: 0.92;
-  }
-
-  .menu-scene__title-reference {
-    top: 7%;
-    width: min(42vw, 100dvh);
   }
 
   .menu-scene__intro {
@@ -5741,9 +5613,34 @@ html {
   }
 }
 
-/* Raster titles already use a height cap through 900px. Cap the associated
- * forced-line copy through the last independently observed 800px boundary. */
+/* Cap forced-line copy through the last independently observed 800px
+ * boundary so it stays clear of the card band. */
 @media (min-width: 1024px) and (max-height: 800px) and (min-aspect-ratio: 4 / 3) {
+  /* Live headings need a height-led top offset once the viewport is shorter
+   * than the authored 16:9 composition. Keeping the title band above the
+   * intro preserves the handwritten rhythm without relying on raster padding. */
+  .about-scene .section-frame__heading {
+    top: 9.5%;
+  }
+
+  .visit-scene .section-frame__heading {
+    top: 0%;
+  }
+
+  .visit-scene .scene-kicker {
+    margin-bottom: 0;
+    font-size: clamp(0.75rem, 2.2dvh, 0.94rem);
+    line-height: 1.08;
+  }
+
+  .events-scene .section-frame__heading {
+    top: 18%;
+  }
+
+  .visit-scene__intro {
+    top: 30.5%;
+  }
+
   .about-scene__intro {
     gap: 1rem;
   }
@@ -5769,35 +5666,92 @@ html {
 @media (min-width: 1024px) and (max-height: 680px) {
   .scene.menu-scene {
     height: auto;
-    min-height: max(100dvh, 42rem);
+    min-height: max(100dvh, 48rem);
     max-height: none;
   }
 
   .menu-scene .section-frame__inner {
     height: auto;
+    min-height: max(100dvh, 48rem);
+  }
+}
+
+/* Menu and Events carry card footers below the authored 16:9 crop. On a
+ * short desktop viewport let those scenes grow into a scrollable paper
+ * runway instead of clipping the final card and provenance line. */
+@media (min-width: 1600px) and (min-height: 681px) and (max-height: 800px) {
+  .scene.menu-scene,
+  .scene.events-scene {
+    height: auto;
+    min-height: max(100dvh, 66rem);
+    max-height: none;
+  }
+
+  .menu-scene .section-frame__inner,
+  .events-scene .section-frame__inner {
+    height: auto;
+    min-height: max(100dvh, 66rem);
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1599px) and (min-height: 681px) and (max-height: 800px) {
+  .scene.menu-scene,
+  .scene.events-scene {
+    height: auto;
+    min-height: max(100dvh, 52rem);
+    max-height: none;
+  }
+
+  .menu-scene .section-frame__inner,
+  .events-scene .section-frame__inner {
+    height: auto;
+    min-height: max(100dvh, 52rem);
+  }
+}
+
+/* The fixed desktop scenes need the same scroll runway as Menu on phone-like
+ * heights. This keeps the lower card bands inside the paper scene instead of
+ * clipping their final rows at the viewport edge. */
+@media (min-width: 1024px) and (max-height: 680px) {
+  .scene.about-scene,
+  .scene.visit-scene,
+  .scene.events-scene,
+  .scene.locations-scene {
+    height: auto;
+    min-height: max(100dvh, 42rem);
+    max-height: none;
+  }
+
+  .about-scene .section-frame__inner,
+  .visit-scene .section-frame__inner,
+  .events-scene .section-frame__inner,
+  .locations-scene .section-frame__inner {
+    height: auto;
     min-height: max(100dvh, 42rem);
   }
 }
 
-/* The title extract scales from viewport width while the intro offset scales
- * from scene height. On short intermediate desktops, constrain that ratio so
- * the actual ink ends before the copy starts and the card band stays fixed. */
+/* At 720px-tall desktop heights the fixed card bands need a small height-led
+ * nudge so their top edge never kisses the preceding intro copy. */
+@media (min-width: 1024px) and (min-height: 681px) and (max-height: 720px) and (min-aspect-ratio: 4 / 3) {
+  .about-scene .benefits-list {
+    bottom: 6.2%;
+  }
+
+  .events-scene__cards {
+    top: 60.1%;
+  }
+
+  .locations-scene__cards {
+    top: 54.3%;
+  }
+}
+
+/* On short intermediate desktops, keep Visit copy clear of the fixed card
+ * band without clipping the live title. */
 @media (min-width: 1024px) and (max-height: 900px) and (min-aspect-ratio: 4 / 3) {
-  .about-scene__title-reference-upper {
-    width: min(47.55vw, 117dvh);
-  }
-
-  .about-scene__title-reference-lower {
-    width: min(52.33vw, 85dvh);
-  }
-
-  .visit-scene__title-reference {
-    top: 11.5%;
-    width: min(41.5vw, 75dvh);
-  }
-
   .visit-scene__intro {
-    top: 34%;
+    top: 30.5%;
     width: 38%;
   }
 
@@ -5806,12 +5760,30 @@ html {
     line-height: 1.4;
   }
 
-  .events-scene__title-reference {
-    width: min(47.25vw, 75dvh);
+}
+
+/* The very wide 640px-ish desktop crop needs one last height-led nudge after
+ * the grouped runway and compact Visit rules: the live About title moves clear
+ * of its paragraph, Visit gets a little more breathing room, and Events keeps
+ * its full card shell on the paper. */
+@media (min-width: 1600px) and (max-height: 680px) {
+  .about-scene .section-frame__heading {
+    top: 7%;
   }
 
-  .locations-scene__title-reference {
-    width: min(46.95vw, 75dvh);
+  .visit-scene__intro {
+    top: 31.5%;
+  }
+
+  .scene.events-scene {
+    height: auto;
+    min-height: max(100dvh, 55rem);
+    max-height: none;
+  }
+
+  .events-scene .section-frame__inner {
+    height: auto;
+    min-height: max(100dvh, 55rem);
   }
 }
 
@@ -5852,5 +5824,22 @@ html {
   .visit-card__copy p {
     font-size: clamp(0.72rem, 1.9dvh, 0.88rem);
     line-height: 1.24;
+  }
+}
+
+/* At the narrowest phone width keep the menu controls discoverable in the
+ * opening viewport. The card row still follows immediately below, so touch
+ * users can start swiping without an extra hunt for the carousel affordance. */
+@media (max-width: 340px) {
+  .menu-scene__intro {
+    margin-top: 1rem;
+  }
+
+  .menu-scene__carousel {
+    margin-top: 0.4rem;
+  }
+
+  .menu-scene .menu-carousel__toolbar {
+    min-height: 2.3rem;
   }
 }
