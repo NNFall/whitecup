@@ -10,6 +10,13 @@ const bridgeModules = import.meta.glob<string>('./scene-bridge-polish*.css', {
 })
 
 const bridgeCss = Object.values(bridgeModules)[0] ?? ''
+const tokenModules = import.meta.glob<string>('./tokens.css', {
+  eager: true,
+  import: 'default',
+  query: '?raw',
+})
+
+const tokensCss = Object.values(tokenModules)[0] ?? ''
 
 describe('SceneBridge polish contract', () => {
   it('renders only independent paper and marker layers with decorative provenance', () => {
@@ -65,8 +72,25 @@ describe('SceneBridge polish contract', () => {
     )
     expect(bridgeCss).not.toMatch(/margin-block:\s*calc\([^;]*\*\s*-1\)/)
     expect(bridgeCss).not.toMatch(/clip-path:\s*polygon\s*\(/)
-    expect(bridgeCss).not.toMatch(/border(?:-(?:top|right|bottom|left|inline|block))?\s*:/)
+    expect(bridgeCss).toMatch(
+      /\.scene-bridge__paper\s*\{[\s\S]*border:\s*1px solid color-mix\(in oklch, var\(--petrol\) 16%, transparent\);/,
+    )
     expect(bridgeCss).not.toMatch(/story-route-connector|scene-bridge__route|route-ribbon/)
+  })
+
+  it('keeps the bridge wash neutral and anchors it with a subtle petrol edge', () => {
+    const bridgeRule = bridgeCss.match(/\.scene-bridge\s*\{([\s\S]*?)\n\}/)?.[1] ?? ''
+    const paperRule = bridgeCss.match(/\.scene-bridge__paper\s*\{([\s\S]*?)\n\}/)?.[1] ?? ''
+
+    expect(tokensCss).toMatch(/--petrol:\s*#26454a;/)
+    expect(bridgeRule).not.toMatch(/var\(--orange\)/)
+    expect(paperRule).not.toMatch(/var\(--orange\)/)
+    expect(bridgeCss).toContain('color-mix(in oklch, var(--paper-light) 96%, var(--paper) 4%)')
+    expect(bridgeCss).toContain('color-mix(in oklch, var(--paper) 96%, var(--line) 4%)')
+    expect(bridgeCss).toContain(
+      'border: 1px solid color-mix(in oklch, var(--petrol) 16%, transparent);',
+    )
+    expect(bridgeCss).toContain('color: color-mix(in oklch, var(--petrol) 78%, var(--ink-soft) 22%);')
   })
 
   it('removes bridge animation and transitions for reduced-motion visitors', () => {

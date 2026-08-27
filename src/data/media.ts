@@ -186,6 +186,22 @@ export const heroSkylineReference: DecorativeMediaProvenance = {
     'Точно извлечённая из нижней части предоставленного референса прозрачная линейная иллюстрация с orange sun; не является картой или документальной фотографией.',
 }
 
+/**
+ * Shared transparent skyline for the paper rhythm scenes. Unlike the small
+ * hero extract, this responsive asset keeps the full city line at its native
+ * 1200:242 ratio, so menu/footer placement never needs a vertical squash.
+ */
+const rhythmSkylineReferenceEdit: DecorativeMediaProvenance = {
+  id: 'rhythm-skyline-reference-edit',
+  src: mediaUrl('/media/rhythm-skyline-reference-edit-1200w.webp'),
+  alt: '',
+  kind: 'decorative',
+  provenanceKind: 'decorative-reference-edit',
+  sourceLabel: 'Supplied rhythm reference + Remove Background Local',
+  provenance:
+    'Отдельный прозрачный городской skyline, извлечённый из предоставленного rhythm/Visit-референса и оптимизированный в responsive WebP. Это декоративная иллюстрация, не карта и не документальная фотография White Cup.',
+}
+
 export const heroCleanBaseEdit: DecorativeMediaProvenance = {
   id: 'hero-clean-base-edit',
   src: mediaUrl('/media/hero-clean-base-v2-1672.webp'),
@@ -374,7 +390,10 @@ export const menuSceneLayerManifest = {
       }),
     ]),
   ) as Record<MenuCardMediaId, SceneLayerManifestEntry>,
-  skyline: defineSceneLayer('decoration', heroSkylineReference),
+  skyline: defineSceneLayer('decoration', rhythmSkylineReferenceEdit, {
+    srcSet: mediaSrcSet('/media/rhythm-skyline-reference-edit-720w.webp 720w, /media/rhythm-skyline-reference-edit-1200w.webp 1200w'),
+    sizes: '(max-width: 1023px) 90vw, min(36vw, 42rem)',
+  }),
 } as const
 
 const aboutCleanBaseReferenceEdit: DecorativeMediaProvenance = {
@@ -584,16 +603,7 @@ const visitDoodlesReferenceEdit: DecorativeMediaProvenance = {
     'Полноэкранный прозрачный слой с точными облаками, птицами, солнцем, маршрутом, стаканчиком, карточными иконками и маленькими штрихами из предоставленного Visit-референса. Фон удалён локально, production использует alpha-preserving WebP; это декоративный reference-art.',
 }
 
-const visitSkylineReferenceEdit: DecorativeMediaProvenance = {
-  id: 'visit-skyline-reference-edit',
-  src: mediaUrl('/media/rhythm-skyline-reference-edit-1200w.webp'),
-  alt: '',
-  kind: 'decorative',
-  provenanceKind: 'decorative-reference-edit',
-  sourceLabel: 'Supplied Visit reference + Remove Background Local',
-  provenance:
-    'Отдельный прозрачный городской skyline, извлечённый из нижней части предоставленного Visit-референса и оптимизированный в responsive WebP. Это декоративная иллюстрация, не карта и не документальная фотография.',
-}
+const visitSkylineReferenceEdit = rhythmSkylineReferenceEdit
 
 export const visitSceneLayerManifest = {
   backdrop: defineSceneLayer('backdrop', visitCleanBaseReferenceEdit, {

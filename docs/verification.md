@@ -19,7 +19,7 @@ polish: стабильную шапку, мягкие CSS-мосты, восьм
 
 ## Автоматический gate (27 августа 2026)
 
-- [x] `npm.cmd test -- --run` — **31 файл / 203 теста**, все прошли.
+- [x] `npm.cmd test -- --run` — **31 файл / 205 тестов**, все прошли.
 - [x] `npm.cmd run build -- --base=/site/whitecup/` — **PASS**; проверены 3
   локальных шрифта, Vite 8.2.2, 44 модуля.
 - [x] `git diff --check` — **PASS**; остаются только стандартные предупреждения
@@ -46,6 +46,13 @@ polish: стабильную шапку, мягкие CSS-мосты, восьм
 
 - [x] `document.documentElement.scrollWidth === viewport width` на всех восьми
   размерах; console errors/warnings — `[]`.
+- [x] Menu skyline на desktop сохраняет natural ratio 1200:242 (`object-fit:
+  contain`), получает только мягкое grayscale/brightness-приглушение для
+  читаемости, не пересекает footer-note и pagination на 1920×1080, 1648×912 и
+  1024×720; mobile-слой остаётся в normal flow.
+- [x] Bridge paper проверен как neutral ivory/paper gradient с petrol edge;
+  прежний красный/orange wash удалён из базового слоя, orange оставлен только
+  локальным маркером.
 - [x] Hash-переходы `#menu`, `#about`, `#visit`, `#events`, `#locations`,
   `#contact` оставляют заголовок примерно на 80–94px ниже rail.
 - [x] Events и Locations собраны из независимых paper/photo/map/cards layers;

@@ -774,6 +774,12 @@ h2 {
   white-space: nowrap;
 }
 
+.menu-scene .menu-carousel__footer,
+.menu-scene .menu-carousel__note {
+  position: relative;
+  z-index: 2;
+}
+
 .menu-scene .menu-carousel__footer {
   display: flex;
   min-height: clamp(2.6rem, 3.15vw, 3.8rem);
@@ -906,10 +912,13 @@ h2 {
   display: block;
   width: 50.8%;
   height: auto;
+  aspect-ratio: 1200 / 242;
   opacity: 0.86;
   pointer-events: none;
   mix-blend-mode: multiply;
-  transform: scaleY(0.34);
+  object-fit: contain;
+  object-position: center bottom;
+  transform: none;
   transform-origin: bottom center;
 }
 
@@ -931,6 +940,30 @@ h2 {
 
   .menu-carousel__sliver {
     display: block;
+  }
+
+  /* Keep the supplied skyline at its natural proportions. Its former
+     scaleY squash made the line-art look stretched and let it bleed over
+     the carousel note. A bounded contain box reserves a calm footer band. */
+  .menu-scene__skyline {
+    bottom: 0;
+    left: 50%;
+    width: min(44%, 46rem);
+    height: clamp(4.5rem, 4.8vw, 5.25rem);
+    max-width: calc(100% - 2rem);
+    aspect-ratio: 1200 / 242;
+    object-fit: contain;
+    object-position: center bottom;
+    filter: grayscale(1) brightness(0.45) contrast(1.2);
+    transform: translateX(-50%);
+  }
+
+  .menu-scene .menu-carousel__note {
+    transform: translateY(clamp(-4.75rem, -2.55vw, -1.9rem));
+  }
+
+  .menu-scene .menu-carousel__footer {
+    transform: translateY(clamp(-4.75rem, -2.55vw, -1.9rem));
   }
 }
 

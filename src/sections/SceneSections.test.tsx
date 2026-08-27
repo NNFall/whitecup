@@ -161,7 +161,11 @@ describe('White Cup story scenes', () => {
     )
     expect(menu.querySelector('.menu-scene__skyline')).toHaveAttribute(
       'src',
-      '/media/hero-skyline-exact.png',
+      '/media/rhythm-skyline-reference-edit-1200w.webp',
+    )
+    expect(menu.querySelector('.menu-scene__skyline')).toHaveAttribute(
+      'srcset',
+      '/media/rhythm-skyline-reference-edit-720w.webp 720w, /media/rhythm-skyline-reference-edit-1200w.webp 1200w',
     )
     expect(menu.querySelectorAll('[data-menu-copy="middle"] [data-scene-card-image]')).toHaveLength(siteData.menuItems.length)
     expect(menu.innerHTML).not.toMatch(/ChatGPT Image|01_44_54 \(2\)|menu-clean-base\.png/i)
@@ -179,6 +183,21 @@ describe('White Cup story scenes', () => {
     )
     expect(globalCss).not.toMatch(
       /\.menu-scene__intro\s*{[^}]*display:\s*grid;/,
+    )
+  })
+
+  it('contains the menu skyline in a natural-ratio crop without covering the footer copy', () => {
+    expect(globalCss).toMatch(
+      /@media\s*\(min-width:\s*1024px\)[\s\S]*\.menu-scene__skyline\s*\{[\s\S]*bottom:\s*0;[\s\S]*width:\s*min\(44%,\s*46rem\);[\s\S]*height:\s*clamp\(4\.5rem,\s*4\.8vw,\s*5\.25rem\);[\s\S]*max-width:\s*calc\(100%\s*-\s*2rem\);[\s\S]*aspect-ratio:\s*1200\s*\/\s*242;[\s\S]*object-fit:\s*contain;[\s\S]*object-position:\s*center bottom;[\s\S]*filter:\s*grayscale\(1\)\s+brightness\(0\.45\)\s+contrast\(1\.2\);[\s\S]*transform:\s*translateX\(-50%\);/,
+    )
+    expect(globalCss).toMatch(
+      /\.menu-scene\s+\.menu-carousel__footer,\s*\.menu-scene\s+\.menu-carousel__note\s*\{[\s\S]*position:\s*relative;[\s\S]*z-index:\s*2;/,
+    )
+    expect(globalCss).toMatch(
+      /\.menu-scene\s+\.menu-carousel__note\s*\{[\s\S]*transform:\s*translateY\(clamp\(-4\.75rem,\s*-2\.55vw,\s*-1\.9rem\)\);/,
+    )
+    expect(globalCss).toMatch(
+      /\.menu-scene\s+\.menu-carousel__footer\s*\{[^}]*transform:\s*translateY\(clamp\(-4\.75rem,\s*-2\.55vw,\s*-1\.9rem\)\);/,
     )
   })
 

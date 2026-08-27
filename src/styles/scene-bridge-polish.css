@@ -14,24 +14,13 @@
   min-height: clamp(5.25rem, 6vw, 8rem) !important;
   margin-block: 0 !important;
   overflow: visible !important;
+  background-color: var(--paper-light) !important;
   background:
-    radial-gradient(
-      ellipse at 18% 50%,
-      color-mix(in oklch, var(--orange) 5%, transparent),
-      transparent 28%
-    ),
-    radial-gradient(
-      ellipse at 82% 50%,
-      color-mix(in oklch, var(--ink) 3%, transparent),
-      transparent 31%
-    ),
     linear-gradient(
       180deg,
-      color-mix(in oklch, var(--paper) 10%, transparent) 0%,
-      color-mix(in oklch, var(--paper-light) 58%, transparent) 22%,
-      color-mix(in oklch, var(--paper-light) 94%, transparent) 50%,
-      color-mix(in oklch, var(--paper) 58%, transparent) 78%,
-      color-mix(in oklch, var(--paper) 10%, transparent) 100%
+      color-mix(in oklch, var(--paper-light) 96%, var(--paper) 4%) 0%,
+      var(--paper-light) 48%,
+      color-mix(in oklch, var(--paper) 96%, var(--line) 4%) 100%
     ) !important;
   isolation: isolate;
   pointer-events: none;
@@ -56,27 +45,18 @@
   place-items: center;
   overflow: hidden;
   border-radius: clamp(1rem, 1.8vw, 1.8rem);
+  border: 1px solid color-mix(in oklch, var(--petrol) 16%, transparent);
   background:
-    radial-gradient(
-      ellipse at 20% 35%,
-      color-mix(in oklch, var(--orange) 8%, transparent),
-      transparent 28%
-    ),
-    radial-gradient(
-      ellipse at 78% 70%,
-      color-mix(in oklch, var(--ink) 4%, transparent),
-      transparent 34%
-    ),
     linear-gradient(
       105deg,
-      color-mix(in oklch, var(--paper-light) 88%, transparent),
-      color-mix(in oklch, var(--paper) 76%, transparent) 52%,
-      color-mix(in oklch, var(--paper-light) 88%, transparent)
+      color-mix(in oklch, var(--paper-light) 98%, var(--paper) 2%),
+      color-mix(in oklch, var(--paper-light) 96%, var(--line) 4%) 52%,
+      color-mix(in oklch, var(--paper) 97%, var(--line) 3%)
     ) !important;
   clip-path: none !important;
   box-shadow:
-    0 0.45rem 1.25rem rgb(74 48 30 / 0.08),
-    0 -0.2rem 0.9rem color-mix(in oklch, var(--paper-light) 18%, transparent);
+    0 0.45rem 1.25rem color-mix(in oklch, var(--petrol) 14%, transparent),
+    0 -0.2rem 0.9rem color-mix(in oklch, var(--paper-light) 22%, transparent);
   opacity: 0.96;
   pointer-events: none;
   transform: translate3d(0, 0, 0);
@@ -119,7 +99,7 @@
   display: inline-block;
   max-inline-size: calc(100% - 8rem);
   overflow: hidden;
-  color: color-mix(in oklch, var(--ink-soft) 72%, transparent);
+  color: color-mix(in oklch, var(--petrol) 78%, var(--ink-soft) 22%);
   font-family: var(--font-script);
   font-size: clamp(0.82rem, 1vw, 1.02rem);
   font-weight: 400;
