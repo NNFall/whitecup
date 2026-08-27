@@ -105,8 +105,8 @@ Supporting frames в `docs/evidence/layered-reconstruction/` остаются л
   `nginx -t` успешен и reload выполнен. Nginx вывел только существующие
   duplicate-server-name warnings, без ошибок конфигурации.
 - [x] Public smoke: `https://kaigo.space/site/whitecup/` отвечает HTTP 200 и
-  отдаёт свежие `/site/whitecup/assets/index-DgfKVftP.js` и
-  `/site/whitecup/assets/index-DZiEOxjQ.css`; обе ссылки отвечают HTTP 200.
+  отдаёт свежие `/site/whitecup/assets/index-chfUBDWf.js` и
+  `/site/whitecup/assets/index-BnM08peE.css`; обе ссылки отвечают HTTP 200.
 - [x] Опубликованный URL повторно проверен только в Codex IAB: 1920×1080 —
   full-bleed rail x=0/y=0, h=64, bridge 115.2px/radius 28.8px; 390×844 —
   bridge 50.7px; 320×568 — bridge 40px. На всех трёх размерах overflow `0`,
