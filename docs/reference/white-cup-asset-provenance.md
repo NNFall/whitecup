@@ -13,6 +13,7 @@
 | `public/media/hero-skyline-exact.png` | skyline and orange sun | supplied reference crop + local alpha extraction | transparent decorative extract; not a map |
 | `public/media/hero-underline-reference-extract-tight.webp` | orange underline under `White Cup` | direct crop of supplied reference; only orange pixels retained with local alpha mask; tight WebP derived from `docs/reference/assets/hero-underline-reference-crop-authoring.png` | 364×28 `yuva420p`; exact stroke, no script-copy, no SVG |
 | `public/media/about-pastry-plate-reference-edit-v2-{720,1200}.webp` | About: pastry + full patterned plate | Built-in Image Generation Skill edit of the supplied About reference; selected raw authoring PNG is preserved in `docs/reference/assets/about-pastry-plate-v2-authoring.png` | alpha-preserving lossless responsive WebP; `decorative-reference-edit`; not a documentary dish photo |
+| `public/media/menu-{cappuccino,bagel,waffle,syrniki,cheesecake,oatmeal,shakshuka,croissant}-{480,768}.webp` | Menu card foreground art | Image Generation Skill reference-edits; the three 1254px source derivatives for oatmeal, shakshuka and croissant are retained as `docs/reference/assets/menu-{oatmeal,shakshuka,croissant}-authoring.webp` rather than published | responsive WebP selected by `srcSet`; `decorative-reference-edit`; not documentary food evidence |
 
 ## Remove Background Local decision
 
@@ -20,6 +21,6 @@
 
 ## Non-runtime experiments
 
-Ранние POC и generated hero-эксперименты перед публикацией удалены из `public/media` и из production registry: они не будут публично раздаваться Vite и не участвуют в runtime. Нужные authoring-оригиналы активных foreground-слоёв сохранены в `docs/reference/assets/`. Для About также отклонены два промежуточных результата: у одного была мягкая полупрозрачная вуаль, а у второго шахматный фон оказался baked; Remove Background Local удалил у него белую тарелку. Они не попали в рабочую директорию и не участвуют в runtime. Documentary Yandex images stay separately typed in `src/data/media.ts` and mount only where their venue role is factual.
+Ранние POC и generated hero-эксперименты перед публикацией удалены из `public/media` и из production registry: они не будут публично раздаваться Vite и не участвуют в runtime. Нужные authoring-оригиналы активных foreground-слоёв сохранены в `docs/reference/assets/`; три исходных 1254px menu-кадра также перенесены туда как `menu-*-authoring.webp`, потому что runtime использует только responsive `-480`/`-768` варианты. Для About также отклонены два промежуточных результата: у одного была мягкая полупрозрачная вуаль, а у второго шахматный фон оказался baked; Remove Background Local удалил у него белую тарелку. Они не попали в рабочую директорию и не участвуют в runtime. Documentary Yandex images stay separately typed in `src/data/media.ts` and mount only where their venue role is factual.
 
 All reference edits/extracts above are visual art direction. They must never be described as documentary photos of White Cup, menu availability, prices, or a live map.

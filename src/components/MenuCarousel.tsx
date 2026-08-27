@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react'
 
 import { menuSceneLayerManifest, type MenuCardMediaId } from '../data/media'
 import type { MenuItem } from '../data/site'
@@ -10,134 +10,177 @@ export interface MenuCarouselProps {
   provenanceDescriptionId?: string
 }
 
-const prefersReducedMotion = () =>
-  typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true
-
+type MenuCopy = 'leading' | 'middle' | 'trailing'
 type MenuScrollBehavior = 'auto' | 'smooth'
 
 const PROGRAMMATIC_SCROLL_FALLBACK_MS = 1000
 
-const getNativeScrollTarget = (viewport: HTMLDivElement, card: HTMLLIElement) => {
-  // The isolated track stylesheet adds enough trailing range for every card
-  // to align to this exact native offset. Do not clamp here: doing so would
-  // collapse later dot positions whenever layout is measured before the
-  // trailing range has settled, and the browser natively clamps impossible
-  // values at the true scroll boundary.
-  return Math.max(0, card.offsetLeft - viewport.offsetLeft)
-}
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true
+
+const modulo = (value: number, divisor: number) => ((value % divisor) + divisor) % divisor
+
+const isClonePhysicalIndex = (physicalIndex: number, itemCount: number) =>
+  physicalIndex < itemCount || physicalIndex >= itemCount * 2
+
+const getLogicalIndex = (physicalIndex: number, itemCount: number) => modulo(physicalIndex, itemCount)
+
+const getNativeScrollTarget = (viewport: HTMLDivElement, card: HTMLLIElement) =>
+  Math.max(0, card.offsetLeft - viewport.offsetLeft)
 
 const getNearestCardIndex = (
   viewport: HTMLDivElement,
   cards: readonly (HTMLLIElement | null)[],
-  itemCount: number,
 ) => {
+  const cardEntries = cards
+    .map((card, index) => ({
+      card,
+      index,
+      offset: card ? Math.max(0, card.offsetLeft - viewport.offsetLeft) : null,
+    }))
+    .filter((entry): entry is { card: HTMLLIElement; index: number; offset: number } => entry.offset !== null)
+
+  if (cardEntries.length === 0) return 0
+
   const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth)
   const currentScroll = Math.max(0, Math.min(viewport.scrollLeft, maxScroll || viewport.scrollLeft))
-  const offsets = cards.slice(0, itemCount).map((card) =>
-    card ? Math.max(0, card.offsetLeft - viewport.offsetLeft) : null,
-  )
-  const measuredOffsets = offsets.filter((offset): offset is number => offset !== null)
-  const hasDistinctCardOffsets = measuredOffsets.some(
-    (offset, index) => index > 0 && Math.abs(offset - measuredOffsets[0]) > 1,
+
+  // At the native end boundary the browser can expose the same snap position
+  // for more than one card. The final physical clone is still the correct
+  // source of truth until scrollend recenters it into the middle copy.
+  if (maxScroll > 1 && currentScroll >= maxScroll - 1) return cardEntries.at(-1)?.index ?? 0
+
+  const hasDistinctOffsets = cardEntries.some(
+    (entry, index) => index > 0 && Math.abs(entry.offset - cardEntries[0].offset) > 1,
   )
 
-  // Several cards can legitimately share the maximum snap position when the
-  // viewport intentionally shows multiple cards. The boundary itself still
-  // represents the final item for controls, dots, and assistive technology.
-  if (itemCount > 1 && maxScroll > 1 && currentScroll >= maxScroll - 1) return itemCount - 1
-
-  // Layout metrics are unavailable in JSDOM. Progress is a safe fallback for
-  // that case and still maps the real maximum scroll boundary to the final
-  // item when a browser exposes no individual card offsets.
-  if (!hasDistinctCardOffsets) {
-    if (maxScroll <= 1 || itemCount <= 1) return 0
-    return Math.max(0, Math.min(itemCount - 1, Math.round((currentScroll / maxScroll) * (itemCount - 1))))
+  // JSDOM does not calculate layout metrics. When it does expose a range but
+  // no individual offsets, preserve a useful physical progress estimate.
+  if (!hasDistinctOffsets) {
+    if (maxScroll <= 1 || cards.length <= 1) return cardEntries[0].index
+    return Math.max(0, Math.min(cards.length - 1, Math.round((currentScroll / maxScroll) * (cards.length - 1))))
   }
 
-  return offsets.reduce<number>((nearestIndex, offset, index) => {
-    if (offset === null) return nearestIndex
-
-    const target = maxScroll > 0 ? Math.min(offset, maxScroll) : offset
-    const nearestOffset = offsets[nearestIndex]
-    if (nearestOffset === null) return index
-
-    const nearestTarget = maxScroll > 0 ? Math.min(nearestOffset, maxScroll) : nearestOffset
-    return Math.abs(target - currentScroll) < Math.abs(nearestTarget - currentScroll)
-      ? index
-      : nearestIndex
-  }, 0)
+  return cardEntries.reduce((nearest, entry) =>
+    Math.abs(entry.offset - currentScroll) < Math.abs(nearest.offset - currentScroll) ? entry : nearest,
+  ).index
 }
 
-/**
- * The menu intentionally uses native overflow instead of a transform carousel.
- * That keeps touch scrolling natural, makes the final card reachable without
- * JavaScript, and lets browser scroll-snap do the hard work on small screens.
- */
-function DecorativeMenuSliver({ item, side }: { item: MenuItem; side: 'left' | 'right' }) {
+interface PendingNavigation {
+  physicalIndex: number
+  logicalIndex: number
+}
+
+function MenuCard({
+  item,
+  index,
+  itemCount,
+  copy,
+  physicalIndex,
+  clone,
+  setCardRef,
+}: {
+  item: MenuItem
+  index: number
+  itemCount: number
+  copy: MenuCopy
+  physicalIndex: number
+  clone: boolean
+  setCardRef: (element: HTMLLIElement | null) => void
+}) {
   const media = menuSceneLayerManifest.cards[item.id as MenuCardMediaId]
+  const cardId = clone ? `menu-card-${item.id}-${copy}` : `menu-card-${item.id}`
+  const descriptionId = `${cardId}-description`
+  const factsId = `${cardId}-facts`
 
   return (
-    <div
-      className={`menu-card menu-carousel__sliver menu-carousel__sliver--${side}`}
-      data-menu-sliver={side}
-      aria-hidden="true"
+    <li
+      className="menu-card"
+      ref={setCardRef}
+      data-menu-index={index}
+      data-menu-physical-index={physicalIndex}
+      data-menu-copy={copy}
+      data-menu-loop-copy={copy}
+      data-menu-clone={clone ? 'true' : undefined}
+      aria-hidden={clone ? 'true' : undefined}
+      tabIndex={clone ? -1 : undefined}
+      aria-posinset={clone ? undefined : index + 1}
+      aria-setsize={clone ? undefined : itemCount}
     >
-      <article>
+      <article
+        tabIndex={clone ? -1 : undefined}
+        aria-labelledby={cardId}
+        aria-describedby={`${descriptionId} ${factsId}`}
+      >
         <div className="menu-card__art">
           <img
             src={media.src}
             srcSet={media.srcSet}
             sizes={media.sizes}
             alt=""
+            aria-hidden="true"
+            data-scene-card-image=""
+            data-media-kind={media.asset.provenanceKind}
             loading="lazy"
             decoding="async"
           />
+          {item.id === 'cheesecake' ? <span className="menu-card__season">Сезон</span> : null}
           <span className="menu-card__favorite" aria-hidden="true" />
         </div>
         <div className="menu-card__body">
-          <h3>{item.name}</h3>
-          <p className="menu-card__description">{item.description}</p>
+          <h3 id={cardId}>{item.name}</h3>
+          <p className="menu-card__description" id={descriptionId}>{item.description}</p>
+          <span className="menu-card__facts" id={factsId}>
+            {item.price ?? 'Актуальная цена — в меню'}
+          </span>
         </div>
       </article>
-    </div>
+    </li>
   )
 }
 
 export function MenuCarousel({ items, fullMenuUrl, provenanceDescriptionId }: MenuCarouselProps) {
   const viewportRef = useRef<HTMLDivElement>(null)
   const cardRefs = useRef<Array<HTMLLIElement | null>>([])
-  const pendingIndexRef = useRef<number | null>(null)
+  const activePhysicalIndexRef = useRef(0)
+  const pendingNavigationRef = useRef<PendingNavigation | null>(null)
   const pendingFallbackTimerRef = useRef<number | null>(null)
+  const initializedItemCountRef = useRef<number | null>(null)
   const [activeIndex, setActiveIndex] = useState(0)
-
-  useEffect(() => {
-    setActiveIndex((currentIndex) => Math.min(currentIndex, Math.max(0, items.length - 1)))
-  }, [items.length])
-
-  const reconcileViewport = useCallback(() => {
-    const viewport = viewportRef.current
-    if (!viewport || viewport.clientWidth === 0) return
-
-    setActiveIndex(getNearestCardIndex(viewport, cardRefs.current, items.length))
-  }, [items.length])
 
   const clearPendingFallbackTimer = useCallback(() => {
     if (pendingFallbackTimerRef.current === null) return
 
-    if (typeof window !== 'undefined') {
-      window.clearTimeout(pendingFallbackTimerRef.current)
-    }
+    if (typeof window !== 'undefined') window.clearTimeout(pendingFallbackTimerRef.current)
     pendingFallbackTimerRef.current = null
   }, [])
 
-  const clearPendingProgrammaticTarget = useCallback(
-    (reconcile = false) => {
-      pendingIndexRef.current = null
-      clearPendingFallbackTimer()
-      if (reconcile) reconcileViewport()
-    },
-    [clearPendingFallbackTimer, reconcileViewport],
-  )
+  const recenterToMiddle = useCallback((logicalIndex: number) => {
+    const viewport = viewportRef.current
+    const itemCount = items.length
+    if (!viewport || itemCount === 0) return
+
+    const normalizedIndex = modulo(logicalIndex, itemCount)
+    const physicalIndex = itemCount + normalizedIndex
+    const card = cardRefs.current[physicalIndex]
+    if (!card) return
+
+    activePhysicalIndexRef.current = physicalIndex
+    const targetLeft = getNativeScrollTarget(viewport, card)
+    if (viewport.scrollLeft !== targetLeft) viewport.scrollLeft = targetLeft
+  }, [items.length])
+
+  const reconcileViewport = useCallback(() => {
+    const viewport = viewportRef.current
+    const itemCount = items.length
+    if (!viewport || itemCount === 0) return 0
+
+    const physicalIndex = getNearestCardIndex(viewport, cardRefs.current.slice(0, itemCount * 3))
+    activePhysicalIndexRef.current = physicalIndex
+    const logicalIndex = getLogicalIndex(physicalIndex, itemCount)
+    setActiveIndex(logicalIndex)
+    return physicalIndex
+  }, [items.length])
 
   const schedulePendingFallback = useCallback(() => {
     clearPendingFallbackTimer()
@@ -145,26 +188,40 @@ export function MenuCarousel({ items, fullMenuUrl, provenanceDescriptionId }: Me
 
     pendingFallbackTimerRef.current = window.setTimeout(() => {
       pendingFallbackTimerRef.current = null
-      pendingIndexRef.current = null
-      reconcileViewport()
+      const pending = pendingNavigationRef.current
+      pendingNavigationRef.current = null
+      if (!pending) return
+
+      const physicalIndex = reconcileViewport()
+      const logicalIndex = getLogicalIndex(physicalIndex, items.length)
+      setActiveIndex(logicalIndex)
+      if (isClonePhysicalIndex(physicalIndex, items.length)) recenterToMiddle(logicalIndex)
     }, PROGRAMMATIC_SCROLL_FALLBACK_MS)
-  }, [clearPendingFallbackTimer, reconcileViewport])
+  }, [clearPendingFallbackTimer, items.length, reconcileViewport, recenterToMiddle])
 
-  const moveTo = useCallback(
-    (index: number) => {
-      if (items.length === 0) return
+  const moveToPhysical = useCallback(
+    (physicalIndex: number, logicalIndex: number) => {
+      const itemCount = items.length
+      if (itemCount === 0) return
 
-      const nextIndex = Math.max(0, Math.min(index, items.length - 1))
-      setActiveIndex(nextIndex)
-
+      const boundedPhysicalIndex = Math.max(0, Math.min(physicalIndex, itemCount * 3 - 1))
+      const normalizedLogicalIndex = modulo(logicalIndex, itemCount)
       const viewport = viewportRef.current
-      const card = cardRefs.current[nextIndex]
+      const card = cardRefs.current[boundedPhysicalIndex]
+
+      activePhysicalIndexRef.current = boundedPhysicalIndex
+      setActiveIndex(normalizedLogicalIndex)
+
       if (!viewport || !card) {
-        clearPendingProgrammaticTarget()
+        pendingNavigationRef.current = null
+        clearPendingFallbackTimer()
         return
       }
 
-      pendingIndexRef.current = nextIndex
+      pendingNavigationRef.current = {
+        physicalIndex: boundedPhysicalIndex,
+        logicalIndex: normalizedLogicalIndex,
+      }
       schedulePendingFallback()
 
       const behavior: MenuScrollBehavior = prefersReducedMotion() ? 'auto' : 'smooth'
@@ -173,28 +230,73 @@ export function MenuCarousel({ items, fullMenuUrl, provenanceDescriptionId }: Me
       if (typeof viewport.scrollTo === 'function') {
         viewport.scrollTo({ left: targetLeft, behavior })
       } else {
-        // scrollTo is supported by target browsers; this keeps the control
-        // useful in older engines without hijacking touch or wheel scrolling.
         viewport.scrollLeft = targetLeft
       }
     },
-    [clearPendingProgrammaticTarget, items.length, schedulePendingFallback],
+    [clearPendingFallbackTimer, items.length, schedulePendingFallback],
   )
+
+  const moveToLogical = useCallback(
+    (logicalIndex: number) => {
+      if (items.length === 0) return
+      moveToPhysical(items.length + modulo(logicalIndex, items.length), logicalIndex)
+    },
+    [items.length, moveToPhysical],
+  )
+
+  const moveBy = useCallback(
+    (delta: -1 | 1) => {
+      const itemCount = items.length
+      if (itemCount === 0) return
+
+      const physicalCount = itemCount * 3
+      const currentPhysical = Math.max(
+        0,
+        Math.min(physicalCount - 1, activePhysicalIndexRef.current),
+      )
+      const currentLogical = getLogicalIndex(currentPhysical, itemCount)
+      let targetPhysical = currentPhysical + delta
+
+      if (targetPhysical < 0) targetPhysical = physicalCount - 1
+      if (targetPhysical >= physicalCount) targetPhysical = itemCount
+
+      moveToPhysical(targetPhysical, currentLogical + delta)
+    },
+    [items.length, moveToPhysical],
+  )
+
+  useLayoutEffect(() => {
+    const viewport = viewportRef.current
+    const itemCount = items.length
+    if (!viewport || itemCount === 0 || initializedItemCountRef.current === itemCount) return
+
+    const middleFirstCard = cardRefs.current[itemCount]
+    if (!middleFirstCard) return
+
+    activePhysicalIndexRef.current = itemCount
+    const targetLeft = getNativeScrollTarget(viewport, middleFirstCard)
+    if (viewport.scrollLeft !== targetLeft) viewport.scrollLeft = targetLeft
+    initializedItemCountRef.current = itemCount
+  }, [items.length])
+
+  useEffect(() => {
+    if (items.length === 0) {
+      setActiveIndex(0)
+      return
+    }
+
+    setActiveIndex((currentIndex) => modulo(currentIndex, items.length))
+  }, [items.length])
 
   useEffect(() => {
     const viewport = viewportRef.current
     if (!viewport || typeof ResizeObserver === 'undefined') return
 
     const observer = new ResizeObserver(() => {
-      const pendingIndex = pendingIndexRef.current
-      if (pendingIndex !== null) {
-        // Recalculate a pending target after responsive geometry changes so a
-        // viewport resize cannot leave the requested card at a stale offset.
-        const card = cardRefs.current[pendingIndex]
-        if (!card) {
-          clearPendingProgrammaticTarget(true)
-          return
-        }
+      const pending = pendingNavigationRef.current
+      if (pending) {
+        const card = cardRefs.current[pending.physicalIndex]
+        if (!card) return
 
         const targetLeft = getNativeScrollTarget(viewport, card)
         const behavior: MenuScrollBehavior = prefersReducedMotion() ? 'auto' : 'smooth'
@@ -212,29 +314,28 @@ export function MenuCarousel({ items, fullMenuUrl, provenanceDescriptionId }: Me
 
     observer.observe(viewport)
     return () => observer.disconnect()
-  }, [clearPendingProgrammaticTarget, reconcileViewport, schedulePendingFallback])
+  }, [reconcileViewport, schedulePendingFallback])
 
   useEffect(() => () => clearPendingFallbackTimer(), [clearPendingFallbackTimer])
 
   const handleViewportKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
       event.preventDefault()
-      moveTo(activeIndex + 1)
+      moveBy(1)
+      return
     }
 
     if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
       event.preventDefault()
-      moveTo(activeIndex - 1)
+      moveBy(-1)
     }
   }
 
   const handleViewportScroll = () => {
-    const viewport = viewportRef.current
-    if (!viewport || viewport.clientWidth === 0) return
-
-    const pendingIndex = pendingIndexRef.current
-    if (pendingIndex !== null) {
-      setActiveIndex(pendingIndex)
+    const pending = pendingNavigationRef.current
+    if (pending) {
+      activePhysicalIndexRef.current = pending.physicalIndex
+      setActiveIndex(pending.logicalIndex)
       return
     }
 
@@ -242,16 +343,39 @@ export function MenuCarousel({ items, fullMenuUrl, provenanceDescriptionId }: Me
   }
 
   const handleViewportScrollEnd = () => {
-    clearPendingProgrammaticTarget(true)
+    const pending = pendingNavigationRef.current
+    pendingNavigationRef.current = null
+    clearPendingFallbackTimer()
+
+    if (pending) {
+      activePhysicalIndexRef.current = pending.physicalIndex
+      setActiveIndex(pending.logicalIndex)
+      if (isClonePhysicalIndex(pending.physicalIndex, items.length)) {
+        recenterToMiddle(pending.logicalIndex)
+      }
+      return
+    }
+
+    const physicalIndex = reconcileViewport()
+    if (items.length > 0 && isClonePhysicalIndex(physicalIndex, items.length)) {
+      recenterToMiddle(getLogicalIndex(physicalIndex, items.length))
+    }
   }
 
   const handleNativeScrollIntent = () => {
-    clearPendingProgrammaticTarget(true)
+    pendingNavigationRef.current = null
+    clearPendingFallbackTimer()
   }
 
   if (items.length === 0) {
     return <p className="menu-carousel__empty">Актуальное меню скоро появится.</p>
   }
+
+  const copies: Array<{ name: MenuCopy; clone: boolean; offset: number }> = [
+    { name: 'leading', clone: true, offset: 0 },
+    { name: 'middle', clone: false, offset: items.length },
+    { name: 'trailing', clone: true, offset: items.length * 2 },
+  ]
 
   return (
     <div className="menu-carousel" role="region" aria-roledescription="carousel" aria-label="Избранное меню White Cup">
@@ -263,8 +387,7 @@ export function MenuCarousel({ items, fullMenuUrl, provenanceDescriptionId }: Me
             type="button"
             data-touch-target="44"
             aria-label="Предыдущая позиция"
-            onClick={() => moveTo(activeIndex - 1)}
-            disabled={activeIndex === 0}
+            onClick={() => moveBy(-1)}
           >
             <span aria-hidden="true">←</span>
           </button>
@@ -273,8 +396,7 @@ export function MenuCarousel({ items, fullMenuUrl, provenanceDescriptionId }: Me
             type="button"
             data-touch-target="44"
             aria-label="Следующая позиция"
-            onClick={() => moveTo(activeIndex + 1)}
-            disabled={activeIndex === items.length - 1}
+            onClick={() => moveBy(1)}
           >
             <span aria-hidden="true">→</span>
           </button>
@@ -282,7 +404,6 @@ export function MenuCarousel({ items, fullMenuUrl, provenanceDescriptionId }: Me
       </div>
 
       <div className="menu-carousel__viewport-shell">
-        {items[1] ? <DecorativeMenuSliver item={items[1]} side="left" /> : null}
         <div
           ref={viewportRef}
           className="menu-carousel__viewport"
@@ -296,53 +417,25 @@ export function MenuCarousel({ items, fullMenuUrl, provenanceDescriptionId }: Me
           onTouchStart={handleNativeScrollIntent}
           aria-label="Позиции меню, используйте стрелки для навигации"
         >
-          <ul className="menu-carousel__track" aria-label="Позиции меню">
-            {items.map((item, index) => {
-              const descriptionId = `menu-card-${item.id}-description`
-              const factsId = `menu-card-${item.id}-facts`
-
-              return (
-                <li
-                  className="menu-card"
-                  key={item.id}
-                  ref={(element) => {
-                    cardRefs.current[index] = element
+          <ul className="menu-carousel__track" aria-label="Позиции меню" data-menu-loop-copies="3">
+            {copies.flatMap(({ name, clone, offset }) =>
+              items.map((item, index) => (
+                <MenuCard
+                  key={`${name}-${item.id}`}
+                  item={item}
+                  index={index}
+                  itemCount={items.length}
+                  copy={name}
+                  physicalIndex={offset + index}
+                  clone={clone}
+                  setCardRef={(element) => {
+                    cardRefs.current[offset + index] = element
                   }}
-                  data-menu-index={index}
-                >
-                  <article
-                    aria-labelledby={`menu-card-${item.id}`}
-                    aria-describedby={`${descriptionId} ${factsId}`}
-                  >
-                    <div className="menu-card__art">
-                      <img
-                        src={menuSceneLayerManifest.cards[item.id as MenuCardMediaId].src}
-                        srcSet={menuSceneLayerManifest.cards[item.id as MenuCardMediaId].srcSet}
-                        sizes={menuSceneLayerManifest.cards[item.id as MenuCardMediaId].sizes}
-                        alt=""
-                        aria-hidden="true"
-                        data-scene-card-image=""
-                        data-media-kind={menuSceneLayerManifest.cards[item.id as MenuCardMediaId].asset.provenanceKind}
-                        loading="lazy"
-                        decoding="async"
-                      />
-                      {item.id === 'cheesecake' ? <span className="menu-card__season">Сезон</span> : null}
-                      <span className="menu-card__favorite" aria-hidden="true" />
-                    </div>
-                    <div className="menu-card__body">
-                      <h3 id={`menu-card-${item.id}`}>{item.name}</h3>
-                      <p className="menu-card__description" id={descriptionId}>{item.description}</p>
-                      <span className="menu-card__facts" id={factsId}>
-                        {item.price ?? 'Актуальная цена — в меню'}
-                      </span>
-                    </div>
-                  </article>
-                </li>
-              )
-            })}
+                />
+              )),
+            )}
           </ul>
         </div>
-        {items[0] ? <DecorativeMenuSliver item={items[0]} side="right" /> : null}
       </div>
 
       <div className="menu-carousel__footer">
@@ -354,7 +447,7 @@ export function MenuCarousel({ items, fullMenuUrl, provenanceDescriptionId }: Me
               type="button"
               aria-label={`Перейти к ${item.name}`}
               aria-current={index === activeIndex ? 'true' : undefined}
-              onClick={() => moveTo(index)}
+              onClick={() => moveToLogical(index)}
             >
               <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
             </button>

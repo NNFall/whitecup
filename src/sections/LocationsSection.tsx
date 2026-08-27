@@ -1,12 +1,15 @@
+import { OrganicPhoto } from '../components/OrganicPhoto'
 import { Reveal } from '../components/Reveal'
 import { SceneLayer } from '../components/SceneLayer'
 import { SectionFrame } from '../components/SectionFrame'
 import { StaticMapCard } from '../components/StaticMapCard'
 import {
+  documentarySceneMedia,
   locationsCardIconMedia,
   locationsSceneLayerManifest,
 } from '../data/media'
 import { siteData, type Location } from '../data/site'
+import '../styles/scene-layout-polish.css'
 
 type LocationCardIconName = keyof typeof locationsCardIconMedia
 
@@ -49,18 +52,38 @@ function LocationHeading({ location }: { location: Location }) {
 }
 
 export function LocationsSection() {
+  const documentaryPhoto = documentarySceneMedia.locations[0]
+
   return (
     <SectionFrame
       id="locations"
       title={
-        <>
+        <span className="locations-scene__title" data-scene-layer="title">
           Как нас <span className="locations-scene__title-accent">найти</span>
-        </>
+        </span>
       }
       className="locations-scene"
+      data-scene-layout="independent"
     >
-      <div className="locations-scene__art">
+      <div
+        className="locations-scene__paper"
+        data-scene-layer="paper"
+        data-scene-paper="true"
+        aria-hidden="true"
+      />
+
+      <Reveal className="locations-scene__intro" data-scene-layer="copy">
+        <p>
+          Мы в <span className="locations-scene__intro-accent">самом сердце Самары</span>.
+          <br className="locations-scene__desktop-break" /> Две уютные кофейни с ароматным кофе,
+          <br className="locations-scene__desktop-break" /> свежими завтраками и тёплой атмосферой
+          <br className="locations-scene__desktop-break" /> каждый день.
+        </p>
+      </Reveal>
+
+      <div className="locations-scene__map-layer" data-scene-layer="map">
         <StaticMapCard
+          className="locations-scene__map"
           layer={locationsSceneLayerManifest.map}
           labels={[
             {
@@ -74,30 +97,26 @@ export function LocationsSection() {
             },
           ]}
         />
-        <SceneLayer
-          {...locationsSceneLayerManifest.interior}
-          className="locations-scene__interior"
-          loading="lazy"
-          decoding="async"
-        />
-        <SceneLayer
-          {...locationsSceneLayerManifest.decoration}
-          className="locations-scene__doodles"
-          loading="lazy"
-          decoding="async"
+      </div>
+
+      <div className="locations-scene__photo" data-scene-layer="photo">
+        <OrganicPhoto
+          media={documentaryPhoto}
+          className="locations-scene__documentary"
+          aspectRatio="16 / 9"
+          sizes="(max-width: 1023px) calc(100vw - 2rem), 50vw"
         />
       </div>
 
-      <Reveal className="locations-scene__intro">
-        <p>
-          Мы в <span className="locations-scene__intro-accent">самом сердце Самары</span>.
-          <br className="locations-scene__desktop-break" /> Две уютные кофейни с ароматным кофе,
-          <br className="locations-scene__desktop-break" /> свежими завтраками и тёплой атмосферой
-          <br className="locations-scene__desktop-break" /> каждый день.
-        </p>
-      </Reveal>
+      <SceneLayer
+        {...locationsSceneLayerManifest.decoration}
+        className="locations-scene__doodles"
+        data-scene-layer="doodles"
+        loading="lazy"
+        decoding="async"
+      />
 
-      <div className="locations-scene__cards">
+      <div className="locations-scene__cards" data-scene-layer="cards">
         {siteData.locations.map((location, index) => {
           const displayAddress = getDisplayAddress(location)
 
@@ -139,7 +158,7 @@ export function LocationsSection() {
                   </a>
                 </div>
 
-                <div className="location-card__actions">
+                <div className="location-card__actions" data-scene-layer="actions">
                   <a
                     className="location-card__action location-card__action--route"
                     href={location.routeUrl}

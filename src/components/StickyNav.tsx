@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { BrandMark } from './BrandMark'
+import '../styles/navigation-polish.css'
 
 interface NavItem {
   href: `#${SceneId}`

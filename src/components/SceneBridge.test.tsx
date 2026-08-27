@@ -2,6 +2,8 @@ import { render } from '@testing-library/react'
 
 import { SceneBridge } from './SceneBridge'
 
+const bridgeCss = (await import('../styles/scene-bridge-polish.css?raw')).default as string
+
 const bridgePairs = [
   ['hero', 'menu'],
   ['menu', 'about'],
@@ -18,6 +20,7 @@ describe('SceneBridge', () => {
 
     expect(bridge).toHaveAttribute('aria-hidden', 'true')
     expect(bridge).toHaveAttribute('data-media-kind', 'decorative-generated')
+    expect(bridge).toHaveAttribute('data-provenance', 'local-css')
     expect(bridge).toHaveAttribute('data-bridge-layer', 'transition')
     expect(bridge).toHaveClass('scene-bridge')
     expect(bridge).not.toHaveAttribute('tabindex')
@@ -25,7 +28,7 @@ describe('SceneBridge', () => {
     expect(bridge?.querySelector('a, button, input, select, textarea')).toBeNull()
   })
 
-  it('orders the paper wash beneath the generated route art', () => {
+  it('orders the paper wash beneath the minimal CSS marker', () => {
     const { container } = render(<SceneBridge from="menu" to="about" />)
 
     const bridge = container.querySelector<HTMLElement>('[data-scene-bridge="menu-about"]')
@@ -34,63 +37,41 @@ describe('SceneBridge', () => {
       (layer) => layer.dataset.bridgeLayer,
     )
 
-    expect(layers).toEqual(['paper', 'route'])
+    expect(layers).toEqual(['paper', 'marker'])
     expect(bridge?.querySelector('[data-bridge-layer="paper"]')).toHaveAttribute(
       'aria-hidden',
       'true',
     )
   })
 
-  it.each(bridgePairs)('binds the %s-%s paper and route layers to their CSS hooks', (from, to) => {
+  it.each(bridgePairs)('binds the %s-%s paper and marker layers to their CSS hooks', (from, to) => {
     const { container } = render(<SceneBridge from={from} to={to} />)
 
     const bridge = container.querySelector<HTMLElement>(`[data-scene-bridge="${from}-${to}"]`)
     const paper = bridge?.querySelector<HTMLElement>('[data-bridge-layer="paper"]')
-    const route = bridge?.querySelector<HTMLImageElement>('[data-bridge-layer="route"]')
+    const marker = bridge?.querySelector<HTMLElement>('[data-bridge-layer="marker"]')
 
     expect(paper).toHaveClass('scene-bridge__paper')
-    expect(route).toHaveClass('scene-bridge__route')
+    expect(marker).toHaveClass('scene-bridge__marker')
     expect(paper?.parentElement).toBe(bridge)
-    expect(route?.parentElement).toBe(bridge)
+    expect(marker?.parentElement).toBe(bridge)
+    expect(paper).toHaveAttribute('aria-hidden', 'true')
+    expect(marker).toHaveAttribute('aria-hidden', 'true')
+    expect(paper).toHaveAttribute('data-media-kind', 'decorative-generated')
+    expect(marker).toHaveAttribute('data-media-kind', 'decorative-generated')
+    expect(paper).toHaveAttribute('data-provenance', 'local-css')
+    expect(marker).toHaveAttribute('data-provenance', 'local-css')
   })
 
-  it('renders the responsive generated route as an explicitly decorative image', () => {
+  it('does not render a route image or media URL', () => {
     const { container } = render(<SceneBridge from="hero" to="menu" />)
 
-    const route = container.querySelector<HTMLImageElement>('.scene-bridge__route')
-
-    expect(route).toHaveAttribute('src', '/media/story-route-connector-1200.webp')
-    expect(route).toHaveAttribute(
-      'srcset',
-      '/media/story-route-connector-720.webp 720w, /media/story-route-connector-1200.webp 1200w, /media/story-route-connector-2400.webp 2400w',
-    )
-    expect(route).toHaveAttribute(
-      'sizes',
-      '(max-width: 433px) 155vw, (max-width: 1023px) 42rem, (max-width: 1304px) 92vw, 75rem',
-    )
-    expect(route).toHaveAttribute('alt', '')
-    expect(route).toHaveAttribute('aria-hidden', 'true')
-    expect(route).toHaveAttribute('data-bridge-layer', 'route')
+    expect(container.querySelector('img, picture, [src], [srcset]')).toBeNull()
   })
 
-  it('loads the first connector eagerly without blocking image decoding', () => {
-    const { container } = render(<SceneBridge from="hero" to="menu" />)
-
-    const route = container.querySelector<HTMLImageElement>('.scene-bridge__route')
-
-    expect(route).toHaveAttribute('loading', 'eager')
-    expect(route).toHaveAttribute('decoding', 'async')
+  it('removes bridge animation and transitions for reduced-motion visitors', () => {
+    expect(bridgeCss).toMatch(
+      /@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]*\.scene-bridge,[\s\S]*\.scene-bridge\s+\*[\s\S]*animation:\s*none\s*!important;[\s\S]*transition:\s*none\s*!important;/,
+    )
   })
-
-  it.each(bridgePairs.slice(1))(
-    'defers the below-fold %s-%s connector and decodes it asynchronously',
-    (from, to) => {
-      const { container } = render(<SceneBridge from={from} to={to} />)
-
-      const route = container.querySelector<HTMLImageElement>('.scene-bridge__route')
-
-      expect(route).toHaveAttribute('loading', 'lazy')
-      expect(route).toHaveAttribute('decoding', 'async')
-    },
-  )
 })

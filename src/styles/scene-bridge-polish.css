@@ -1,0 +1,176 @@
+/* Scene bridges are a small paper crossfade, not a repeated image ribbon.
+ * Keep this layer after the legacy continuity rules so the bridge can soften
+ * the seam without changing any scene's measured artboard. */
+
+.scene-bridge {
+  --bridge-marker-x: 50%;
+  --bridge-marker-angle: 0deg;
+  --bridge-overlap: clamp(1.5rem, 2.5vw, 2.5rem);
+  position: relative;
+  z-index: 1 !important;
+  display: block;
+  inline-size: 100%;
+  height: clamp(2.5rem, 4vw, 5rem);
+  min-height: clamp(2.5rem, 4vw, 5rem) !important;
+  margin-block: calc(var(--bridge-overlap) * -1) !important;
+  overflow: clip;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    color-mix(in oklch, var(--paper-light) 7%, transparent) 34%,
+    color-mix(in oklch, var(--paper) 14%, transparent) 50%,
+    color-mix(in oklch, var(--paper-light) 7%, transparent) 66%,
+    transparent 100%
+  ) !important;
+  isolation: isolate;
+  pointer-events: none;
+  transition:
+    opacity 360ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scene-bridge::before,
+.scene-bridge::after {
+  content: none !important;
+}
+
+.scene-bridge__paper {
+  position: absolute;
+  z-index: 0;
+  inset: -1.75rem -12vw !important;
+  background:
+    radial-gradient(
+      ellipse at 21% 50%,
+      color-mix(in oklch, var(--orange) 1%, transparent),
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse at 79% 50%,
+      color-mix(in oklch, var(--ink) 1%, transparent),
+      transparent 52%
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      color-mix(in oklch, var(--paper-light) 9%, transparent) 34%,
+      color-mix(in oklch, var(--paper) 18%, transparent) 50%,
+      color-mix(in oklch, var(--paper-light) 9%, transparent) 66%,
+      transparent 100%
+    ) !important;
+  clip-path: none !important;
+  opacity: 0.32 !important;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+  animation: scene-bridge-paper-fade 680ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.scene-bridge__marker {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: var(--bridge-marker-x);
+  display: block;
+  width: min(9rem, 30vw);
+  block-size: 0.14rem;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in oklch, var(--orange) 46%, transparent) 23%,
+    var(--orange) 50%,
+    color-mix(in oklch, var(--orange) 46%, transparent) 77%,
+    transparent 100%
+  );
+  opacity: 0.48;
+  pointer-events: none;
+  transform: translate3d(-50%, -50%, 0) rotate(var(--bridge-marker-angle));
+  transition:
+    opacity 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  animation: scene-bridge-marker-settle 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.scene-bridge[data-scene-bridge='hero-menu'] {
+  --bridge-marker-x: 66%;
+  --bridge-marker-angle: 0.8deg;
+}
+
+.scene-bridge[data-scene-bridge='menu-about'] {
+  --bridge-marker-x: 34%;
+  --bridge-marker-angle: -1deg;
+}
+
+.scene-bridge[data-scene-bridge='about-visit'] {
+  --bridge-marker-x: 61%;
+  --bridge-marker-angle: 0.6deg;
+}
+
+.scene-bridge[data-scene-bridge='visit-events'] {
+  --bridge-marker-x: 39%;
+  --bridge-marker-angle: -0.8deg;
+}
+
+.scene-bridge[data-scene-bridge='events-locations'] {
+  --bridge-marker-x: 68%;
+  --bridge-marker-angle: 0.9deg;
+}
+
+@keyframes scene-bridge-paper-fade {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.2rem, 0);
+  }
+
+  to {
+    opacity: 0.32;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes scene-bridge-marker-settle {
+  from {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) rotate(var(--bridge-marker-angle)) scaleX(0.72);
+  }
+
+  to {
+    opacity: 0.48;
+    transform: translate3d(-50%, -50%, 0) rotate(var(--bridge-marker-angle)) scaleX(1);
+  }
+}
+
+@media (max-width: 1023px) {
+  .scene-bridge {
+    --bridge-overlap: clamp(1.25rem, 5vw, 2rem);
+    height: clamp(2.5rem, 10vw, 4rem);
+    min-height: clamp(2.5rem, 10vw, 4rem) !important;
+    margin-block: calc(var(--bridge-overlap) * -1) !important;
+  }
+
+  .scene-bridge__paper {
+    inset-inline: -16vw !important;
+  }
+
+  .scene-bridge__marker {
+    width: min(6rem, 32vw);
+    opacity: 0.42;
+  }
+}
+
+@media (max-width: 360px) {
+  .scene-bridge {
+    height: 2.5rem;
+    min-height: 2.5rem !important;
+  }
+
+  .scene-bridge__marker {
+    width: 5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-bridge,
+  .scene-bridge * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

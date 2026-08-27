@@ -1,0 +1,553 @@
+/* Independent Events and Locations scene layout. The paper is a DOM/CSS
+ * surface; every visual and semantic group owns a named grid area. */
+
+.scene.events-scene[data-scene-layout='independent'],
+.scene.locations-scene[data-scene-layout='independent'] {
+  height: auto !important;
+  max-height: none !important;
+  min-height: max(100dvh, 45rem);
+  padding: 0;
+  overflow: hidden;
+  background: var(--paper-light);
+}
+
+.scene.events-scene[data-scene-layout='independent'] .section-frame__inner,
+.scene.locations-scene[data-scene-layout='independent'] .section-frame__inner {
+  position: relative;
+  isolation: isolate;
+  width: min(100%, 120rem);
+  max-width: none;
+  height: auto !important;
+  min-height: max(100dvh, 45rem);
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.scene.events-scene[data-scene-layout='independent'] [data-scene-paper],
+.scene.locations-scene[data-scene-layout='independent'] [data-scene-paper] {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background:
+    radial-gradient(circle at 22% 18%, rgb(255 255 255 / 0.46), transparent 35%),
+    linear-gradient(145deg, var(--paper-light), var(--paper));
+  pointer-events: none;
+}
+
+/* Events -------------------------------------------------------------- */
+
+.scene.events-scene[data-scene-layout='independent'] .section-frame__inner {
+  display: grid;
+  grid-template-areas:
+    'title photo'
+    'copy photo'
+    'cards photo';
+  grid-template-columns: minmax(34rem, 0.95fr) minmax(30rem, 1.05fr);
+  grid-template-rows: auto auto minmax(18rem, 1fr);
+  gap: clamp(1rem, 2.1dvh, 1.5rem) clamp(2rem, 4vw, 5rem);
+  padding: clamp(6.5rem, 10dvh, 8rem) clamp(2rem, 4.8vw, 5.75rem) clamp(2rem, 4dvh, 3.25rem);
+}
+
+.scene.events-scene[data-scene-layout='independent'] .section-frame__heading {
+  position: relative !important;
+  z-index: 4;
+  inset: auto !important;
+  align-self: end;
+  width: auto !important;
+  max-width: 100%;
+  grid-area: title;
+}
+
+.scene.events-scene[data-scene-layout='independent'] .events-scene__title {
+  display: block;
+  min-width: 0;
+}
+
+.scene.events-scene[data-scene-layout='independent'] .events-scene__title-line {
+  width: auto;
+  max-width: 100%;
+  white-space: normal;
+  transform: none;
+}
+
+.scene.events-scene[data-scene-layout='independent'] .events-scene__intro {
+  position: relative !important;
+  z-index: 4;
+  inset: auto !important;
+  align-self: start;
+  width: auto !important;
+  max-width: 42rem;
+  grid-area: copy;
+}
+
+.scene.events-scene[data-scene-layout='independent'] .events-scene__intro p {
+  max-width: 58ch;
+  font-size: clamp(0.95rem, 1.02vw, 1.2rem);
+}
+
+.scene.events-scene[data-scene-layout='independent'] .events-scene__photo {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  height: clamp(34rem, 72dvh, 40rem);
+  min-height: 0;
+  align-self: start;
+  grid-area: photo;
+}
+
+.scene.events-scene[data-scene-layout='independent'] .events-scene__documentary {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  aspect-ratio: auto !important;
+  border: 0;
+  border-radius: clamp(0.8rem, 1.2vw, 1.35rem);
+  clip-path: polygon(2% 3%, 97% 0, 100% 96%, 4% 100%, 0 45%);
+}
+
+.scene.events-scene[data-scene-layout='independent'] .events-scene__documentary::after {
+  display: none;
+}
+
+.scene.events-scene[data-scene-layout='independent'] .events-scene__documentary img {
+  object-position: 58% center;
+}
+
+.scene.events-scene[data-scene-layout='independent'] .events-scene__props {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  min-height: 0;
+  grid-area: photo;
+  pointer-events: none;
+}
+
+.scene.events-scene[data-scene-layout='independent'] .events-scene__props .events-scene__chalkboard {
+  top: 5%;
+  right: 4%;
+  left: auto;
+  width: clamp(6rem, 11vw, 12rem);
+}
+
+.scene.events-scene[data-scene-layout='independent'] .events-scene__props .events-scene__cake {
+  top: auto;
+  bottom: -3%;
+  left: -8%;
+  width: min(66%, 34rem);
+}
+
+.scene.events-scene[data-scene-layout='independent'] .events-scene__props .events-scene__coffee {
+  top: auto;
+  right: -7%;
+  bottom: -2%;
+  left: auto;
+  width: min(53%, 28rem);
+}
+
+.scene.events-scene[data-scene-layout='independent'] .events-scene__doodles {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  grid-area: 1 / 1 / -1 / -1;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.scene.events-scene[data-scene-layout='independent'] .events-scene__cards {
+  position: relative !important;
+  z-index: 4;
+  inset: auto !important;
+  display: grid;
+  width: auto !important;
+  height: auto !important;
+  min-width: 0;
+  grid-area: cards;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.7rem, 1.1vw, 1.25rem);
+}
+
+.scene.events-scene[data-scene-layout='independent'] .events-card-reveal,
+.scene.events-scene[data-scene-layout='independent'] .events-card {
+  height: clamp(18rem, 40dvh, 21rem);
+  min-height: 0;
+}
+
+.scene.events-scene[data-scene-layout='independent'] .events-card {
+  grid-template-rows: minmax(7.75rem, 45%) minmax(0, 1fr);
+}
+
+.scene.events-scene[data-scene-layout='independent'] .events-card__copy {
+  padding: clamp(0.62rem, 0.85vw, 0.9rem);
+}
+
+.scene.events-scene[data-scene-layout='independent'] .events-card__copy h3 {
+  font-size: clamp(1rem, 1.1vw, 1.3rem);
+}
+
+.scene.events-scene[data-scene-layout='independent'] .events-card__copy p {
+  font-size: clamp(0.72rem, 0.72vw, 0.86rem);
+}
+
+/* Locations ----------------------------------------------------------- */
+
+.scene.locations-scene[data-scene-layout='independent'] .section-frame__inner {
+  display: grid;
+  grid-template-areas:
+    'title map'
+    'copy map'
+    'cards photo';
+  grid-template-columns: minmax(34rem, 0.92fr) minmax(32rem, 1.08fr);
+  grid-template-rows: auto auto minmax(24rem, 1fr);
+  gap: clamp(1rem, 2dvh, 1.5rem) clamp(2rem, 4vw, 5rem);
+  padding: clamp(6.5rem, 10dvh, 8rem) clamp(2rem, 4.8vw, 5.75rem) clamp(2rem, 4dvh, 3.25rem);
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .section-frame__heading {
+  position: relative !important;
+  z-index: 4;
+  inset: auto !important;
+  align-self: end;
+  width: auto !important;
+  max-width: 100%;
+  grid-area: title;
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .locations-scene__title {
+  display: block;
+  min-width: 0;
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .locations-scene__intro {
+  position: relative !important;
+  z-index: 4;
+  inset: auto !important;
+  align-self: start;
+  width: auto !important;
+  max-width: 38rem;
+  grid-area: copy;
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .locations-scene__intro p {
+  max-width: 55ch;
+  font-size: clamp(0.95rem, 1.02vw, 1.2rem);
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .locations-scene__map-layer {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  min-height: 17rem;
+  overflow: hidden;
+  border-radius: clamp(0.8rem, 1.2vw, 1.35rem);
+  grid-area: map;
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .locations-scene__map-layer .static-map-card {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  height: 100%;
+  min-height: 17rem;
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .locations-scene__map-image {
+  object-position: 58% center;
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .locations-scene__map-city {
+  top: 52%;
+  left: 46%;
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .locations-scene__map-label[data-map-location='modern-museum'] {
+  top: 32%;
+  left: 62%;
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .locations-scene__map-label[data-map-location='tsekh'] {
+  top: 72%;
+  left: 63%;
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .locations-scene__photo {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  height: clamp(22rem, 46dvh, 26rem);
+  min-height: 0;
+  align-self: start;
+  grid-area: photo;
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .locations-scene__documentary {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  aspect-ratio: auto !important;
+  border: 0;
+  border-radius: clamp(0.8rem, 1.2vw, 1.35rem);
+  clip-path: polygon(2% 4%, 98% 0, 100% 95%, 4% 100%, 0 38%);
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .locations-scene__documentary::after {
+  display: none;
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .locations-scene__documentary img {
+  object-position: center;
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .locations-scene__doodles {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  grid-area: 1 / 1 / -1 / -1;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .locations-scene__cards {
+  position: relative !important;
+  z-index: 4;
+  inset: auto !important;
+  display: grid;
+  width: auto !important;
+  min-width: 0;
+  align-self: start;
+  grid-area: cards;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.85rem, 1.5vw, 1.75rem);
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .location-card,
+.scene.locations-scene[data-scene-layout='independent'] .location-card[data-location-card='tsekh'] {
+  min-height: clamp(22rem, 44dvh, 27rem);
+  padding: clamp(1rem, 1.55vw, 1.65rem);
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .location-card__icon--pin,
+.scene.locations-scene[data-scene-layout='independent'] .location-card__icon--clock,
+.scene.locations-scene[data-scene-layout='independent'] .location-card__icon--phone {
+  display: none;
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .location-card__address,
+.scene.locations-scene[data-scene-layout='independent'] .location-card__details {
+  padding-left: 0;
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .location-card__address h3 {
+  font-size: clamp(1.15rem, 1.3vw, 1.5rem);
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .location-card__address p,
+.scene.locations-scene[data-scene-layout='independent'] .location-card__note {
+  font-size: clamp(0.68rem, 0.68vw, 0.8rem);
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .location-card__actions {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: auto;
+  padding-top: 0.8rem;
+}
+
+.scene.locations-scene[data-scene-layout='independent'] .location-card__action {
+  min-height: 3rem;
+  padding-inline: clamp(0.75rem, 1vw, 1.1rem);
+  font-size: clamp(0.76rem, 0.82vw, 0.96rem);
+}
+
+/* Height-led desktop fallback: 1920x720 and 1536x720 keep their named grid,
+ * while 1440x568 receives enough scroll runway for every row. */
+@media (min-width: 1024px) and (max-height: 760px) {
+  .scene.events-scene[data-scene-layout='independent'],
+  .scene.locations-scene[data-scene-layout='independent'],
+  .scene.events-scene[data-scene-layout='independent'] .section-frame__inner,
+  .scene.locations-scene[data-scene-layout='independent'] .section-frame__inner {
+    min-height: 48rem;
+  }
+
+  .scene.events-scene[data-scene-layout='independent'] .section-frame__inner,
+  .scene.locations-scene[data-scene-layout='independent'] .section-frame__inner {
+    padding-top: 5.75rem;
+    padding-bottom: 2rem;
+  }
+
+  /* Keep the cards track tied to its content instead of stretching a
+   * fractional row into the short viewport's bridge. The scene still owns a
+   * 48rem runway, while the final card row ends at its intrinsic height. */
+  .scene.events-scene[data-scene-layout='independent'] .section-frame__inner,
+  .scene.locations-scene[data-scene-layout='independent'] .section-frame__inner {
+    grid-template-rows: auto auto auto;
+    align-content: start;
+  }
+
+  .scene.events-scene[data-scene-layout='independent'] .events-scene__cards,
+  .scene.locations-scene[data-scene-layout='independent'] .locations-scene__cards {
+    align-self: start;
+  }
+}
+
+/* Tablet and mobile: normal document flow, one named area per row. */
+@media (max-width: 1023px) {
+  .scene.events-scene[data-scene-layout='independent'],
+  .scene.locations-scene[data-scene-layout='independent'] {
+    min-height: auto;
+  }
+
+  .scene.events-scene[data-scene-layout='independent'] .section-frame__inner,
+  .scene.locations-scene[data-scene-layout='independent'] .section-frame__inner {
+    width: min(100%, 48rem);
+    min-height: auto;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.35rem;
+    padding: 6rem 1.25rem 2.75rem;
+  }
+
+  .scene.events-scene[data-scene-layout='independent'] .section-frame__inner {
+    grid-template-areas:
+      'title'
+      'copy'
+      'photo'
+      'cards';
+    grid-template-rows: auto;
+  }
+
+  .scene.locations-scene[data-scene-layout='independent'] .section-frame__inner {
+    grid-template-areas:
+      'title'
+      'copy'
+      'photo'
+      'map'
+      'cards';
+    grid-template-rows: auto;
+  }
+
+  .scene.events-scene[data-scene-layout='independent'] .section-frame__heading,
+  .scene.locations-scene[data-scene-layout='independent'] .section-frame__heading,
+  .scene.events-scene[data-scene-layout='independent'] .events-scene__intro,
+  .scene.locations-scene[data-scene-layout='independent'] .locations-scene__intro,
+  .scene.events-scene[data-scene-layout='independent'] .events-scene__cards,
+  .scene.locations-scene[data-scene-layout='independent'] .locations-scene__cards {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .scene.events-scene[data-scene-layout='independent'] .events-scene__desktop-break,
+  .scene.locations-scene[data-scene-layout='independent'] .locations-scene__desktop-break {
+    display: none;
+  }
+
+  .scene.events-scene[data-scene-layout='independent'] .events-scene__photo,
+  .scene.events-scene[data-scene-layout='independent'] .events-scene__documentary {
+    height: clamp(22rem, 108vw, 34rem);
+    min-height: 0;
+  }
+
+  .scene.events-scene[data-scene-layout='independent'] .events-scene__props {
+    grid-area: photo;
+  }
+
+  .scene.events-scene[data-scene-layout='independent'] .events-scene__doodles {
+    inset: auto;
+    position: relative;
+    grid-area: photo;
+  }
+
+  .scene.events-scene[data-scene-layout='independent'] .events-scene__cards,
+  .scene.locations-scene[data-scene-layout='independent'] .locations-scene__cards {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .scene.events-scene[data-scene-layout='independent'] .events-card-reveal,
+  .scene.events-scene[data-scene-layout='independent'] .events-card {
+    height: auto;
+    min-height: 22rem;
+  }
+
+  .scene.events-scene[data-scene-layout='independent'] .events-card {
+    grid-template-rows: minmax(12rem, 56vw) auto;
+  }
+
+  .scene.locations-scene[data-scene-layout='independent'] .locations-scene__photo,
+  .scene.locations-scene[data-scene-layout='independent'] .locations-scene__documentary {
+    height: clamp(17rem, 66vw, 28rem);
+    min-height: 0;
+  }
+
+  .scene.locations-scene[data-scene-layout='independent'] .locations-scene__map-layer,
+  .scene.locations-scene[data-scene-layout='independent'] .locations-scene__map-layer .static-map-card {
+    min-height: clamp(20rem, 82vw, 32rem);
+  }
+
+  .scene.locations-scene[data-scene-layout='independent'] .locations-scene__doodles {
+    position: relative;
+    inset: auto;
+    display: block;
+    grid-area: map;
+  }
+
+  .scene.locations-scene[data-scene-layout='independent'] .location-card,
+  .scene.locations-scene[data-scene-layout='independent'] .location-card[data-location-card='tsekh'] {
+    min-height: 22rem;
+    padding: 1.15rem;
+  }
+
+  .scene.locations-scene[data-scene-layout='independent'] .location-card__address h3 {
+    font-size: clamp(1.45rem, 5.8vw, 2rem);
+  }
+
+  .scene.locations-scene[data-scene-layout='independent'] .location-card__address p,
+  .scene.locations-scene[data-scene-layout='independent'] .location-card__note {
+    font-size: clamp(0.76rem, 2.85vw, 0.9rem);
+  }
+}
+
+@media (max-width: 400px) {
+  .scene.events-scene[data-scene-layout='independent'] .section-frame__inner,
+  .scene.locations-scene[data-scene-layout='independent'] .section-frame__inner {
+    gap: 1.1rem;
+    padding: 5.35rem 1rem 2.25rem;
+  }
+
+  .scene.events-scene[data-scene-layout='independent'] .events-scene__photo,
+  .scene.events-scene[data-scene-layout='independent'] .events-scene__documentary {
+    height: 21rem;
+    min-height: 0;
+  }
+
+  .scene.locations-scene[data-scene-layout='independent'] .locations-scene__map-layer,
+  .scene.locations-scene[data-scene-layout='independent'] .locations-scene__map-layer .static-map-card {
+    min-height: 22rem;
+  }
+}
+
+@media (max-width: 340px) {
+  .scene.events-scene[data-scene-layout='independent'] .section-frame__inner,
+  .scene.locations-scene[data-scene-layout='independent'] .section-frame__inner {
+    padding-right: 0.85rem;
+    padding-left: 0.85rem;
+  }
+
+  .scene.events-scene[data-scene-layout='independent'] .events-card__copy,
+  .scene.locations-scene[data-scene-layout='independent'] .location-card {
+    padding-right: 0.85rem;
+    padding-left: 0.85rem;
+  }
+
+  .scene.locations-scene[data-scene-layout='independent'] .location-card__action {
+    font-size: 0.88rem;
+  }
+}

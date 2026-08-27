@@ -1,6 +1,7 @@
 import { render, screen, within } from '@testing-library/react'
 
 import { MenuSection } from './MenuSection'
+import { siteData } from '../data/site'
 import globalCss from '../styles/global.css?raw'
 
 describe('Menu reference visual contract', () => {
@@ -47,27 +48,26 @@ describe('Menu reference visual contract', () => {
     expect(noteCopy).toHaveTextContent(/листайте, чтобы увидеть больше!/i)
 
     expect(menu?.querySelector('.menu-card__price')).not.toBeInTheDocument()
-    const facts = menu?.querySelectorAll('.menu-card__facts') ?? []
-    expect(facts).toHaveLength(5)
+    const facts = menu?.querySelectorAll('[data-menu-copy="middle"] .menu-card__facts') ?? []
+    expect(facts).toHaveLength(siteData.menuItems.length)
     expect(facts[0]).toHaveTextContent('270–320 ₽')
     expect([...facts].slice(1).every((fact) => /актуальная цена — в меню/i.test(fact.textContent ?? ''))).toBe(true)
   })
 
-  it('adds decorative edge slivers without changing the five-item accessible carousel', () => {
+  it('keeps the expanded accessible carousel while hiding only non-semantic copies', () => {
     const { container } = render(<MenuSection />)
     const menu = container.querySelector<HTMLElement>('#menu')
     const carousel = within(menu as HTMLElement).getByRole('region', {
       name: /избранное меню white cup/i,
     })
 
-    expect(within(carousel).getAllByRole('listitem')).toHaveLength(5)
+    expect(within(carousel).getAllByRole('listitem')).toHaveLength(siteData.menuItems.length)
 
-    const slivers = carousel.querySelectorAll<HTMLElement>('[data-menu-sliver]')
-    expect(slivers).toHaveLength(2)
-    slivers.forEach((sliver) => {
-      expect(sliver).toHaveAttribute('aria-hidden', 'true')
-      expect(sliver.closest('ul')).toBeNull()
-      expect(sliver.querySelector('img')).toHaveAttribute('alt', '')
+    const clones = carousel.querySelectorAll<HTMLElement>('[data-menu-clone="true"]')
+    expect(clones).toHaveLength(siteData.menuItems.length * 2)
+    clones.forEach((clone) => {
+      expect(clone).toHaveAttribute('aria-hidden', 'true')
+      expect(clone).toHaveAttribute('tabindex', '-1')
     })
   })
 

@@ -10,6 +10,12 @@ const mobileHeroModules = import.meta.glob<string>('./mobile-hero-polish.css', {
 
 const mobileHeroCss = Object.values(mobileHeroModules)[0] ?? ''
 
+function resolveMobileBackdropStart(viewportWidth: number) {
+  const preferred = -1.8 * 16 + 1.54 * viewportWidth
+
+  return Math.min(40 * 16, Math.max(29 * 16, preferred))
+}
+
 describe('mobile hero polish contract', () => {
   it('keeps the action stack above the backdrop with an opaque quiet CTA', () => {
     const mobileGuard = mobileHeroCss.match(
@@ -43,6 +49,12 @@ describe('mobile hero polish contract', () => {
     expect(mobileRules).toMatch(
       /\.hero-backdrop\s*\{[^}]*pointer-events:\s*none;/s,
     )
+    expect(mobileRules).toMatch(
+      /\.hero-backdrop\s*\{[^}]*top:\s*clamp\(29rem,\s*calc\(-1\.8rem\s*\+\s*154vw\),\s*40rem\);/s,
+    )
+    expect(resolveMobileBackdropStart(320)).toBe(464)
+    expect(resolveMobileBackdropStart(390)).toBeGreaterThan(559)
+    expect(resolveMobileBackdropStart(435)).toBe(640)
     expect(mobileRules).not.toMatch(/background(?:-color)?:\s*transparent/)
   })
 })

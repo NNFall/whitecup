@@ -17,6 +17,7 @@
   }
 
   .hero-backdrop {
+    top: clamp(29rem, calc(-1.8rem + 154vw), 40rem);
     pointer-events: none;
   }
 }

@@ -3,6 +3,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react'
 import App from '../App'
 import * as mediaRegistry from '../data/media'
 import { heroSceneLayerManifest } from '../data/media'
+import { siteData } from '../data/site'
 import globalCss from '../styles/global.css?raw'
 
 describe('White Cup story scenes', () => {
@@ -162,7 +163,7 @@ describe('White Cup story scenes', () => {
       'src',
       '/media/hero-skyline-exact.png',
     )
-    expect(menu.querySelectorAll('[data-scene-card-image]')).toHaveLength(5)
+    expect(menu.querySelectorAll('[data-menu-copy="middle"] [data-scene-card-image]')).toHaveLength(siteData.menuItems.length)
     expect(menu.innerHTML).not.toMatch(/ChatGPT Image|01_44_54 \(2\)|menu-clean-base\.png/i)
   })
 
@@ -522,7 +523,6 @@ describe('White Cup story scenes', () => {
     })
 
     const expectedLayers = [
-      ['.events-scene__backdrop', '/media/events-clean-base-1672w.webp', 'backdrop'],
       ['.events-scene__doodles', '/media/events-doodles-reference-edit-1672.webp', 'decoration'],
       ['.events-scene__chalkboard', '/media/events-chalkboard-reference-edit-480w.webp', 'decoration'],
       ['.events-scene__cake', '/media/events-cake-plate-clean-1200w.webp', 'foreground'],
@@ -543,12 +543,16 @@ describe('White Cup story scenes', () => {
     expect(
       within(events).getByRole('link', { name: /камерные события.*vk.*новой вкладке/i }),
     ).toHaveAttribute('href', 'https://vk.ru/white_cup')
-    expect(events.querySelector('.organic-photo')).not.toBeInTheDocument()
+    expect(events.querySelector('.events-scene__backdrop')).not.toBeInTheDocument()
+    const documentaryPhoto = events.querySelector('[data-media-id="interior-03"]')
+    expect(documentaryPhoto).toHaveAttribute('data-media-kind', 'documentary')
+    expect(documentaryPhoto?.querySelector('img')).toHaveAttribute('src', '/media/interior-03.webp')
+    expect(documentaryPhoto?.querySelector('img')).toHaveAttribute('alt')
     expect(events.innerHTML).not.toMatch(
       /events-cake-plate-reference-edit|events-coffee-cutout/i,
     )
     expect(events.innerHTML).not.toMatch(
-      /interior-03|ChatGPT Image|01_44_54 \(4\)|events-(?:clean-base|cake-plate-clean|coffee-clean|chalkboard-reference-edit|doodles-reference-edit)\.png/i,
+      /ChatGPT Image|01_44_54 \(4\)|events-(?:clean-base|cake-plate-clean|coffee-clean|chalkboard-reference-edit|doodles-reference-edit)\.png/i,
     )
   })
 
@@ -711,7 +715,6 @@ describe('White Cup story scenes', () => {
 
     const expectedLayers = [
       ['.locations-scene__map-image', '/media/locations-map-reference-1672w.webp', 'backdrop'],
-      ['.locations-scene__interior', '/media/locations-interior-base-1672w.webp', 'foreground'],
       ['.locations-scene__doodles', '/media/locations-doodles-reference-edit-1672.webp', 'decoration'],
     ] as const
 
@@ -745,9 +748,13 @@ describe('White Cup story scenes', () => {
     expect(routeLinks[0].querySelector('.location-card__icon--arrow')).toBeInTheDocument()
     expect(contactLinks[0].querySelector('.location-card__icon--chat')).toBeInTheDocument()
 
-    expect(locations.querySelector('.organic-photo')).not.toBeInTheDocument()
+    expect(locations.querySelector('.locations-scene__interior')).not.toBeInTheDocument()
+    const documentaryPhoto = locations.querySelector('[data-media-id="interior-02"]')
+    expect(documentaryPhoto).toHaveAttribute('data-media-kind', 'documentary')
+    expect(documentaryPhoto?.querySelector('img')).toHaveAttribute('src', '/media/interior-02.webp')
+    expect(documentaryPhoto?.querySelector('img')).toHaveAttribute('alt')
     expect(locations.innerHTML).not.toMatch(
-      /interior-0[24]|ChatGPT Image|01_44_55 \(5\)|locations-(?:clean-base|map-reference|interior-base|doodles-reference-edit|card-icons-reference-edit)\.png/i,
+      /ChatGPT Image|01_44_55 \(5\)|locations-(?:clean-base|map-reference|interior-base|doodles-reference-edit|card-icons-reference-edit)\.png/i,
     )
   })
 

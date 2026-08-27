@@ -7,9 +7,12 @@ const expectedCssImportOrder = [
   './styles/global.css',
   './styles/footer.css',
   './styles/live-typography.css',
-  './styles/menu-carousel-polish.css',
   './styles/scene-continuity-polish.css',
   './styles/mobile-hero-polish.css',
+  './styles/menu-carousel-polish.css',
+  './styles/navigation-polish.css',
+  './styles/scene-bridge-polish.css',
+  './styles/scene-layout-polish.css',
 ]
 
 describe('runtime style layer imports', () => {

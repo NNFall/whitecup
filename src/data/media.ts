@@ -341,6 +341,21 @@ const menuCardReferenceEdits = {
     'cheesecake',
     'Крупный кадр малинового чизкейка, восстановленный по композиции предоставленного menu-референса.',
   ),
+  oatmeal: defineMenuCardReferenceEdit(
+    'oatmeal',
+    'oatmeal',
+    'Отдельный editorial-кадр овсяной каши с ягодами, орехами и мёдом для расширения сезонной подборки меню.',
+  ),
+  shakshuka: defineMenuCardReferenceEdit(
+    'shakshuka',
+    'shakshuka',
+    'Отдельный editorial-кадр шакшуки с яйцами и тёплым хлебом для расширения завтраков.',
+  ),
+  croissant: defineMenuCardReferenceEdit(
+    'croissant',
+    'croissant',
+    'Отдельный editorial-кадр круассана с джемом и ягодами для расширения витрины.',
+  ),
 } as const
 
 export type MenuCardMediaId = keyof typeof menuCardReferenceEdits

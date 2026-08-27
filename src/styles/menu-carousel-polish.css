@@ -153,6 +153,91 @@
   }
 }
 
+/* Desktop windows shorter than the authored 16:9 scene must be allowed to
+   grow with the carousel copy. The legacy layer pins the scene to 100dvh and
+   clips its overflow, which can hide the footer or the menu hint as cards
+   become taller at 1536x720 and 1920x800. Keep the horizontal canvas clipped,
+   but let the paper runway own its natural vertical height. */
+@media (min-width: 1024px) and (min-height: 681px) and (max-height: 800px) {
+  .scene.menu-scene {
+    height: auto !important;
+    min-height: max(100dvh, 52rem);
+    max-height: none !important;
+    overflow-x: clip !important;
+    overflow-y: visible !important;
+  }
+
+  .menu-scene .section-frame__inner {
+    height: auto !important;
+    min-height: max(100dvh, 52rem);
+  }
+}
+
+/* At wide short desktop sizes the reference crop has a larger card band;
+   preserve enough paper runway for every card, control, and note. */
+@media (min-width: 1600px) and (min-height: 681px) and (max-height: 800px) {
+  .scene.menu-scene,
+  .menu-scene .section-frame__inner {
+    min-height: max(100dvh, 66rem);
+  }
+}
+
+/* Extra-short desktop windows use the compact runway already established by
+   the visual contract while retaining the same no-clipping behavior. */
+@media (min-width: 1024px) and (max-height: 680px) {
+  .scene.menu-scene {
+    height: auto !important;
+    min-height: max(100dvh, 48rem);
+    max-height: none !important;
+    overflow-x: clip !important;
+    overflow-y: visible !important;
+  }
+
+  .menu-scene .section-frame__inner {
+    height: auto !important;
+    min-height: max(100dvh, 48rem);
+  }
+}
+
+/* The standard desktop crop also needs a small runway between the compact
+   800px profile and the full 1080px reference. At 1648x912 the final note
+   sits just below the fixed 100dvh scene; this intrinsic band keeps it inside
+   the paper without changing the 1920x1080 composition. */
+@media (min-width: 1024px) and (min-height: 801px) and (max-height: 960px) {
+  .scene.menu-scene {
+    height: auto !important;
+    min-height: max(100dvh, 60rem);
+    max-height: none !important;
+    overflow-x: clip !important;
+    overflow-y: visible !important;
+  }
+
+  .menu-scene .section-frame__inner {
+    height: auto !important;
+    min-height: max(100dvh, 60rem);
+  }
+}
+
+/* Mobile descriptions stay live copy, not a two-line crop. The card body is
+   allowed to size itself from its heading and full description, so long menu
+   names remain readable at both 390px and 320px widths. */
+@media (max-width: 720px) {
+  .scene.menu-scene .menu-card article {
+    height: auto;
+  }
+
+  .scene.menu-scene .menu-card__body {
+    height: auto;
+    min-height: 0 !important;
+  }
+
+  .scene.menu-scene .menu-card__description {
+    display: block;
+    overflow: visible !important;
+    -webkit-line-clamp: unset;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .scene.menu-scene .menu-carousel__viewport {
     scroll-behavior: auto;

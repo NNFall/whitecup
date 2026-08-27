@@ -90,7 +90,7 @@ describe('White Cup site data', () => {
     expect(manifest?.backdrop.srcSet?.split(',')).toHaveLength(2)
 
     const cards = Object.values(manifest?.cards ?? {})
-    expect(cards).toHaveLength(5)
+    expect(cards).toHaveLength(siteData.menuItems.length)
     expect(cards.every((entry) => entry.asset.kind === 'decorative')).toBe(true)
     expect(cards.every((entry) => entry.asset.provenanceKind === 'decorative-reference-edit')).toBe(true)
     expect(cards.every((entry) => entry.src.endsWith('-768.webp'))).toBe(true)

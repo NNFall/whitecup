@@ -6,9 +6,12 @@ import './styles/tokens.css'
 import './styles/global.css'
 import './styles/footer.css'
 import './styles/live-typography.css'
-import './styles/menu-carousel-polish.css'
 import './styles/scene-continuity-polish.css'
 import './styles/mobile-hero-polish.css'
+import './styles/menu-carousel-polish.css'
+import './styles/navigation-polish.css'
+import './styles/scene-bridge-polish.css'
+import './styles/scene-layout-polish.css'
 
 const rootElement = document.getElementById('root')
 

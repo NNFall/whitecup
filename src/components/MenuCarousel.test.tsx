@@ -3,6 +3,8 @@ import { act, fireEvent, render, screen, within } from '@testing-library/react'
 import { MenuCarousel } from './MenuCarousel'
 import { siteData } from '../data/site'
 
+const legacyFiveItems = siteData.menuItems.slice(0, 5)
+
 describe('MenuCarousel', () => {
   it('exposes a labelled carousel with every item and a safe price fallback', () => {
     render(<MenuCarousel items={siteData.menuItems} />)
@@ -10,21 +12,15 @@ describe('MenuCarousel', () => {
     const region = screen.getByRole('region', { name: /избранное меню white cup/i })
     expect(region).toBeInTheDocument()
     const cards = within(region).getAllByRole('listitem')
-    expect(cards).toHaveLength(5)
+    expect(cards).toHaveLength(siteData.menuItems.length)
     expect(
       cards.map((card) => within(card).getByRole('heading').textContent),
-    ).toEqual([
-      'Капучино',
-      'Бейгл с лососем',
-      'Вафля с ягодами',
-      'Сырники',
-      'Малиновый чизкейк',
-    ])
+    ).toEqual(siteData.menuItems.map((item) => item.name))
 
     const decorativePhotos = region.querySelectorAll<HTMLImageElement>(
-      'img[data-scene-card-image]',
+      '[data-menu-copy="middle"] img[data-scene-card-image]',
     )
-    expect(decorativePhotos).toHaveLength(5)
+    expect(decorativePhotos).toHaveLength(siteData.menuItems.length)
     decorativePhotos.forEach((photo) => {
       expect(photo).toHaveAttribute('alt', '')
       expect(photo).toHaveAttribute('aria-hidden', 'true')
@@ -32,12 +28,17 @@ describe('MenuCarousel', () => {
       expect(photo.getAttribute('srcset')?.split(',')).toHaveLength(2)
     })
 
-    expect(within(region).getByText('270–320 ₽')).toBeInTheDocument()
-    expect(within(region).getAllByText(/актуальная цена — в меню/i)).toHaveLength(siteData.menuItems.length - 1)
+    expect(within(cards[0]).getByText('270–320 ₽')).toBeInTheDocument()
+    expect(region.querySelectorAll('[data-menu-copy="middle"] .menu-card__facts'))
+      .toHaveLength(siteData.menuItems.length)
+    expect(
+      [...region.querySelectorAll('[data-menu-copy="middle"] .menu-card__facts')]
+        .filter((facts) => /актуальная цена — в меню/i.test(facts.textContent ?? '')),
+    ).toHaveLength(siteData.menuItems.length - 1)
   })
 
   it('uses the viewport native scroll offset for the next card', () => {
-    render(<MenuCarousel items={siteData.menuItems} />)
+    render(<MenuCarousel items={legacyFiveItems} />)
 
     const region = screen.getByRole('region', { name: /избранное меню white cup/i })
     const viewport = within(region).getByTestId('menu-carousel-viewport')
@@ -58,7 +59,7 @@ describe('MenuCarousel', () => {
   })
 
   it('moves a finite rendered viewport when the next control is clicked', () => {
-    render(<MenuCarousel items={siteData.menuItems} />)
+    render(<MenuCarousel items={legacyFiveItems} />)
 
     const region = screen.getByRole('region', { name: /избранное меню white cup/i })
     const viewport = within(region).getByTestId('menu-carousel-viewport')
@@ -98,7 +99,7 @@ describe('MenuCarousel', () => {
   })
 
   it('keeps a later card at its exact offset when the current native range is too short', () => {
-    render(<MenuCarousel items={siteData.menuItems} />)
+    render(<MenuCarousel items={legacyFiveItems} />)
 
     const region = screen.getByRole('region', { name: /избранное меню white cup/i })
     const viewport = within(region).getByTestId('menu-carousel-viewport')
@@ -125,7 +126,7 @@ describe('MenuCarousel', () => {
   })
 
   it('uses the exact final card offset when trailing native range is available', () => {
-    render(<MenuCarousel items={siteData.menuItems} />)
+    render(<MenuCarousel items={legacyFiveItems} />)
 
     const region = screen.getByRole('region', { name: /избранное меню white cup/i })
     const viewport = within(region).getByTestId('menu-carousel-viewport')
@@ -161,11 +162,11 @@ describe('MenuCarousel', () => {
 
     expect(scrollTo).toHaveBeenCalledWith({ left: lastCardOffset, behavior: 'smooth' })
     expect(dots.at(-1)).toHaveAttribute('aria-current', 'true')
-    expect(next).toBeDisabled()
+    expect(next).not.toBeDisabled()
   })
 
   it('syncs the active dot to the nearest card after native scrolling', () => {
-    render(<MenuCarousel items={siteData.menuItems} />)
+    render(<MenuCarousel items={legacyFiveItems} />)
 
     const region = screen.getByRole('region', { name: /избранное меню white cup/i })
     const viewport = within(region).getByTestId('menu-carousel-viewport')
@@ -202,7 +203,7 @@ describe('MenuCarousel', () => {
     })
 
     try {
-      render(<MenuCarousel items={siteData.menuItems} />)
+      render(<MenuCarousel items={legacyFiveItems} />)
 
       const region = screen.getByRole('region', { name: /избранное меню white cup/i })
       const viewport = within(region).getByTestId('menu-carousel-viewport')
@@ -232,7 +233,7 @@ describe('MenuCarousel', () => {
   })
 
   it('keeps a non-adjacent dot active through intermediate native scroll events until scrollend', () => {
-    render(<MenuCarousel items={siteData.menuItems} />)
+    render(<MenuCarousel items={legacyFiveItems} />)
 
     const region = screen.getByRole('region', { name: /избранное меню white cup/i })
     const viewport = within(region).getByTestId('menu-carousel-viewport')
@@ -271,7 +272,7 @@ describe('MenuCarousel', () => {
   })
 
   it('cancels a pending programmatic target when native pointer scrolling begins', () => {
-    render(<MenuCarousel items={siteData.menuItems} />)
+    render(<MenuCarousel items={legacyFiveItems} />)
 
     const region = screen.getByRole('region', { name: /избранное меню white cup/i })
     const viewport = within(region).getByTestId('menu-carousel-viewport')
@@ -307,7 +308,7 @@ describe('MenuCarousel', () => {
     vi.useFakeTimers()
 
     try {
-      render(<MenuCarousel items={siteData.menuItems} />)
+      render(<MenuCarousel items={legacyFiveItems} />)
 
       const region = screen.getByRole('region', { name: /избранное меню white cup/i })
       const viewport = within(region).getByTestId('menu-carousel-viewport')
@@ -365,7 +366,7 @@ describe('MenuCarousel', () => {
     })
 
     try {
-      const { unmount } = render(<MenuCarousel items={siteData.menuItems} />)
+      const { unmount } = render(<MenuCarousel items={legacyFiveItems} />)
 
       const region = screen.getByRole('region', { name: /избранное меню white cup/i })
       const viewport = within(region).getByTestId('menu-carousel-viewport')
@@ -407,7 +408,7 @@ describe('MenuCarousel', () => {
   })
 
   it('changes the active dot with keyboard arrows and can reach the final card', () => {
-    render(<MenuCarousel items={siteData.menuItems} />)
+    render(<MenuCarousel items={legacyFiveItems} />)
 
     const region = screen.getByRole('region', { name: /избранное меню white cup/i })
     const viewport = within(region).getByTestId('menu-carousel-viewport')
@@ -418,16 +419,16 @@ describe('MenuCarousel', () => {
     fireEvent.keyDown(viewport, { key: 'ArrowRight' })
     expect(dots[1]).toHaveAttribute('aria-current', 'true')
 
-    for (let index = 1; index < siteData.menuItems.length; index += 1) {
+    for (let index = 1; index < legacyFiveItems.length - 1; index += 1) {
       fireEvent.click(next)
     }
 
     expect(dots.at(-1)).toHaveAttribute('aria-current', 'true')
-    expect(next).toBeDisabled()
+    expect(next).not.toBeDisabled()
   })
 
   it('supports previous/next controls and keeps every control keyboard reachable', () => {
-    render(<MenuCarousel items={siteData.menuItems} />)
+    render(<MenuCarousel items={legacyFiveItems} />)
 
     const region = screen.getByRole('region', { name: /избранное меню white cup/i })
     const previous = within(region).getByRole('button', { name: /предыдущая позиция/i })
@@ -437,16 +438,16 @@ describe('MenuCarousel', () => {
     expect(next).toHaveClass('menu-carousel__control')
     expect(previous).toHaveAttribute('data-touch-target', '44')
     expect(next).toHaveAttribute('data-touch-target', '44')
-    expect(previous).toBeDisabled()
+    expect(previous).not.toBeDisabled()
 
     fireEvent.click(next)
     expect(previous).not.toBeDisabled()
     fireEvent.click(previous)
-    expect(previous).toBeDisabled()
+    expect(previous).not.toBeDisabled()
   })
 
   it('keeps the final item active at the real desktop maximum scroll boundary', () => {
-    render(<MenuCarousel items={siteData.menuItems} />)
+    render(<MenuCarousel items={legacyFiveItems} />)
 
     const region = screen.getByRole('region', { name: /избранное меню white cup/i })
     const viewport = within(region).getByTestId('menu-carousel-viewport')
@@ -470,12 +471,12 @@ describe('MenuCarousel', () => {
     fireEvent.scroll(viewport)
 
     expect(dots.at(-1)).toHaveAttribute('aria-current', 'true')
-    expect(next).toBeDisabled()
+    expect(next).not.toBeDisabled()
 
     fireEvent.click(dots.at(-1) as HTMLButtonElement)
     fireEvent.scroll(viewport)
 
     expect(dots.at(-1)).toHaveAttribute('aria-current', 'true')
-    expect(next).toBeDisabled()
+    expect(next).not.toBeDisabled()
   })
 })
