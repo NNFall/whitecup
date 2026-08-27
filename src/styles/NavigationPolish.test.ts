@@ -9,7 +9,7 @@ const navigationModules = import.meta.glob<string>('./navigation-polish*.css', {
   query: '?raw',
 })
 
-const navigationCss = Object.values(navigationModules)[0] ?? ''
+const navigationCss = (Object.values(navigationModules)[0] ?? '').replace(/\r\n?/g, '\n')
 
 const setHash = (hash: string) => {
   window.history.replaceState(null, '', hash || '/')
