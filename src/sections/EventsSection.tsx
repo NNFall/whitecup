@@ -22,7 +22,10 @@ export function EventsSection() {
             Завтраки, встречи
           </span>{' '}
           <span className="events-scene__title-line events-scene__title-line--second">
-            и тёплые <span className="events-scene__accent">события</span>
+            <span className="events-scene__word events-scene__word--warm">и тёплые</span>{' '}
+            <span className="events-scene__word events-scene__word--events events-scene__accent">
+              события
+            </span>
           </span>
         </span>
       }

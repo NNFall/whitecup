@@ -22,4 +22,33 @@ describe('live title runtime contract', () => {
     expect(container.querySelectorAll('[class*="title-reference"]')).toHaveLength(0)
     expect(container.querySelectorAll('.section-frame__title-reference, .hero-scene__title-reference')).toHaveLength(0)
   })
+
+  it('keeps every expressive phrase as selectable text inside the one semantic heading', () => {
+    const { container } = render(<App />)
+
+    const phraseContracts = [
+      ['#hero', '.hero-scene__word--coffee', 'кофе'],
+      ['#hero', '.hero-scene__word--own', 'и свой'],
+      ['#hero', '.hero-scene__word--vibe', 'вайб в'],
+      ['#hero', '.hero-scene__brand', 'White Cup'],
+      ['#menu', '.menu-scene__title-initial', 'З'],
+      ['#menu', '.menu-scene__word--look', 'заглянуть'],
+      ['#about', '.about-scene__word--want', 'хочется'],
+      ['#about', '.about-scene__word--return', 'возвращаться'],
+      ['#visit', '.visit-scene__word--rhythm', 'ритма'],
+      ['#events', '.events-scene__word--warm', 'и тёплые'],
+      ['#events', '.events-scene__word--events', 'события'],
+      ['#locations', '.locations-scene__word--find', 'найти'],
+    ] as const
+
+    for (const [sceneSelector, phraseSelector, text] of phraseContracts) {
+      const scene = container.querySelector(sceneSelector)
+      const phrase = scene?.querySelector(phraseSelector)
+
+      expect(phrase).toBeInstanceOf(HTMLElement)
+      expect(phrase).toHaveTextContent(text)
+      expect(phrase).not.toHaveAttribute('aria-hidden', 'true')
+      expect(phrase?.querySelector('img, picture')).not.toBeInTheDocument()
+    }
+  })
 })

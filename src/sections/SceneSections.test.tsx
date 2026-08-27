@@ -194,10 +194,10 @@ describe('White Cup story scenes', () => {
       /\.menu-scene\s+\.menu-carousel__footer,\s*\.menu-scene\s+\.menu-carousel__note\s*\{[\s\S]*position:\s*relative;[\s\S]*z-index:\s*2;/,
     )
     expect(globalCss).toMatch(
-      /\.menu-scene\s+\.menu-carousel__note\s*\{[\s\S]*transform:\s*translateY\(clamp\(-4\.75rem,\s*-2\.55vw,\s*-1\.9rem\)\);/,
+      /@media\s*\(min-width:\s*1024px\)[\s\S]*\.menu-scene\s+\.menu-carousel__note\s*\{[\s\S]*--menu-skyline-gap:\s*clamp\(0\.35rem,\s*0\.4vw,\s*0\.55rem\);[\s\S]*transform:\s*translateY\(calc\(clamp\(-5\.25rem,\s*-2\.8vw,\s*-2\.1rem\)\s*-\s*var\(--menu-skyline-gap\)\)\);/,
     )
     expect(globalCss).toMatch(
-      /\.menu-scene\s+\.menu-carousel__footer\s*\{[^}]*transform:\s*translateY\(clamp\(-4\.75rem,\s*-2\.55vw,\s*-1\.9rem\)\);/,
+      /@media\s*\(min-width:\s*1024px\)[\s\S]*\.menu-scene\s+\.menu-carousel__footer\s*\{[\s\S]*transform:\s*translateY\(calc\(clamp\(-5\.25rem,\s*-2\.8vw,\s*-2\.1rem\)\s*-\s*var\(--menu-skyline-gap\)\)\);/,
     )
   })
 

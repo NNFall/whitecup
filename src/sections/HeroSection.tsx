@@ -55,10 +55,14 @@ export function HeroSection() {
                 Завтраки,
               </span>{' '}
               <span className="hero-scene__title-line hero-scene__title-line--second">
-                <span className="hero-scene__accent">кофе</span> и свой
+                <span className="hero-scene__word hero-scene__word--coffee hero-scene__accent">
+                  кофе
+                </span>{' '}
+                <span className="hero-scene__word hero-scene__word--own">и свой</span>
               </span>{' '}
               <span className="hero-scene__title-line hero-scene__title-line--third hero-scene__last-line">
-                вайб в <em>White Cup</em>
+                <span className="hero-scene__word hero-scene__word--vibe">вайб в</span>{' '}
+                <em className="hero-scene__brand">White Cup</em>
                 <span className="hero-scene__heart" aria-hidden="true">
                   ♡
                 </span>

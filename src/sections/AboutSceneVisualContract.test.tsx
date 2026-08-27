@@ -2,6 +2,7 @@ import { render, screen, within } from '@testing-library/react'
 
 import App from '../App'
 import globalCss from '../styles/global.css?raw'
+import liveTypographyCss from '../styles/live-typography.css?raw'
 
 describe('About scene reference geometry', () => {
   it('locks the measured brand line, reference underline, and desktop paragraph rhythm', () => {
@@ -14,6 +15,15 @@ describe('About scene reference geometry', () => {
 
     expect(heading.querySelector('.about-scene__title-line--brand')).toBeInTheDocument()
     expect(heading.querySelector('.about-scene__return')).toHaveTextContent('возвращаться')
+    expect(heading.querySelector('.about-scene__word--want')).toHaveTextContent('хочется')
+    expect(heading.querySelector('.about-scene__word--return')).toHaveTextContent('возвращаться')
+
+    expect(liveTypographyCss).toMatch(
+      /\.about-scene__word--return\s*\{[^}]*font-family:\s*var\(--font-script\);/s,
+    )
+    expect(liveTypographyCss).toMatch(
+      /@media\s*\(min-width:\s*1024px\)[\s\S]*?\.about-scene__word--want\s*\{[^}]*transform:\s*rotate\(-0\.55deg\);/s,
+    )
 
     expect(globalCss).toMatch(
       /\.about-scene__title-line--brand\s*\{[^}]*transform:\s*translateY\(1\.29dvh\) rotate\(-0\.7deg\) scale\(1\.07,\s*1\.38\);/,

@@ -67,6 +67,45 @@ describe('live typography contracts', () => {
     )
   })
 
+  it('gives every phrase a bounded desktop rhythm and removes transforms on mobile', () => {
+    expect(liveTypographyCss).toMatch(
+      /\.hero-scene__brand,\s*\.about-scene__title-line--brand,\s*\.about-scene__word--return\s*\{[^}]*font-family:\s*var\(--font-script\);[^}]*font-style:\s*normal;/s,
+    )
+    expect(liveTypographyCss).toMatch(
+      /@media\s*\(min-width:\s*1024px\)[\s\S]*?\.hero-scene h1\s*\{[^}]*padding-bottom:\s*clamp\(1\.25rem,\s*1\.4vw,\s*1\.5rem\);/s,
+    )
+
+    const desktopPhraseTransforms = [
+      ['hero-scene__word--coffee', 'rotate\\(-0\\.6deg\\) translateY\\(-0\\.02em\\)'],
+      ['hero-scene__word--own', 'rotate\\(0\\.35deg\\)'],
+      ['hero-scene__word--vibe', 'rotate\\(-0\\.3deg\\)'],
+      ['hero-scene__brand', 'rotate\\(-1\\.1deg\\) translateY\\(0\\.03em\\)'],
+      ['menu-scene__title-initial', 'rotate\\(-0\\.7deg\\)'],
+      ['menu-scene__word--look', 'rotate\\(-0\\.75deg\\)'],
+      ['about-scene__word--want', 'rotate\\(-0\\.55deg\\)'],
+      ['about-scene__word--return', 'rotate\\(-1deg\\)'],
+      ['visit-scene__word--rhythm', 'rotate\\(-0\\.7deg\\)'],
+      ['events-scene__word--warm', 'rotate\\(0\\.4deg\\)'],
+      ['locations-scene__word--find', 'rotate\\(-0\\.7deg\\)'],
+    ] as const
+
+    for (const [selector, transform] of desktopPhraseTransforms) {
+      expect(liveTypographyCss).toMatch(
+        new RegExp(
+          `@media\\s*\\(min-width:\\s*1024px\\)[\\s\\S]*?\\.${selector}\\s*\\{[^}]*transform:\\s*${transform};`,
+          's',
+        ),
+      )
+    }
+
+    expect(liveTypographyCss).toMatch(
+      /@media\s*\(min-width:\s*1024px\)[\s\S]*?\.menu-scene__title-initial\s*\{[^}]*font-size:\s*1\.12em;/s,
+    )
+    expect(liveTypographyCss).toMatch(
+      /@media\s*\(max-width:\s*1023px\)[\s\S]*?\.hero-scene__word--coffee,[\s\S]*?\.locations-scene__word--find\s*\{[^}]*transform:\s*none;/s,
+    )
+  })
+
   it('removes title-image runtime paths from every scene source', () => {
     expect(runtimeSceneSources.join('\n')).not.toMatch(
       /ReferenceTitleLayer|title-reference|TitleReferenceExtract|TitleReference|heroUnderlineReferenceExtract/i,

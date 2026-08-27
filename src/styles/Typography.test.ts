@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import indexHtml from '../../index.html?raw'
+import fontLicenses from '../../docs/font-licenses.md?raw'
 import globalCss from './global.css?raw'
 import liveTypographyCss from './live-typography.css?raw'
 import tokensCss from './tokens.css?raw'
@@ -72,5 +73,12 @@ describe('deterministic local typography', () => {
     expect(globalCss).toMatch(
       /\.menu-scene\s+\.menu-card__price\s*\{[^}]*font-family:\s*var\(--font-body\);/,
     )
+  })
+
+  it('records why the verified Neucha display face wins the Pangolin comparison', () => {
+    expect(fontLicenses).toMatch(
+      /White Cup Display[^]*Neucha[^]*(?:Pangolin[^]*(?:rejected|не выбран)|(?:rejected|не выбран)[^]*Pangolin)/i,
+    )
+    expect(fontLicenses).toMatch(/Pangolin[^]*(?:wider|шире)[^]*(?:playful|игрив)/i)
   })
 })

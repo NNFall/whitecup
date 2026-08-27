@@ -959,11 +959,13 @@ h2 {
   }
 
   .menu-scene .menu-carousel__note {
-    transform: translateY(clamp(-4.75rem, -2.55vw, -1.9rem));
+    --menu-skyline-gap: clamp(0.35rem, 0.4vw, 0.55rem);
+    transform: translateY(calc(clamp(-5.25rem, -2.8vw, -2.1rem) - var(--menu-skyline-gap)));
   }
 
   .menu-scene .menu-carousel__footer {
-    transform: translateY(clamp(-4.75rem, -2.55vw, -1.9rem));
+    --menu-skyline-gap: clamp(0.35rem, 0.4vw, 0.55rem);
+    transform: translateY(calc(clamp(-5.25rem, -2.8vw, -2.1rem) - var(--menu-skyline-gap)));
   }
 }
 

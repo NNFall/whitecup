@@ -3,6 +3,7 @@ import { render, screen, within } from '@testing-library/react'
 import { MenuSection } from './MenuSection'
 import { siteData } from '../data/site'
 import globalCss from '../styles/global.css?raw'
+import liveTypographyCss from '../styles/live-typography.css?raw'
 
 describe('Menu reference visual contract', () => {
   it('exposes the menu heading as one continuous accessible name', () => {
@@ -18,11 +19,28 @@ describe('Menu reference visual contract', () => {
     // name instead of being a decorative raster layer hidden from assistive
     // technology.
     expect(heading.querySelector('.menu-scene__title')).not.toHaveAttribute('aria-hidden')
+    expect(heading.querySelector('.menu-scene__word--look')).toHaveTextContent('заглянуть')
+    expect(heading.querySelector('.menu-scene__mobile-title-break')).toHaveAttribute('aria-hidden', 'true')
     expect(heading.querySelector('.sr-only')).not.toBeInTheDocument()
     expect(heading.querySelector('.menu-scene__title')).not.toHaveAttribute('aria-label')
     expect(menu).toHaveAccessibleName('Завтраки, ради которых хочется заглянуть')
     expect(globalCss).toMatch(
       /\.sr-only\s*\{[^}]*position:\s*absolute;[^}]*width:\s*1px;[^}]*height:\s*1px;[^}]*clip-path:\s*inset\(50%\);/s,
+    )
+  })
+
+  it('holds the 320px title to three authored lines with a positive flow gap', () => {
+    expect(liveTypographyCss).toMatch(
+      /\.menu-scene__mobile-title-break\s*\{[^}]*display:\s*none;/s,
+    )
+    expect(liveTypographyCss).toMatch(
+      /@media\s*\(max-width:\s*1023px\)[\s\S]*?\.menu-scene__mobile-title-break\s*\{[^}]*display:\s*block;/s,
+    )
+    expect(liveTypographyCss).toMatch(
+      /@media\s*\(max-width:\s*380px\)[\s\S]*?\.menu-scene \.section-frame__heading h2\s*\{[^}]*font-size:\s*clamp\(2\.45rem,\s*12vw,\s*2\.7rem\);[^}]*line-height:\s*0\.9;/s,
+    )
+    expect(liveTypographyCss).toMatch(
+      /@media\s*\(max-width:\s*380px\)[\s\S]*?\.menu-scene \.section-frame__heading\s*\{[^}]*margin-bottom:\s*clamp\(1\.1rem,\s*5vw,\s*1\.4rem\);/s,
     )
   })
 

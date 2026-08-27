@@ -19,7 +19,8 @@ polish: стабильную шапку, мягкие CSS-мосты, восьм
 
 ## Автоматический gate (27 августа 2026)
 
-- [x] `npm.cmd test -- --run` — **31 файл / 205 тестов**, все прошли.
+- [x] `npm.cmd test -- --run` — **31 файл / 210 тестов**, все прошли (включая
+  phrase-level heading contracts).
 - [x] `npm.cmd run build -- --base=/site/whitecup/` — **PASS**; проверены 3
   локальных шрифта, Vite 8.2.2, 44 модуля.
 - [x] `git diff --check` — **PASS**; остаются только стандартные предупреждения
@@ -48,8 +49,8 @@ polish: стабильную шапку, мягкие CSS-мосты, восьм
   размерах; console errors/warnings — `[]`.
 - [x] Menu skyline на desktop сохраняет natural ratio 1200:242 (`object-fit:
   contain`), получает только мягкое grayscale/brightness-приглушение для
-  читаемости, не пересекает footer-note и pagination на 1920×1080, 1648×912 и
-  1024×720; mobile-слой остаётся в normal flow.
+  читаемости и отделён от footer-note явным gap (IAB: 11.8px на 1920×1080,
+  22.6px на 1648×912, 93.8px на 1024×720); mobile-слой остаётся в normal flow.
 - [x] Bridge paper проверен как neutral ivory/paper gradient с petrol edge;
   прежний красный/orange wash удалён из базового слоя, orange оставлен только
   локальным маркером.
@@ -63,6 +64,12 @@ polish: стабильную шапку, мягкие CSS-мосты, восьм
   не зажаты line-clamp.
 - [x] Reduced-motion правила отключают transitions/animations для nav, bridges,
   reveals и carousel.
+- [x] Heading typography pass: baseline/after кадры сохранены в
+  `docs/evidence/headings-before/` и `docs/evidence/headings-after-*.png`;
+  phrase-level spans, Neucha display, Marck Script accents и mobile reset
+  проверены focused/full тестами. Hero/menu/about after-кадры сняты только в
+  Codex In-app Browser на 1920×1080; hero/menu/about mobile кадры — на
+  390×844, дополнительная menu-проверка — на 320×568.
 - [x] Намеренный overflow ограничен About coffee-cutout внутри frame и
   внутренним native-scroll Menu; горизонтального overflow страницы нет.
 
@@ -104,15 +111,16 @@ Supporting frames в `docs/evidence/layered-reconstruction/` остаются л
 - [x] Production build с base `/site/whitecup/` распакован в `/root/whitecup`;
   `nginx -t` успешен и reload выполнен. Nginx вывел только существующие
   duplicate-server-name warnings, без ошибок конфигурации.
-- [x] Public smoke: `https://kaigo.space/site/whitecup/` отвечает HTTP 200 и
-  отдаёт свежие `/site/whitecup/assets/index-chfUBDWf.js` и
-  `/site/whitecup/assets/index-BnM08peE.css`; обе ссылки отвечают HTTP 200.
+- [x] Public smoke (heading-refinement release):
+  `https://kaigo.space/site/whitecup/` отвечает HTTP 200 и отдаёт
+  `/site/whitecup/assets/index-DeOGeb5K.js` и
+  `/site/whitecup/assets/index-PbAPXVif.css`; обе ссылки отвечают HTTP 200.
 - [x] Опубликованный URL повторно проверен только в Codex IAB: 1920×1080 —
-  full-bleed rail x=0/y=0, h=64, bridge 115.2px/radius 28.8px; 390×844 —
-  bridge 50.7px; 320×568 — bridge 40px. На всех трёх размерах overflow `0`,
-  один `h1`, CTA помещаются, console errors/warnings — `[]`.
+  full-bleed rail x=0/y=0, h=64, display-фразы и script-акцент загружены;
+  390×844 — live-heading, обе CTA и mobile reset. На обоих размерах overflow
+  `0`, один `h1`, console errors/warnings — `[]`.
 - [x] Публичные узкие desktop viewport 1024×720 и 1100×720 проверены в IAB:
   Events/Locations internal overflow `0`, document overflow `0`.
 - [x] GitHub/remote SHA проверен после push и совпал с локальным release HEAD
-  на момент проверки; точный текущий SHA также выведен в финальном handoff.
+  на момент проверки; точный SHA передан в финальном handoff.
   Локальный сервер для повторной проверки — `http://127.0.0.1:4175/`.

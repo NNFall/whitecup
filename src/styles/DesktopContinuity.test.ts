@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import footerCss from './footer.css?raw'
 import globalCss from './global.css?raw'
+import liveTypographyCss from './live-typography.css?raw'
 
 function extractCssBlock(css: string, atRule: string, marker: string) {
   let cursor = 0
@@ -152,6 +153,15 @@ describe('desktop continuity guards', () => {
     )
     expect(hiddenTitleRules).toEqual([])
     expect(rasterTitleRules).toEqual([])
+  })
+
+  it('reserves intrinsic Hero flow below the script brand without absolute phrase positioning', () => {
+    expect(liveTypographyCss).toMatch(
+      /@media\s*\(min-width:\s*1024px\)[\s\S]*?\.hero-scene h1\s*\{[^}]*padding-bottom:\s*clamp\(1\.25rem,\s*1\.4vw,\s*1\.5rem\);/s,
+    )
+    expect(liveTypographyCss).not.toMatch(
+      /(?:hero|menu|about|visit|events|locations)-scene__(?:word|brand)[^{]*\{[^}]*position:\s*absolute;/s,
+    )
   })
 
   it('moves live title bands clear of copy on short desktop heights', () => {

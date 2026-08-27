@@ -66,6 +66,10 @@ describe('early-scene reference convergence', () => {
     expect(lines[0]).toHaveClass('hero-scene__title-line--first')
     expect(lines[1]).toHaveClass('hero-scene__title-line--second')
     expect(lines[2]).toHaveClass('hero-scene__title-line--third')
+    expect(heading.querySelector('.hero-scene__word--coffee')).toHaveTextContent('кофе')
+    expect(heading.querySelector('.hero-scene__word--own')).toHaveTextContent('и свой')
+    expect(heading.querySelector('.hero-scene__word--vibe')).toHaveTextContent('вайб в')
+    expect(heading.querySelector('.hero-scene__brand')).toHaveTextContent('White Cup')
 
     expect(heading).toHaveTextContent('Завтраки, кофе и свой вайб в White Cup')
     expect(hero.querySelector('[data-conditional-layer*="title-reference"]')).not.toBeInTheDocument()
@@ -120,6 +124,8 @@ describe('early-scene reference convergence', () => {
     expect(heading.querySelector('.about-scene__title-line--brand')).toBeInTheDocument()
     expect(heading.querySelector('.about-scene__title-line--place')).toBeInTheDocument()
     expect(heading.querySelector('.about-scene__title-line--return')).toBeInTheDocument()
+    expect(heading.querySelector('.about-scene__word--want')).toHaveTextContent('хочется')
+    expect(heading.querySelector('.about-scene__word--return')).toHaveTextContent('возвращаться')
 
     expect(globalCss).toMatch(
       /\.about-scene__title-line--brand\s*\{[^}]*transform:\s*translateY\(1\.29dvh\) rotate\(-0\.7deg\) scale\(1\.07,\s*1\.38\);/,
@@ -214,6 +220,7 @@ describe('early-scene reference convergence', () => {
 
     expect(heading.querySelector('.visit-scene__title-line--first')).toBeInTheDocument()
     expect(heading.querySelector('.visit-scene__title-line--second')).toBeInTheDocument()
+    expect(heading.querySelector('.visit-scene__word--rhythm')).toHaveTextContent('ритма')
     expect(globalCss).toMatch(
       /\.visit-scene__title-line--first\s*\{[^}]*transform:\s*translateY\(-0\.75dvh\) scale\(1\.34,\s*1\.25\);/,
     )

@@ -12,10 +12,15 @@ export function MenuSection() {
       title={
         <span className="menu-scene__title">
           <span className="menu-scene__title-line">
-            <span className="menu-scene__title-initial">З</span>автраки, ради которых
+            <span className="menu-scene__title-initial">З</span>автраки,
+            <br className="menu-scene__mobile-title-break" aria-hidden="true" />{' '}
+            ради которых
           </span>{' '}
           <span className="menu-scene__title-line">
-            хочется <span className="menu-scene__accent">заглянуть</span>
+            хочется{' '}
+            <span className="menu-scene__word menu-scene__word--look menu-scene__accent">
+              заглянуть
+            </span>
           </span>
         </span>
       }

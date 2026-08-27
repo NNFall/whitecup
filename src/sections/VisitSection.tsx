@@ -24,7 +24,10 @@ export function VisitSection() {
         <>
           <span className="visit-scene__title-line visit-scene__title-line--first">У нас есть место</span>{' '}
           <span className="visit-scene__title-line visit-scene__title-line--second">
-            для вашего <span className="visit-scene__accent">ритма</span>
+            для вашего{' '}
+            <span className="visit-scene__word visit-scene__word--rhythm visit-scene__accent">
+              ритма
+            </span>
           </span>
         </>
       }

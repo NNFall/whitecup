@@ -56,8 +56,29 @@
   white-space: nowrap;
 }
 
-.hero-scene h1 em {
+.hero-scene__brand,
+.about-scene__title-line--brand,
+.about-scene__word--return {
   font-family: var(--font-script);
+  font-style: normal;
+  font-weight: 400;
+}
+
+.hero-scene__word,
+.hero-scene__brand,
+.menu-scene__title-initial,
+.menu-scene__word,
+.about-scene__word,
+.visit-scene__word,
+.events-scene__word,
+.locations-scene__word {
+  display: inline-block;
+  transform: none;
+  transform-origin: center bottom;
+}
+
+.menu-scene__mobile-title-break {
+  display: none;
 }
 
 /* This element is a flow-sized hook for a CSS stroke, not an image. */
@@ -92,7 +113,11 @@
   font-family: var(--font-script);
   font-size: 0.95em;
   letter-spacing: -0.04em;
-  transform: rotate(-0.7deg);
+  transform: none;
+}
+
+.about-scene__word--return {
+  letter-spacing: -0.035em;
 }
 
 .about-scene__title-line--place,
@@ -112,6 +137,7 @@
     height: auto;
     margin: 0;
     padding: 0;
+    padding-bottom: clamp(1.25rem, 1.4vw, 1.5rem);
     overflow: visible;
     clip: auto;
     clip-path: none;
@@ -194,6 +220,63 @@
     left: auto;
     transform: none;
   }
+
+  .hero-scene__word--coffee {
+    transform: rotate(-0.6deg) translateY(-0.02em);
+  }
+
+  .hero-scene__word--own {
+    transform: rotate(0.35deg);
+  }
+
+  .hero-scene__word--vibe {
+    transform: rotate(-0.3deg);
+  }
+
+  .hero-scene__brand {
+    font-size: 1.06em;
+    letter-spacing: -0.045em;
+    transform: rotate(-1.1deg) translateY(0.03em);
+  }
+
+  .menu-scene__title-initial {
+    font-size: 1.12em;
+    line-height: 0.8;
+    transform: rotate(-0.7deg);
+  }
+
+  .menu-scene__word--look {
+    transform: rotate(-0.75deg);
+  }
+
+  .about-scene__title-line--brand {
+    transform: rotate(-0.7deg);
+  }
+
+  .about-scene__word--want {
+    transform: rotate(-0.55deg);
+  }
+
+  .about-scene__word--return {
+    font-size: 1.02em;
+    transform: rotate(-1deg);
+  }
+
+  .visit-scene__word--rhythm {
+    transform: rotate(-0.7deg);
+  }
+
+  .events-scene__word--warm {
+    transform: rotate(0.4deg);
+  }
+
+  .events-scene__word--events {
+    transform: rotate(-0.65deg);
+  }
+
+  .locations-scene__word--find {
+    transform: rotate(-0.7deg);
+  }
 }
 
 @media (max-width: 1023px) {
@@ -234,6 +317,26 @@
     transform: none;
   }
 
+  .hero-scene__word--coffee,
+  .hero-scene__word--own,
+  .hero-scene__word--vibe,
+  .hero-scene__brand,
+  .menu-scene__title-initial,
+  .menu-scene__word--look,
+  .about-scene__title-line--brand,
+  .about-scene__word--want,
+  .about-scene__word--return,
+  .visit-scene__word--rhythm,
+  .events-scene__word--warm,
+  .events-scene__word--events,
+  .locations-scene__word--find {
+    transform: none;
+  }
+
+  .menu-scene__mobile-title-break {
+    display: block;
+  }
+
   .hero-scene__underline {
     width: clamp(8rem, 42vw, 12rem);
     height: 0.6rem;
@@ -265,6 +368,19 @@
 
   .scene .section-frame__heading h2 {
     font-size: clamp(2.75rem, 12vw, 3.5rem);
+  }
+
+  .menu-scene .section-frame__heading {
+    margin-bottom: clamp(1.1rem, 5vw, 1.4rem);
+  }
+
+  .menu-scene .section-frame__heading h2 {
+    font-size: clamp(2.45rem, 12vw, 2.7rem);
+    line-height: 0.9;
+  }
+
+  .menu-scene__title-line:nth-child(2) {
+    white-space: nowrap;
   }
 }
 

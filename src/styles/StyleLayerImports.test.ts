@@ -10,7 +10,6 @@ const expectedCssImportOrder = [
   './styles/tokens.css',
   './styles/global.css',
   './styles/footer.css',
-  './styles/live-typography.css',
   './styles/scene-continuity-polish.css',
   './styles/mobile-hero-polish.css',
   './styles/menu-carousel-polish.css',
@@ -18,6 +17,7 @@ const expectedCssImportOrder = [
   './styles/scene-bridge-polish.css',
   './styles/scene-layout-polish.css',
   './styles/scene-frame-polish.css',
+  './styles/live-typography.css',
 ]
 
 const componentStyleOwners = [

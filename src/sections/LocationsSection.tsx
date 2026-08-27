@@ -58,7 +58,10 @@ export function LocationsSection() {
       id="locations"
       title={
         <span className="locations-scene__title" data-scene-layer="title">
-          Как нас <span className="locations-scene__title-accent">найти</span>
+          Как нас{' '}
+          <span className="locations-scene__word locations-scene__word--find locations-scene__title-accent">
+            найти
+          </span>
         </span>
       }
       className="locations-scene"

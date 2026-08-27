@@ -25,6 +25,11 @@ from the local FontTools distribution at
   preserved in the source repository.
 - CSS family: the local subset is exposed as `White Cup Display`; the original
   Neucha family is used only as the upstream attribution/source name.
+- Runtime comparison decision: `White Cup Display` stays on the verified
+  Neucha subset because its narrow, monoline Cyrillic follows the supplied
+  title crops more closely. Pangolin was compared but rejected for runtime
+  headings: its Cyrillic is wider and more playful, which changes the measured
+  line breaks and makes the reference composition less faithful.
 - Coverage: Basic Latin, Latin-1, combining marks, basic Cyrillic including
   Russian `Ё/ё`, common punctuation, euro, numero, four navigation arrows,
   minus, and filled dot; unsupported symbols such as the ruble sign and heart

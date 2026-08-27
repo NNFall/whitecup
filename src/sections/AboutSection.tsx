@@ -23,8 +23,12 @@ export function AboutSection() {
           </span>
           {' '}
           <span className="about-scene__title-line about-scene__title-line--return">
-            <span className="about-scene__accent">хочется</span>{' '}
-            <span className="about-scene__return">возвращаться</span>
+            <span className="about-scene__word about-scene__word--want about-scene__accent">
+              хочется
+            </span>{' '}
+            <span className="about-scene__word about-scene__word--return about-scene__return">
+              возвращаться
+            </span>
           </span>
         </>
       }
