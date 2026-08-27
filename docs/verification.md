@@ -134,6 +134,6 @@ Supporting frames в `docs/evidence/layered-reconstruction/` остаются л
   `0`, один `h1`, console errors/warnings — `[]`.
 - [x] Публичные узкие desktop viewport 1024×720 и 1100×720 проверены в IAB:
   Events/Locations internal overflow `0`, document overflow `0`.
-- [x] GitHub/remote SHA проверен после push и совпал с локальным release HEAD
-  на момент проверки: `cbbc471eb53c37b8aab4f5714ebe37b52739fd7d`.
+- [x] GitHub/remote SHA проверен после push и совпал с локальным release HEAD:
+  `14fe824f7677bd88926759d30208e202cd239f76`.
   Локальный сервер для повторной проверки — `http://127.0.0.1:4175/`.
