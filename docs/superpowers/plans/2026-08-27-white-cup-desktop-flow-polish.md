@@ -28,7 +28,11 @@ Make the desktop landing read as one continuous paper guide: full-width top navi
 - [x] **5. Independent review and browser evidence**
   - Ask independent agents to review CSS/semantics and inspect the in-app Browser at all required viewports. Fix P1/P2 overlap, header ghosting, overflow and bridge legibility findings.
 
-- [ ] **6. Full verification and release**
+- [x] **6. Full verification and release**
   - Run `npm.cmd test -- --run`, `npm.cmd run build -- --base=/site/whitecup/`, `git diff --check` and staged diff checks.
   - Update `docs/verification.md`, `docs/visual-deviations.md` and this plan with truthful counts/evidence.
   - Stage only intended source/docs files, commit with current local dates, push `origin/master`, deploy `/root/whitecup`, smoke-test the public URL in the Codex in-app Browser, and verify the remote SHA.
+  - Evidence: 31 files / 203 tests PASS; Vite 8.2.2 build (44 modules) PASS;
+    IAB desktop/mobile and 1024/1100 narrow-width sweeps show no document or
+    scene overflow. Release source is the final local release HEAD; public
+    smoke and Nginx reload are recorded in `docs/verification.md`.

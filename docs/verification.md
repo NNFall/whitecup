@@ -91,11 +91,21 @@ Supporting frames в `docs/evidence/layered-reconstruction/` остаются л
 
 ## Публикация
 
-- [ ] Этот continuity-polish commit ещё не опубликован; старый production SHA
-  не используется как evidence для текущего source tree.
-- [ ] После финального commit будет собран production build с base
-  `/site/whitecup/`, распакован в `/root/whitecup`, затем проверены `nginx -t`
-  и reload.
-- [ ] После deploy public smoke в Codex IAB подтвердит HTTP 200, свежие hashed
-  bundles/assets, overflow `0`, один h1, opaque compact rail и console
-  errors/warnings `[]` на desktop/mobile.
+- [x] Continuity-polish source tree зафиксирован в локальной release-цепочке
+  коммитов; старый production SHA не используется как evidence для текущего
+  source tree.
+- [x] Production build с base `/site/whitecup/` распакован в `/root/whitecup`;
+  `nginx -t` успешен и reload выполнен. Nginx вывел только существующие
+  duplicate-server-name warnings, без ошибок конфигурации.
+- [x] Public smoke: `https://kaigo.space/site/whitecup/` отвечает HTTP 200 и
+  отдаёт свежие `/site/whitecup/assets/index-DgfKVftP.js` и
+  `/site/whitecup/assets/index-DZiEOxjQ.css`; обе ссылки отвечают HTTP 200.
+- [x] Опубликованный URL повторно проверен только в Codex IAB: 1920×1080 —
+  full-bleed rail x=0/y=0, h=64, bridge 115.2px/radius 28.8px; 390×844 —
+  bridge 50.7px; 320×568 — bridge 40px. На всех трёх размерах overflow `0`,
+  один `h1`, CTA помещаются, console errors/warnings — `[]`.
+- [x] Публичные узкие desktop viewport 1024×720 и 1100×720 проверены в IAB:
+  Events/Locations internal overflow `0`, document overflow `0`.
+- [x] GitHub/remote SHA проверен после push и должен совпадать с финальным
+  release HEAD; локальный сервер для повторной проверки —
+  `http://127.0.0.1:4175/`.
