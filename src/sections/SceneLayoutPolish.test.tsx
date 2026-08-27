@@ -6,6 +6,25 @@ import locationsSource from './LocationsSection.tsx?raw'
 import { EventsSection } from './EventsSection'
 import { LocationsSection } from './LocationsSection'
 
+function extractCssAtRule(css: string, atRule: string) {
+  const start = css.indexOf(atRule)
+  if (start < 0) return ''
+
+  const open = css.indexOf('{', start)
+  if (open < 0) return ''
+
+  let depth = 0
+  for (let index = open; index < css.length; index += 1) {
+    if (css[index] === '{') depth += 1
+    if (css[index] !== '}') continue
+
+    depth -= 1
+    if (depth === 0) return css.slice(start, index + 1)
+  }
+
+  return ''
+}
+
 describe('Events and Locations independent scene layouts', () => {
   it('builds Events from semantic content, documentary photo, and independent decorative layers', () => {
     render(<EventsSection />)
@@ -119,6 +138,53 @@ describe('Events and Locations independent scene layouts', () => {
     )
     expect(shortDesktopGuard).toMatch(
       /\.scene\.locations-scene\[data-scene-layout='independent'\] \.locations-scene__cards[\s\S]*align-self:\s*start;/,
+    )
+  })
+
+  it('relaxes the independent grids and media bounds for narrow desktop widths', () => {
+    const narrowDesktopGuard = sceneLayoutCss.match(
+      /@media\s*\(min-width:\s*1024px\)\s*and\s*\(max-width:\s*1199px\)[\s\S]*$/,
+    )?.[0]
+
+    expect(narrowDesktopGuard).toBeTruthy()
+    expect(narrowDesktopGuard).toMatch(
+      /\.scene\.events-scene\[data-scene-layout='independent'\] \.section-frame__inner\s*\{[\s\S]*grid-template-columns:\s*minmax\(0,\s*0\.95fr\)\s+minmax\(0,\s*1\.05fr\);/,
+    )
+    expect(narrowDesktopGuard).toMatch(
+      /\.scene\.locations-scene\[data-scene-layout='independent'\] \.section-frame__inner\s*\{[\s\S]*grid-template-columns:\s*minmax\(0,\s*0\.92fr\)\s+minmax\(0,\s*1\.08fr\);/,
+    )
+    expect(narrowDesktopGuard).toMatch(
+      /\.scene\.events-scene\[data-scene-layout='independent'\] \.events-scene__(?:photo|props|documentary|doodles)[\s\S]*min-width:\s*0;[\s\S]*max-width:\s*100%;/,
+    )
+    expect(narrowDesktopGuard).toMatch(
+      /\.scene\.locations-scene\[data-scene-layout='independent'\] \.locations-scene__(?:map-layer|photo|documentary|doodles)[\s\S]*min-width:\s*0;[\s\S]*max-width:\s*100%;/,
+    )
+  })
+
+  it('keeps Menu and Events paper runways visible at low desktop heights', () => {
+    const wideShortGuard = extractCssAtRule(
+      sceneLayoutCss,
+      '@media (min-width: 1600px) and (min-height: 681px) and (max-height: 800px)',
+    )
+    const compactShortGuard = extractCssAtRule(
+      sceneLayoutCss,
+      '@media (min-width: 1024px) and (max-width: 1599px) and (min-height: 681px) and (max-height: 800px)',
+    )
+
+    expect(wideShortGuard).toBeDefined()
+    expect(wideShortGuard).toMatch(
+      /\.scene\.menu-scene,\s*\.scene\.events-scene\[data-scene-layout='independent'\]\s*\{[^}]*height:\s*auto\s*!important;[^}]*min-height:\s*max\(100dvh,\s*66rem\);[^}]*max-height:\s*none\s*!important;[^}]*overflow-x:\s*clip\s*!important;[^}]*overflow-y:\s*visible\s*!important;/s,
+    )
+    expect(wideShortGuard).toMatch(
+      /\.menu-scene \.section-frame__inner,\s*\.scene\.events-scene\[data-scene-layout='independent'\] \.section-frame__inner\s*\{[^}]*height:\s*auto\s*!important;[^}]*min-height:\s*max\(100dvh,\s*66rem\);/s,
+    )
+
+    expect(compactShortGuard).toBeDefined()
+    expect(compactShortGuard).toMatch(
+      /\.scene\.menu-scene,\s*\.scene\.events-scene\[data-scene-layout='independent'\]\s*\{[^}]*height:\s*auto\s*!important;[^}]*min-height:\s*max\(100dvh,\s*52rem\);[^}]*max-height:\s*none\s*!important;[^}]*overflow-x:\s*clip\s*!important;[^}]*overflow-y:\s*visible\s*!important;/s,
+    )
+    expect(compactShortGuard).toMatch(
+      /\.menu-scene \.section-frame__inner,\s*\.scene\.events-scene\[data-scene-layout='independent'\] \.section-frame__inner\s*\{[^}]*height:\s*auto\s*!important;[^}]*min-height:\s*max\(100dvh,\s*52rem\);/s,
     )
   })
 })

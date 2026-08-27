@@ -1,0 +1,59 @@
+/* Desktop scene edges -----------------------------------------------------
+ *
+ * The scenes remain full-bleed artboards internally, but their outside edge
+ * gets a quiet paper-card finish. The body texture is allowed to breathe in
+ * the small gutter so the next scene can arrive through the bridge instead
+ * of looking like another hard screenshot seam.
+ */
+
+@media (min-width: 1024px) {
+  :root {
+    --scene-edge-radius: clamp(1rem, 1.45vw, 1.8rem);
+    --scene-edge-gutter: clamp(0.45rem, 1.05vw, 1.25rem);
+  }
+
+  .app-shell > .scene {
+    position: relative;
+    z-index: 0;
+    inline-size: auto;
+    margin-inline: var(--scene-edge-gutter);
+    border-radius: var(--scene-edge-radius);
+    box-shadow: 0 0.38rem 1.15rem rgb(74 48 30 / 0.065);
+  }
+
+  /* The hero meets the viewport at the top; only its lower edge participates
+     in the rounded hand-off so the full-width header can melt into the art. */
+  .app-shell > .scene.hero-scene {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  .app-shell > .scene::before,
+  .app-shell > .scene::after {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    content: '';
+    pointer-events: none;
+  }
+
+  /* A barely-there tonal feather protects the paper edge without covering
+     live copy, photography, or the independent decorative layers. */
+  .app-shell > .scene::before {
+    z-index: 18;
+    background: linear-gradient(
+      to bottom,
+      color-mix(in oklch, var(--paper-light) 3%, transparent),
+      transparent 8%,
+      transparent 91%,
+      rgb(74 48 30 / 0.035)
+    );
+  }
+
+  .app-shell > .scene::after {
+    z-index: 19;
+    box-shadow:
+      inset 0 0 0 1px rgb(74 48 30 / 0.045),
+      inset 0 -0.8rem 1.6rem rgb(74 48 30 / 0.03);
+  }
+}

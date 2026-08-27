@@ -31,16 +31,17 @@ describe('stable White Cup navigation polish', () => {
   it.each([
     ['#hero', 'reference'],
     ['#menu', 'compact'],
-  ] as const)('keeps one bounded desktop rail at one origin for the %s profile', (hash, profile) => {
+  ] as const)('keeps a full-bleed desktop rail at the viewport edge for the %s profile', (hash, profile) => {
     const shell = declarationsFor(
       ".site-nav__desktop-shell:is([data-nav-profile='reference'], [data-nav-profile='compact'])",
     )
 
     expect(shell).toMatch(/position:\s*relative(?:\s*!important)?;/)
-    expect(shell).toMatch(/top:\s*1rem(?:\s*!important)?;/)
-    expect(shell).toMatch(/max-width:\s*78rem(?:\s*!important)?;/)
+    expect(shell).toMatch(/top:\s*0(?:\s*!important)?;/)
+    expect(shell).toMatch(/width:\s*100%(?:\s*!important)?;/)
+    expect(shell).toMatch(/max-width:\s*none(?:\s*!important)?;/)
     expect(shell).toMatch(/min-height:\s*4rem(?:\s*!important)?;/)
-    expect(shell).toMatch(/margin-inline:\s*auto(?:\s*!important)?;/)
+    expect(shell).toMatch(/margin-inline:\s*0(?:\s*!important)?;/)
     expect(navigationCss).not.toMatch(/translateX\s*\(/)
 
     setHash(hash)
@@ -51,14 +52,15 @@ describe('stable White Cup navigation polish', () => {
     expect(header).toHaveAttribute('data-nav-profile', profile)
   })
 
-  it('uses a readable paper veil and transitions only scroll-safe visual properties', () => {
+  it('uses a readable translucent paper veil and transitions only scroll-safe visual properties', () => {
     const shell = declarationsFor(
       ".site-nav__desktop-shell:is([data-nav-profile='reference'], [data-nav-profile='compact'])",
     )
 
     expect(shell).toMatch(
-      /background:\s*color-mix\(in oklch,\s*var\(--paper-light\)\s+91%,\s*transparent\);/,
+      /background:\s*linear-gradient\(/,
     )
+    expect(shell).toMatch(/color-mix\(in oklch,\s*var\(--paper-light\)\s+82%,\s*transparent\)/)
     expect(shell).toMatch(/color:\s*var\(--ink\);/)
     expect(shell).toMatch(
       /transition:[\s\S]*opacity[\s\S]*background-color[\s\S]*box-shadow[\s\S]*transform/,
@@ -68,23 +70,23 @@ describe('stable White Cup navigation polish', () => {
     )
   })
 
-  it('keeps the scrolled rail visually light and fully opaque over the scene below it', () => {
+  it('keeps the scrolled rail visually light while preserving a translucent scene connection', () => {
     const compact = declarationsFor(
       ".site-nav__desktop-shell[data-nav-profile='compact']",
     )
 
     expect(compact).toMatch(/opacity:\s*1(?:\s*!important)?;/)
     expect(compact).toMatch(
-      /background-color:\s*color-mix\(in oklch,\s*var\(--paper-light\)\s+84%,\s*transparent\);/,
+      /background-color:\s*color-mix\(in oklch,\s*var\(--paper-light\)\s+88%,\s*transparent\);/,
     )
     expect(compact).toMatch(
-      /border-color:\s*color-mix\(in oklch,\s*var\(--line\)\s+34%,\s*transparent\);/,
+      /border-bottom-color:\s*color-mix\(in oklch,\s*var\(--line\)\s+34%,\s*transparent\);/,
     )
-    expect(compact).toMatch(/box-shadow:\s*0\s+0\.2rem\s+0\.65rem\s+rgb\(18 17 15 \/ 0\.04\);/)
-    expect(compact).not.toMatch(/opacity:\s*0\.(94|985)/)
+    expect(compact).toMatch(/box-shadow:\s*0\s+0\.25rem\s+0\.85rem\s+rgb\(18 17 15 \/ 0\.075\);/)
+    expect(compact).not.toMatch(/background-color:\s*var\(--paper-light\);/)
   })
 
-  it('keeps the desktop rail opaque over photo and scene-copy layers', () => {
+  it('keeps the desktop rail readable over photo and scene-copy layers without restoring a hard card', () => {
     const shell = declarationsFor(
       ".site-nav__desktop-shell:is([data-nav-profile='reference'], [data-nav-profile='compact'])",
     )
@@ -92,10 +94,18 @@ describe('stable White Cup navigation polish', () => {
       ".site-nav__desktop-shell[data-nav-profile='compact']",
     )
 
-    expect(shell).toMatch(/background:\s*color-mix\(/)
-    expect(shell).toMatch(/background-color:\s*var\(--paper-light\);/)
+    expect(shell).toMatch(/background:\s*linear-gradient\(/)
     expect(compact).toMatch(/background-color:\s*color-mix\(/)
-    expect(compact).toMatch(/background-color:\s*var\(--paper-light\);/)
+    expect(compact).not.toMatch(/background-color:\s*var\(--paper-light\);/)
+  })
+
+  it('suppresses the legacy polygon veil on both desktop profiles', () => {
+    const desktopVeil = declarationsFor(
+      ".site-nav__desktop-shell:is([data-nav-profile='reference'], [data-nav-profile='compact'])::before",
+    )
+
+    expect(desktopVeil).toMatch(/content:\s*none\s*!important;/)
+    expect(desktopVeil).not.toMatch(/clip-path:/)
   })
 
   it('gives the fixed mobile header a stable paper surface so scene copy cannot ghost through', () => {

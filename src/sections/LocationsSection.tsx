@@ -9,7 +9,6 @@ import {
   locationsSceneLayerManifest,
 } from '../data/media'
 import { siteData, type Location } from '../data/site'
-import '../styles/scene-layout-polish.css'
 
 type LocationCardIconName = keyof typeof locationsCardIconMedia
 

@@ -19,9 +19,9 @@ polish: стабильную шапку, мягкие CSS-мосты, восьм
 
 ## Автоматический gate (27 августа 2026)
 
-- [x] `npm.cmd test -- --run` — **30 файлов / 194 теста**, все прошли.
+- [x] `npm.cmd test -- --run` — **31 файл / 203 теста**, все прошли.
 - [x] `npm.cmd run build -- --base=/site/whitecup/` — **PASS**; проверены 3
-  локальных шрифта, Vite 8.2.2, 43 модуля.
+  локальных шрифта, Vite 8.2.2, 44 модуля.
 - [x] `git diff --check` — **PASS**; остаются только стандартные предупреждения
   нормализации LF→CRLF от Git на Windows.
 - [x] В runtime нет публичных `poc`/`legacy` медиа; все 48 уникальных путей
@@ -35,11 +35,12 @@ polish: стабильную шапку, мягкие CSS-мосты, восьм
 
 | Viewport | Результат |
 | --- | --- |
-| 1920×1080 | Hero reference-faithful; rail 1248×64, opacity 1; один h1, CTA и photo-layer не пересекаются. |
+| 1920×1080 | Hero reference-faithful; full-bleed rail x=0/y=0, h≈64, opacity 1; один h1, CTA и photo-layer не пересекаются. |
 | 1648×912 | Compact rail полностью opaque (`rgb(251,247,240)`), без ghosting; About/Visit/Events/Locations приземляются под rail. |
 | 1920×800 / 1920×720 | Menu/Events/Locations получают intrinsic runway; title→intro→cards идут последовательно, нижний текст не обрезается. |
 | 1536×720 / 1440×568 | Low-height guards сохраняют сетку, карточки и actions внутри сцены; clipping не обнаружен. |
 | 390×844 / 320×568 | Одноколоночный flow, CTA hero выше backdrop, полные описания меню, горизонтального overflow нет. |
+| 1024×720 / 1100×720 | Узкие desktop guards переводят Events/Locations на fluid tracks; photo/map/cards не выходят за сцену. |
 
 Дополнительные live-метрики:
 
@@ -55,6 +56,8 @@ polish: стабильную шапку, мягкие CSS-мосты, восьм
   не зажаты line-clamp.
 - [x] Reduced-motion правила отключают transitions/animations для nav, bridges,
   reveals и carousel.
+- [x] Намеренный overflow ограничен About coffee-cutout внутри frame и
+  внутренним native-scroll Menu; горизонтального overflow страницы нет.
 
 Supporting frames в `docs/evidence/layered-reconstruction/` остаются локальными
 доказательствами визуального прохода и не включаются в production commit.
@@ -88,13 +91,11 @@ Supporting frames в `docs/evidence/layered-reconstruction/` остаются л
 
 ## Публикация
 
-- [x] Commit/push выполнены: `ac532c49ec8fc8b3fc41b629c404bf420525867d`;
-  `git ls-remote origin refs/heads/master` вернул тот же SHA.
-- [x] Production build с base `/site/whitecup/` распакован в `/root/whitecup`;
-  `nginx -t` успешен, затем выполнен `systemctl reload nginx`.
-- [x] Public smoke: `https://kaigo.space/site/whitecup/` отвечает HTTP 200 и
-  отдаёт `/site/whitecup/assets/index-C6aoKO1t.js` /
-  `index-BSyMem21.css`; новые menu WebP отвечают HTTP 200.
-- [x] После reload публичная страница повторно проверена в Codex IAB на
-  1920×1080, 1648×912, 390×844 и 320×568: overflow `0`, один h1, compact
-  rail opacity `1`, console errors/warnings `[]`, menu loop работает.
+- [ ] Этот continuity-polish commit ещё не опубликован; старый production SHA
+  не используется как evidence для текущего source tree.
+- [ ] После финального commit будет собран production build с base
+  `/site/whitecup/`, распакован в `/root/whitecup`, затем проверены `nginx -t`
+  и reload.
+- [ ] После deploy public smoke в Codex IAB подтвердит HTTP 200, свежие hashed
+  bundles/assets, overflow `0`, один h1, opaque compact rail и console
+  errors/warnings `[]` на desktop/mobile.

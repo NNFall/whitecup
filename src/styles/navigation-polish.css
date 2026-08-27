@@ -26,24 +26,33 @@ html {
   .site-nav__desktop-shell:is([data-nav-profile='reference'], [data-nav-profile='compact']) {
     position: relative !important;
     inset: auto !important;
-    top: 1rem !important;
+    top: 0 !important;
     left: auto !important;
     z-index: 0;
     display: flex;
-    width: min(calc(100% - 2rem), 78rem) !important;
-    max-width: 78rem !important;
+    width: 100% !important;
+    max-width: none !important;
     min-height: 4rem !important;
     align-items: center !important;
     gap: clamp(0.75rem, 1.6vw, 1.5rem) !important;
     margin-block: 0 !important;
-    margin-inline: auto !important;
-    padding: 0.375rem clamp(0.75rem, 1.35vw, 1.25rem) !important;
-    border: 1px solid color-mix(in oklch, var(--line) 52%, transparent);
-    background: color-mix(in oklch, var(--paper-light) 91%, transparent);
-    background-color: var(--paper-light);
+    margin-inline: 0 !important;
+    padding: 0.375rem clamp(1.25rem, 5vw, 5.5rem) !important;
+    border: 0;
+    border-bottom: 1px solid color-mix(in oklch, var(--line) 28%, transparent);
+    border-radius: 0 0 clamp(1rem, 2vw, 1.75rem) clamp(1rem, 2vw, 1.75rem);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklch, var(--paper-light) 82%, transparent) 0%,
+        color-mix(in oklch, var(--paper-light) 68%, transparent) 64%,
+        color-mix(in oklch, var(--paper-light) 44%, transparent) 100%
+      );
+    background-color: color-mix(in oklch, var(--paper-light) 78%, transparent);
     color: var(--ink);
     opacity: 1;
     transform: translateY(0) !important;
+    box-shadow: 0 0.3rem 1.1rem rgb(18 17 15 / 0.045);
     transition:
       opacity 240ms cubic-bezier(0.16, 1, 0.3, 1),
       background-color 240ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -54,16 +63,23 @@ html {
 
   .site-nav__desktop-shell[data-nav-profile='compact'] {
     opacity: 1 !important;
-    background-color: color-mix(in oklch, var(--paper-light) 84%, transparent);
-    background-color: var(--paper-light);
-    border-color: color-mix(in oklch, var(--line) 34%, transparent);
-    box-shadow: 0 0.2rem 0.65rem rgb(18 17 15 / 0.04);
-    transform: translateY(0.08rem) !important;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklch, var(--paper-light) 94%, transparent) 0%,
+        color-mix(in oklch, var(--paper-light) 88%, transparent) 72%,
+        color-mix(in oklch, var(--paper-light) 70%, transparent) 100%
+      );
+    background-color: color-mix(in oklch, var(--paper-light) 88%, transparent);
+    border-bottom-color: color-mix(in oklch, var(--line) 34%, transparent);
+    box-shadow: 0 0.25rem 0.85rem rgb(18 17 15 / 0.075);
+    transform: translateY(0.04rem) !important;
   }
 
-  /* The legacy compact veil extends beyond the bounded rail. Keep the
-   * profile readable through the rail itself without washing over the scene. */
-  .site-nav__desktop-shell[data-nav-profile='compact']::before {
+  /* The legacy scene layer used a clipped polygon veil. The full-bleed rail
+   * owns its own gradient now, so suppress that authored shape for both
+   * desktop profiles without changing the mobile scene layer. */
+  .site-nav__desktop-shell:is([data-nav-profile='reference'], [data-nav-profile='compact'])::before {
     content: none !important;
   }
 

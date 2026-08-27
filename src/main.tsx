@@ -1,7 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
-import App from './App'
 import './styles/tokens.css'
 import './styles/global.css'
 import './styles/footer.css'
@@ -12,6 +11,8 @@ import './styles/menu-carousel-polish.css'
 import './styles/navigation-polish.css'
 import './styles/scene-bridge-polish.css'
 import './styles/scene-layout-polish.css'
+import './styles/scene-frame-polish.css'
+import App from './App'
 
 const rootElement = document.getElementById('root')
 

@@ -32,15 +32,38 @@ describe('SceneBridge polish contract', () => {
     })
   })
 
-  it('uses a warm feathered paper crossfade without a raster route ribbon', () => {
+  it('derives a quiet atmospheric signature from the scene pair', () => {
+    const { container } = render(createElement(SceneBridge, { from: 'about', to: 'visit' }))
+    const bridge = container.querySelector<HTMLElement>('[data-scene-bridge="about-visit"]')
+
+    expect(bridge).toHaveAttribute('data-bridge-label', 'ваш ритм — ваш стол')
+    expect(bridge?.querySelector('.scene-bridge__label')).toHaveTextContent('ваш ритм — ваш стол')
+  })
+
+  it('uses an intentional rounded paper interval without a raster route ribbon', () => {
     expect(bridgeCss).toMatch(
-      /\.scene-bridge\s*\{[\s\S]*position:\s*relative;[\s\S]*height:\s*clamp\(2\.5rem,\s*[^;]+,\s*5rem\);[\s\S]*overflow:\s*clip;[\s\S]*pointer-events:\s*none;/,
+      /\.scene-bridge\s*\{[\s\S]*position:\s*relative;[\s\S]*height:\s*clamp\(5\.25rem,\s*6vw,\s*8rem\);[\s\S]*margin-block:\s*0\s*!important;[\s\S]*overflow:\s*visible\s*!important;[\s\S]*pointer-events:\s*none;/,
     )
     expect(bridgeCss).toMatch(/background:\s*linear-gradient\(/)
-    expect(bridgeCss).toMatch(/\.scene-bridge__paper\s*\{[\s\S]*linear-gradient\(/)
     expect(bridgeCss).toMatch(
-      /\.scene-bridge__marker\s*\{[\s\S]*width:\s*min\([^;]*9rem[^;]*\);[\s\S]*var\(--orange\)/,
+      /\.scene-bridge__paper\s*\{[\s\S]*border-radius:\s*clamp\([^;]+\);[\s\S]*linear-gradient\([\s\S]*box-shadow:/,
     )
+    expect(bridgeCss).toMatch(
+      /\.scene-bridge__paper\s*\{[\s\S]*inset:\s*clamp\([^;]+\)\s+!important;/,
+    )
+    expect(bridgeCss).toMatch(
+      /\.scene-bridge__paper\s*\{[\s\S]*background:[\s\S]*!important;[\s\S]*clip-path:\s*none\s*!important;/,
+    )
+    expect(bridgeCss).toMatch(
+      /\.scene-bridge__label\s*\{[\s\S]*font-family:\s*var\(--font-script\);[\s\S]*font-weight:\s*400;[\s\S]*letter-spacing:\s*0\.04em;/,
+    )
+    expect(bridgeCss).toMatch(
+      /\.scene-bridge__marker\s*\{[\s\S]*width:\s*min\([^;]*11rem[^;]*\);[\s\S]*var\(--orange\)/,
+    )
+    expect(bridgeCss).toMatch(
+      /@media\s*\(max-width:\s*1023px\)[\s\S]*\.scene-bridge\s*\{[\s\S]*height:\s*clamp\(2\.5rem,\s*13vw,\s*4rem\);/,
+    )
+    expect(bridgeCss).not.toMatch(/margin-block:\s*calc\([^;]*\*\s*-1\)/)
     expect(bridgeCss).not.toMatch(/clip-path:\s*polygon\s*\(/)
     expect(bridgeCss).not.toMatch(/border(?:-(?:top|right|bottom|left|inline|block))?\s*:/)
     expect(bridgeCss).not.toMatch(/story-route-connector|scene-bridge__route|route-ribbon/)

@@ -8,7 +8,6 @@ import {
   type EventsCardMediaId,
 } from '../data/media'
 import { siteData } from '../data/site'
-import '../styles/scene-layout-polish.css'
 
 export function EventsSection() {
   const [cakeLayer, coffeeLayer] = eventsSceneLayerManifest.foregrounds
