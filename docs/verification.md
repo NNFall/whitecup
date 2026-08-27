@@ -88,5 +88,13 @@ Supporting frames в `docs/evidence/layered-reconstruction/` остаются л
 
 ## Публикация
 
-- [ ] Commit/push, remote SHA, deployment и public URL — выполняются после
-  staging явного release-list и финального production smoke.
+- [x] Commit/push выполнены: `ac532c49ec8fc8b3fc41b629c404bf420525867d`;
+  `git ls-remote origin refs/heads/master` вернул тот же SHA.
+- [x] Production build с base `/site/whitecup/` распакован в `/root/whitecup`;
+  `nginx -t` успешен, затем выполнен `systemctl reload nginx`.
+- [x] Public smoke: `https://kaigo.space/site/whitecup/` отвечает HTTP 200 и
+  отдаёт `/site/whitecup/assets/index-C6aoKO1t.js` /
+  `index-BSyMem21.css`; новые menu WebP отвечают HTTP 200.
+- [x] После reload публичная страница повторно проверена в Codex IAB на
+  1920×1080, 1648×912, 390×844 и 320×568: overflow `0`, один h1, compact
+  rail opacity `1`, console errors/warnings `[]`, menu loop работает.

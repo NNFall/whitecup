@@ -10,10 +10,10 @@
 
 **Current status (27 August 2026):** The navigation, pure-CSS bridge,
 eight-item triple-loop carousel, scene-layout and mobile-hero implementation
-changes are present in the shared worktree. Implementation, full gate, IAB and
-review steps are complete: 30 test files/194 tests PASS, the build with
-`--base=/site/whitecup/` PASS, and `git diff --check` PASS. Deployment, commit
-and push remain pending; the local/untracked browser screenshots are evidence
+changes are complete. The full gate (30 test files/194 tests), nested build,
+IAB checks and independent reviews passed. Commit `ac532c4` is pushed to
+`origin/master`, and the production build is deployed at
+`https://kaigo.space/site/whitecup/`. Browser screenshots remain local evidence
 only and are not claimed as committed.
 
 ---
@@ -182,11 +182,13 @@ reduced-motion state.
 
 Dispatch a read-only reviewer against the final diff and fix all P0/P1 findings before staging.
 
-- [ ] **Step 5: Build with `/site/whitecup/` base and deploy** — build PASS;
-  deployment remains pending.
+- [x] **Step 5: Build with `/site/whitecup/` base and deploy** — build PASS;
+  `dist` uploaded to `/root/whitecup`, `nginx -t` PASS, reload completed, and
+  public smoke returned HTTP 200 for HTML, hashed bundles and menu WebP.
 
 Run `npm.cmd run build -- --base=/site/whitecup/`, upload `dist` to `/root/whitecup`, keep the existing nginx backup, run `nginx -t`, reload nginx, and smoke-test `https://kaigo.space/site/whitecup/` plus representative assets.
 
-- [ ] **Step 6: Commit and push** — pending.
+- [x] **Step 6: Commit and push** — `ac532c49ec8fc8b3fc41b629c404bf420525867d`;
+  local and `origin/master` SHAs match.
 
 Refresh the outgoing commit timestamps, verify with `git show -s --format=fuller`, push `master`, and verify local/remote SHAs match.
