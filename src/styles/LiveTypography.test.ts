@@ -22,6 +22,63 @@ const runtimeSceneSources = [
   locationsSource,
 ]
 
+function extractCssAtRule(css: string, atRule: RegExp) {
+  const match = atRule.exec(css)
+  if (!match || match.index === undefined) {
+    throw new Error(`Missing CSS at-rule ${atRule}`)
+  }
+
+  const start = match.index
+  const open = css.indexOf('{', start)
+  if (open < 0) throw new Error(`Unclosed CSS at-rule ${atRule}`)
+
+  let depth = 0
+  for (let index = open; index < css.length; index += 1) {
+    if (css[index] === '{') depth += 1
+    if (css[index] === '}') {
+      depth -= 1
+      if (depth === 0) return css.slice(start, index + 1)
+    }
+  }
+
+  throw new Error(`Unclosed CSS at-rule ${atRule}`)
+}
+
+function cssRuleHasDeclaration(css: string, selector: string, declaration: RegExp) {
+  const rules = /([^{}]+)\{([^{}]*)\}/g
+  for (const match of css.matchAll(rules)) {
+    const selectors = match[1]
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .split(',')
+      .map((candidate) => candidate.trim())
+    if (selectors.includes(selector) && declaration.test(match[2])) return true
+  }
+
+  return false
+}
+
+function maxClampRem(css: string, selector: string) {
+  const rules = /([^{}]+)\{([^{}]*)\}/g
+  const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const values: number[] = []
+
+  for (const match of css.matchAll(rules)) {
+    const selectors = match[1]
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .split(',')
+      .map((candidate) => candidate.trim())
+    if (!selectors.includes(selector)) continue
+
+    const clamp = match[2].match(
+      new RegExp(`font-size:\\s*clamp\\([^,]+,[^,]+,\\s*([\\d.]+)rem\\s*\\)`),
+    )
+    if (clamp) values.push(Number(clamp[1]))
+  }
+
+  if (!values.length) throw new Error(`Missing clamp font-size for ${escapedSelector}`)
+  return Math.max(...values)
+}
+
 describe('live typography contracts', () => {
   it('registers the local Cyrillic display face and keeps the token on that face', () => {
     expect(tokensCss).toMatch(
@@ -38,7 +95,7 @@ describe('live typography contracts', () => {
       mainSource.indexOf("'./styles/global.css'"),
     )
     expect(liveTypographyCss).toMatch(
-      /\.hero-scene h1\s*\{[^}]*font-family:\s*var\(--font-display\);[^}]*font-size:\s*clamp\(3\.6rem,\s*5vw,\s*6rem\);[^}]*line-height:\s*0\.88;/s,
+      /@media\s*\(min-width:\s*1024px\)[\s\S]*?\.hero-scene h1\s*\{[^}]*font-size:\s*clamp\(4\.75rem,\s*6\.25vw,\s*7\.25rem\);[^}]*line-height:\s*0\.88;/s,
     )
     expect(liveTypographyCss).toMatch(
       /@media\s*\(min-width:\s*1024px\)[\s\S]*?\.menu-scene \.section-frame__heading h2[\s\S]*?opacity:\s*1;/s,
@@ -59,6 +116,48 @@ describe('live typography contracts', () => {
     expect(liveTypographyCss).toMatch(
       new RegExp(`@media \\(max-width:\\s*1023px\\)[\\s\\S]*?${mobileSceneHeadingRule.source}`),
     )
+  })
+
+  it.each([
+    ['.hero-scene h1', 7],
+    ['.menu-scene .section-frame__heading h2', 6.25],
+    ['.about-scene .section-frame__heading h2', 6],
+    ['.visit-scene .section-frame__heading h2', 6],
+    ['.events-scene .section-frame__heading h2', 5.9],
+    ['.locations-scene .section-frame__heading h2', 6.2],
+  ] as const)('raises %s to a reference-fit desktop display clamp', (selector, minimumRem) => {
+    const desktopCss = extractCssAtRule(liveTypographyCss, /@media\s*\(min-width:\s*1024px\)/)
+    const desktopAndBaseCss = `${desktopCss}\n${liveTypographyCss}`
+
+    expect(maxClampRem(desktopAndBaseCss, selector)).toBeGreaterThanOrEqual(minimumRem)
+  })
+
+  it('resets all heading and phrase transforms on mobile after the desktop rebuild', () => {
+    const mobileCss = extractCssAtRule(liveTypographyCss, /@media\s*\(max-width:\s*1023px\)/)
+    const mobileHeadingSelectors = [
+      '.hero-scene h1',
+      '.menu-scene .section-frame__heading h2',
+      '.about-scene .section-frame__heading h2',
+      '.visit-scene .section-frame__heading h2',
+      '.events-scene .section-frame__heading h2',
+      '.locations-scene .section-frame__heading h2',
+    ]
+    const mobilePhraseSelectors = [
+      '.hero-scene__word--coffee',
+      '.hero-scene__brand',
+      '.menu-scene__title-initial',
+      '.menu-scene__word--look',
+      '.about-scene__word--want',
+      '.about-scene__word--return',
+      '.visit-scene__word--rhythm',
+      '.events-scene__word--warm',
+      '.events-scene__word--events',
+      '.locations-scene__word--find',
+    ]
+
+    for (const selector of [...mobileHeadingSelectors, ...mobilePhraseSelectors]) {
+      expect(cssRuleHasDeclaration(mobileCss, selector, /transform:\s*none;/)).toBe(true)
+    }
   })
 
   it('keeps the short White Cup accent on the script face', () => {
@@ -115,11 +214,10 @@ describe('live typography contracts', () => {
   it('draws the hero underline as CSS decoration on the live heading', () => {
     const heroSource = runtimeSceneSources[1]
 
-    expect(heroSource).toMatch(
-      /<span\s+className="hero-scene__underline"\s+aria-hidden="true"[\s\S]*?\/>/,
-    )
+    expect(heroSource).toMatch(/className="hero-scene__brand"/)
+    expect(heroSource).not.toMatch(/hero-scene__underline/)
     expect(liveTypographyCss).toMatch(
-      /\.hero-scene__underline::after\s*\{[^}]*content:\s*'';[^}]*background:\s*var\(--orange-action\);/s,
+      /\.hero-scene__brand::after\s*\{[^}]*content:\s*'';[^}]*background:\s*var\(--orange-action\);/s,
     )
     expect(heroSource).not.toMatch(/hero-title-reference|hero-underline-reference/)
   })

@@ -5648,6 +5648,24 @@ html {
   }
 }
 
+/* Keep the enlarged live About title above its copy as the desktop viewport
+ * gets shorter than the authored 16:9 composition. The 900px band handles
+ * common laptop windows; the tighter 800px band below moves the title farther
+ * up so the final return line never crosses the intro. */
+@media (min-width: 1024px) and (max-height: 900px) and (min-aspect-ratio: 4 / 3) {
+  .about-scene .section-frame__heading {
+    top: 7%;
+  }
+
+  .about-scene__intro {
+    top: 47%;
+  }
+
+  .about-scene .benefits-list {
+    bottom: 5.5%;
+  }
+}
+
 /* Cap forced-line copy through the last independently observed 800px
  * boundary so it stays clear of the card band. */
 @media (min-width: 1024px) and (max-height: 800px) and (min-aspect-ratio: 4 / 3) {
@@ -5655,7 +5673,7 @@ html {
    * than the authored 16:9 composition. Keeping the title band above the
    * intro preserves the handwritten rhythm without relying on raster padding. */
   .about-scene .section-frame__heading {
-    top: 9.5%;
+    top: 3%;
   }
 
   .visit-scene .section-frame__heading {
@@ -5677,6 +5695,7 @@ html {
   }
 
   .about-scene__intro {
+    top: 47%;
     gap: 1rem;
   }
 
@@ -5822,6 +5841,24 @@ html {
   }
 }
 
+/* At 1920px-wide 640/568 crops the authored title still needs to start at
+ * the scene edge: the fixed 7% offset leaves too little runway for the live
+ * return line before the intro. Keep the guard bounded to extra-wide desktop
+ * so the 720px and mobile compositions retain their established rhythm. */
+@media (min-width: 1800px) and (max-height: 680px) and (min-aspect-ratio: 4 / 3) {
+  .about-scene .section-frame__heading {
+    top: 0%;
+  }
+
+  .about-scene__intro {
+    top: 47%;
+  }
+
+  .about-scene .benefits-list {
+    bottom: 6.2%;
+  }
+}
+
 /* At phone-like desktop heights, reserve a little more vertical runway for
  * the intro without letting the card footers fall below the paper scene. */
 @media (min-width: 1024px) and (max-height: 640px) and (min-aspect-ratio: 4 / 3) {
@@ -5876,5 +5913,64 @@ html {
 
   .menu-scene .menu-carousel__toolbar {
     min-height: 2.3rem;
+  }
+}
+
+/* Medium-height desktop crops need a little more room for the live Visit
+ * heading before the intro begins. Keep the card band just below that copy
+ * and leave all compact desktop and mobile rules to their dedicated guards. */
+@media (min-width: 1440px) and (max-width: 1799px) and (min-height: 801px) and (max-height: 900px) {
+  .visit-scene__intro {
+    top: 34.5%;
+  }
+
+  .visit-scene__cards {
+    top: calc(45.6% + clamp(0.65rem, 0.8vw, 0.85rem));
+  }
+}
+
+/* The full-width 1920 composition has a larger live title, so its intro and
+ * card band need a wider height-led separation on 800–900px desktop crops. */
+@media (min-width: 1800px) and (min-height: 801px) and (max-height: 900px) and (min-aspect-ratio: 4 / 3) {
+  .visit-scene__intro {
+    top: 39%;
+  }
+
+  .visit-scene__cards {
+    top: 49%;
+  }
+}
+
+/* The same wide composition needs a small independent nudge below 800px:
+ * the short-height title guard moves the heading up, so keep the Visit intro
+ * and cards one step lower without changing the mobile flow. */
+@media (min-width: 1800px) and (max-height: 800px) and (min-aspect-ratio: 4 / 3) {
+  .visit-scene__intro {
+    top: 32%;
+  }
+
+  .visit-scene__cards {
+    top: 46%;
+  }
+}
+
+/* At the 640px/568px wide desktop crops, preserve one more step of breathing
+ * room below the short-height live Visit title while keeping the cards in the
+ * established 46% band. */
+@media (min-width: 1800px) and (max-height: 680px) and (min-aspect-ratio: 4 / 3) {
+  .visit-scene__intro {
+    top: 33%;
+  }
+
+  .visit-scene__cards {
+    top: 46.5%;
+  }
+}
+
+/* Give the full-height wide composition a small runway after the Visit
+ * intro before its cards begin; shorter wide crops use their own guards. */
+@media (min-width: 1800px) and (min-height: 901px) and (min-aspect-ratio: 4 / 3) {
+  .visit-scene__cards {
+    top: 45.4%;
   }
 }

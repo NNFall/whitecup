@@ -29,6 +29,31 @@ describe('Menu reference visual contract', () => {
     )
   })
 
+  it('keeps the menu title in two authored lines with editable initial and accent spans', () => {
+    const { container } = render(<MenuSection />)
+    const menu = container.querySelector<HTMLElement>('#menu')
+
+    expect(menu).not.toBeNull()
+    if (!menu) throw new Error('Menu section is missing')
+
+    const heading = within(menu).getByRole('heading', { level: 2 })
+    const lines = heading.querySelectorAll('.menu-scene__title-line')
+    const initial = heading.querySelector('.menu-scene__title-initial')
+    const accent = heading.querySelector('.menu-scene__word--look')
+
+    expect(lines).toHaveLength(2)
+    expect(lines[0]).toHaveClass('menu-scene__title-line--first')
+    expect(lines[1]).toHaveClass('menu-scene__title-line--second')
+    expect(lines[0]).toHaveTextContent('Завтраки, ради которых')
+    expect(lines[1]).toHaveTextContent('хочется заглянуть')
+    expect(initial).toHaveTextContent('З')
+    expect(initial).not.toHaveAttribute('aria-hidden', 'true')
+    expect(accent).toHaveTextContent('заглянуть')
+    expect(accent).toHaveClass('menu-scene__accent')
+    expect(accent).not.toHaveAttribute('aria-hidden', 'true')
+    expect(heading.querySelector('img, picture, canvas')).not.toBeInTheDocument()
+  })
+
   it('holds the 320px title to three authored lines with a positive flow gap', () => {
     expect(liveTypographyCss).toMatch(
       /\.menu-scene__mobile-title-break\s*\{[^}]*display:\s*none;/s,
@@ -41,6 +66,9 @@ describe('Menu reference visual contract', () => {
     )
     expect(liveTypographyCss).toMatch(
       /@media\s*\(max-width:\s*380px\)[\s\S]*?\.menu-scene \.section-frame__heading\s*\{[^}]*margin-bottom:\s*clamp\(1\.1rem,\s*5vw,\s*1\.4rem\);/s,
+    )
+    expect(liveTypographyCss).toMatch(
+      /@media\s*\(max-width:\s*1023px\)[\s\S]*?\.menu-scene__title-line(?:\s*,|\s*\{)[^}]*transform:\s*none;/s,
     )
   })
 

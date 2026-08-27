@@ -160,7 +160,7 @@ describe('desktop continuity guards', () => {
       /@media\s*\(min-width:\s*1024px\)[\s\S]*?\.hero-scene h1\s*\{[^}]*padding-bottom:\s*clamp\(1\.25rem,\s*1\.4vw,\s*1\.5rem\);/s,
     )
     expect(liveTypographyCss).not.toMatch(
-      /(?:hero|menu|about|visit|events|locations)-scene__(?:word|brand)[^{]*\{[^}]*position:\s*absolute;/s,
+      /(?:hero|menu|about|visit|events|locations)-scene__(?:word|brand)(?!::after)[^{]*\{[^}]*position:\s*absolute;/s,
     )
   })
 
@@ -182,13 +182,31 @@ describe('desktop continuity guards', () => {
     )
 
     expect(shortAboutTitle).toMatch(
-      /\.about-scene \.section-frame__heading\s*\{[^}]*top:\s*9\.5%;/s,
+      /\.about-scene \.section-frame__heading\s*\{[^}]*top:\s*3%;/s,
     )
     expect(shortVisitTitle).toMatch(
       /\.visit-scene \.section-frame__heading\s*\{[^}]*top:\s*0%;/s,
     )
     expect(shortEventsTitle).toMatch(
       /\.events-scene \.section-frame__heading\s*\{[^}]*top:\s*18%;/s,
+    )
+  })
+
+  it('keeps the enlarged About title clear of copy through the 900px desktop band', () => {
+    const mediumAbout = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1024px) and (max-height: 900px) and (min-aspect-ratio: 4 / 3)',
+      '.about-scene .section-frame__heading',
+    )
+
+    expect(mediumAbout).toMatch(
+      /\.about-scene \.section-frame__heading\s*\{[^}]*top:\s*7%;/s,
+    )
+    expect(mediumAbout).toMatch(
+      /\.about-scene__intro\s*\{[^}]*top:\s*47%;/s,
+    )
+    expect(mediumAbout).toMatch(
+      /\.about-scene \.benefits-list\s*\{[^}]*bottom:\s*5\.5%;/s,
     )
   })
 
@@ -389,6 +407,24 @@ describe('desktop continuity guards', () => {
     )
   })
 
+  it('keeps About clear at 1920px desktop crops down to 568px high', () => {
+    const ultraShortAbout = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1800px) and (max-height: 680px) and (min-aspect-ratio: 4 / 3)',
+      '.about-scene .section-frame__heading',
+    )
+
+    expect(ultraShortAbout).toMatch(
+      /\.about-scene \.section-frame__heading\s*\{[^}]*top:\s*0%;/s,
+    )
+    expect(ultraShortAbout).toMatch(
+      /\.about-scene__intro\s*\{[^}]*top:\s*47%;/s,
+    )
+    expect(ultraShortAbout).toMatch(
+      /\.about-scene \.benefits-list\s*\{[^}]*bottom:\s*6\.2%;/s,
+    )
+  })
+
   it('extends Menu and Events scenes when short desktop cards would outgrow the viewport', () => {
     const wideShortScenes = extractCssBlock(
       globalCss,
@@ -448,6 +484,9 @@ describe('desktop continuity guards', () => {
       /\.about-scene__intro\s*\{[^}]*gap:\s*1rem;/s,
     )
     expect(shortAboutFlow).toMatch(
+      /\.about-scene__intro\s*\{[^}]*top:\s*47%;/s,
+    )
+    expect(shortAboutFlow).toMatch(
       /\.about-scene__intro p\s*\{[^}]*font-size:\s*min\(1\.18vw,\s*2\.4dvh,\s*1\.1rem\);[^}]*line-height:\s*1\.35;/s,
     )
   })
@@ -497,6 +536,78 @@ describe('desktop continuity guards', () => {
     )
     expect(shortWideVisitCards).toMatch(
       /\.visit-card__copy p\s*\{[^}]*font-size:\s*clamp\(0\.72rem,\s*1\.9dvh,\s*0\.88rem\);[^}]*line-height:\s*1\.24;/s,
+    )
+  })
+
+  it('keeps the Visit intro below its live heading and cards on medium desktop crops', () => {
+    const mediumVisit = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1440px) and (max-width: 1799px) and (min-height: 801px) and (max-height: 900px)',
+      '.visit-scene__intro',
+    )
+
+    expect(mediumVisit).toMatch(
+      /\.visit-scene__intro\s*\{[^}]*top:\s*34\.5%;/s,
+    )
+    expect(mediumVisit).toMatch(
+      /\.visit-scene__cards\s*\{[^}]*top:\s*calc\(45\.6% \+ clamp\(0\.65rem,\s*0\.8vw,\s*0\.85rem\)\);/s,
+    )
+  })
+
+  it('gives the wide medium-height Visit title room before its intro and cards', () => {
+    const wideVisit = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1800px) and (min-height: 801px) and (max-height: 900px) and (min-aspect-ratio: 4 / 3)',
+      '.visit-scene__intro',
+    )
+
+    expect(wideVisit).toMatch(
+      /\.visit-scene__intro\s*\{[^}]*top:\s*39%;/s,
+    )
+    expect(wideVisit).toMatch(
+      /\.visit-scene__cards\s*\{[^}]*top:\s*49%;/s,
+    )
+  })
+
+  it('keeps the wide short Visit intro below its live heading and card band', () => {
+    const wideShortVisit = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1800px) and (max-height: 800px) and (min-aspect-ratio: 4 / 3)',
+      '.visit-scene__intro',
+    )
+
+    expect(wideShortVisit).toMatch(
+      /\.visit-scene__intro\s*\{[^}]*top:\s*32%;/s,
+    )
+    expect(wideShortVisit).toMatch(
+      /\.visit-scene__cards\s*\{[^}]*top:\s*46%;/s,
+    )
+  })
+
+  it('keeps the wide phone-height Visit intro clear at 640px and 568px', () => {
+    const veryShortWideVisit = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1800px) and (max-height: 680px) and (min-aspect-ratio: 4 / 3)',
+      '.visit-scene__intro',
+    )
+
+    expect(veryShortWideVisit).toMatch(
+      /\.visit-scene__intro\s*\{[^}]*top:\s*33%;/s,
+    )
+    expect(veryShortWideVisit).toMatch(
+      /\.visit-scene__cards\s*\{[^}]*top:\s*46\.5%;/s,
+    )
+  })
+
+  it('leaves a visible runway between the wide Visit intro and cards', () => {
+    const tallWideVisit = extractCssBlock(
+      globalCss,
+      '@media (min-width: 1800px) and (min-height: 901px) and (min-aspect-ratio: 4 / 3)',
+      '.visit-scene__cards',
+    )
+
+    expect(tallWideVisit).toMatch(
+      /\.visit-scene__cards\s*\{[^}]*top:\s*45\.4%;/s,
     )
   })
 

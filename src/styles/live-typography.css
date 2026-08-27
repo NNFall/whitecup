@@ -46,6 +46,7 @@
 .about-scene__title-line,
 .visit-scene__title-line,
 .events-scene__title-line {
+  display: block;
   max-width: 100%;
   transform: none;
   transform-origin: left top;
@@ -56,12 +57,45 @@
   white-space: nowrap;
 }
 
+.menu-scene__title-line {
+  display: block;
+  max-width: 100%;
+  transform: none;
+  transform-origin: left bottom;
+}
+
+.hero-scene__mobile-brand-break {
+  display: none;
+}
+
 .hero-scene__brand,
 .about-scene__title-line--brand,
 .about-scene__word--return {
   font-family: var(--font-script);
   font-style: normal;
   font-weight: 400;
+}
+
+/* Keep the orange stroke attached to the words it annotates.  The reference
+ * underline belongs to “White Cup”, so it must travel with that live span
+ * instead of occupying an unrelated row below the heading. */
+.hero-scene__brand {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.08em;
+}
+
+.hero-scene__brand::after {
+  position: absolute;
+  right: -0.04em;
+  bottom: -0.04em;
+  left: 0.02em;
+  height: clamp(0.14rem, 0.18vw, 0.22rem);
+  border-radius: 50%;
+  content: '';
+  background: var(--orange-action);
+  transform: rotate(-2deg);
+  transform-origin: left center;
 }
 
 .hero-scene__word,
@@ -79,33 +113,6 @@
 
 .menu-scene__mobile-title-break {
   display: none;
-}
-
-/* This element is a flow-sized hook for a CSS stroke, not an image. */
-.hero-scene__underline {
-  position: relative;
-  display: block;
-  box-sizing: border-box;
-  width: clamp(9rem, 13vw, 15rem);
-  height: 0.7rem;
-  margin: -0.35rem 0 -0.25rem clamp(1rem, 2vw, 2rem);
-  padding: 0;
-  overflow: visible;
-  pointer-events: none;
-  transform: none;
-}
-
-.hero-scene__underline::after {
-  position: absolute;
-  right: 0;
-  bottom: 0.08rem;
-  left: 0;
-  height: clamp(0.16rem, 0.2vw, 0.24rem);
-  border-radius: 50%;
-  content: '';
-  background: var(--orange-action);
-  transform: rotate(-2deg);
-  transform-origin: left center;
 }
 
 .about-scene__title-line--brand {
@@ -145,18 +152,9 @@
   }
 
   .hero-scene__title-line {
+    display: block;
     width: fit-content;
     white-space: nowrap;
-  }
-
-  .hero-scene__underline {
-    position: relative;
-    width: clamp(9rem, 13vw, 15rem);
-    height: 0.7rem;
-    margin: -0.35rem 0 -0.25rem clamp(1rem, 2vw, 2rem);
-    overflow: visible;
-    clip: auto;
-    clip-path: none;
   }
 
   .menu-scene .section-frame__heading h2,
@@ -205,8 +203,15 @@
   .about-scene__title-line,
   .visit-scene__title-line,
   .events-scene__title-line {
+    display: block;
     width: fit-content;
     white-space: nowrap;
+  }
+
+  .menu-scene__title-line {
+    position: static;
+    top: auto;
+    left: auto;
   }
 
   /* Legacy menu lettering used viewport offsets and transforms. The live
@@ -277,6 +282,58 @@
   .locations-scene__word--find {
     transform: rotate(-0.7deg);
   }
+
+  /* The reference uses a generous left copy column. The grid track remains
+   * the source split, while the wider box gives the live heading roughly
+   * 760px of usable text width at a 1920px viewport. */
+  .hero-scene__copy {
+    width: 100%;
+    max-width: 55rem;
+  }
+
+  /* Keep the earlier cascade contract readable while this final rule owns
+   * the measured reference-fit scale. */
+  .hero-scene h1 {
+    font-size: clamp(4.75rem, 6.25vw, 7.25rem);
+    line-height: 0.88;
+  }
+
+  .menu-scene .section-frame__heading h2 {
+    font-size: clamp(4.25rem, 5.45vw, 6.45rem);
+    line-height: 0.9;
+  }
+
+  .about-scene .section-frame__heading h2 {
+    font-size: clamp(4.2rem, 5.1vw, 6.15rem);
+    line-height: 0.92;
+  }
+
+  .visit-scene .section-frame__heading h2 {
+    font-size: clamp(4.2rem, 5.2vw, 6.15rem);
+    line-height: 0.9;
+  }
+
+  .events-scene .section-frame__heading h2 {
+    font-size: clamp(4.15rem, 5vw, 6rem);
+    line-height: 0.92;
+  }
+
+  .locations-scene .section-frame__heading h2 {
+    font-size: clamp(4.35rem, 5.25vw, 6.3rem);
+    line-height: 0.92;
+  }
+
+  /* Explicit flow lines prevent the desktop copy from being re-shaped by
+   * incidental wrapping as the local font loads. */
+  .hero-scene__title-line {
+    display: block;
+    white-space: nowrap;
+  }
+
+  .menu-scene__title-line {
+    display: block;
+    white-space: nowrap;
+  }
 }
 
 @media (max-width: 1023px) {
@@ -311,10 +368,23 @@
   .about-scene__title-line,
   .visit-scene__title-line,
   .events-scene__title-line {
+    display: block;
     width: 100%;
     max-width: 100%;
     white-space: normal;
     transform: none;
+  }
+
+  .menu-scene__title-line {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
+    transform: none;
+  }
+
+  .hero-scene__mobile-brand-break {
+    display: block;
   }
 
   .hero-scene__word--coffee,
@@ -335,15 +405,6 @@
 
   .menu-scene__mobile-title-break {
     display: block;
-  }
-
-  .hero-scene__underline {
-    width: clamp(8rem, 42vw, 12rem);
-    height: 0.6rem;
-    margin: -0.22rem 0 -0.1rem clamp(0.5rem, 5vw, 1.25rem);
-    overflow: visible;
-    clip: auto;
-    clip-path: none;
   }
 
   .scene .section-frame__heading h2 {
@@ -385,7 +446,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-scene__underline::after {
+  .hero-scene__brand::after {
     transform: none;
   }
 }

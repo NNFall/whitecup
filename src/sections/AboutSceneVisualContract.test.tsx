@@ -5,6 +5,35 @@ import globalCss from '../styles/global.css?raw'
 import liveTypographyCss from '../styles/live-typography.css?raw'
 
 describe('About scene reference geometry', () => {
+  it('keeps the About title as three live lines with script and accent word hooks', () => {
+    render(<App />)
+
+    const about = screen.getByRole('region', {
+      name: /о White Cup — место, в которое хочется возвращаться/i,
+    })
+    const heading = within(about).getByRole('heading', { level: 2 })
+    const lines = heading.querySelectorAll('.about-scene__title-line')
+
+    expect(lines).toHaveLength(3)
+    expect(lines[0]).toHaveClass('about-scene__title-line--brand')
+    expect(lines[1]).toHaveClass('about-scene__title-line--place')
+    expect(lines[2]).toHaveClass('about-scene__title-line--return')
+    expect(lines[0]).not.toHaveAttribute('aria-hidden', 'true')
+    expect(lines[1]).not.toHaveAttribute('aria-hidden', 'true')
+    expect(lines[2]).not.toHaveAttribute('aria-hidden', 'true')
+
+    const brand = heading.querySelector('.about-scene__title-line--brand')
+    const accent = heading.querySelector('.about-scene__word--want')
+    const returnWord = heading.querySelector('.about-scene__word--return')
+
+    expect(brand).toHaveTextContent('О White Cup —')
+    expect(accent).toHaveTextContent('хочется')
+    expect(accent).toHaveClass('about-scene__accent')
+    expect(returnWord).toHaveTextContent('возвращаться')
+    expect(returnWord).toHaveClass('about-scene__return')
+    expect(heading.querySelector('img, picture, canvas')).not.toBeInTheDocument()
+  })
+
   it('locks the measured brand line, reference underline, and desktop paragraph rhythm', () => {
     render(<App />)
 

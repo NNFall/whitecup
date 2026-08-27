@@ -43,7 +43,7 @@ describe('deterministic local typography', () => {
     expect(tokensCss).toMatch(
       /@font-face\s*\{(?=[^}]*font-family:\s*['"]White Cup Display['"])(?=[^}]*src:\s*url\(['"]?\/fonts\/white-cup-display-cyrillic\.woff2['"]?\)\s*format\(['"]woff2['"]\))(?=[^}]*font-style:\s*normal)(?=[^}]*font-weight:\s*400)(?=[^}]*font-display:\s*swap)[^}]*\}/s,
     )
-    expect(indexHtml).not.toContain('/fonts/pangolin-cyrillic.woff2')
+    expect(indexHtml).toContain('/fonts/white-cup-display-cyrillic.woff2')
     expect(tokensCss).toMatch(
       /--font-display:\s*['"]White Cup Display['"]\s*,\s*['"]White Cup Body['"][^;]*;/,
     )
@@ -79,6 +79,6 @@ describe('deterministic local typography', () => {
     expect(fontLicenses).toMatch(
       /White Cup Display[^]*Neucha[^]*(?:Pangolin[^]*(?:rejected|не выбран)|(?:rejected|не выбран)[^]*Pangolin)/i,
     )
-    expect(fontLicenses).toMatch(/Pangolin[^]*(?:wider|шире)[^]*(?:playful|игрив)/i)
+    expect(fontLicenses).toMatch(/Pangolin[^]*(?:grainy|зернист|grain)[^]*(?:fourth|четвёрт|extra)/i)
   })
 })

@@ -17,9 +17,9 @@ polish: стабильную шапку, мягкие CSS-мосты, восьм
 - [x] Navigation — bounded paper rail остаётся на одном origin; reference и
   compact desktop-профили полностью непрозрачны, mobile rail не просвечивает.
 
-## Автоматический gate (27 августа 2026)
+## Автоматический gate (28 августа 2026, heading rebuild)
 
-- [x] `npm.cmd test -- --run` — **31 файл / 210 тестов**, все прошли (включая
+- [x] `npm.cmd test -- --run` — **32 файла / 241 тест**, все прошли (включая
   phrase-level heading contracts).
 - [x] `npm.cmd run build -- --base=/site/whitecup/` — **PASS**; проверены 3
   локальных шрифта, Vite 8.2.2, 44 модуля.
@@ -38,15 +38,25 @@ polish: стабильную шапку, мягкие CSS-мосты, восьм
 | --- | --- |
 | 1920×1080 | Hero reference-faithful; full-bleed rail x=0/y=0, h≈64, opacity 1; один h1, CTA и photo-layer не пересекаются. |
 | 1648×912 | Compact rail полностью opaque (`rgb(251,247,240)`), без ghosting; About/Visit/Events/Locations приземляются под rail. |
-| 1920×800 / 1920×720 | Menu/Events/Locations получают intrinsic runway; title→intro→cards идут последовательно, нижний текст не обрезается. |
+| 1920×800 / 1920×720 | Menu/About/Visit/Events/Locations получают low-height runway; title→intro→cards идут последовательно, нижний текст не обрезается. |
+| 1920×640 / 1920×568 | Ultra-short wide guard поднимает About heading и опускает Visit intro; title→intro зазоры остаются положительными, карточки не пересекают копирайт. |
+| 1920×864 / 1680×900 / 1536×864 | Enlarged live headings keep positive title→intro gaps; Visit guard проверен на wide и medium desktop bands. |
 | 1536×720 / 1440×568 | Low-height guards сохраняют сетку, карточки и actions внутри сцены; clipping не обнаружен. |
 | 390×844 / 320×568 | Одноколоночный flow, CTA hero выше backdrop, полные описания меню, горизонтального overflow нет. |
 | 1024×720 / 1100×720 | Узкие desktop guards переводят Events/Locations на fluid tracks; photo/map/cards не выходят за сцену. |
 
+Отдельный heading-sweep текущего локального `4175` подтверждён в IAB на
+1920×1080, 1920×864, 1920×720, 1920×640, 1920×568, 1680×900, 1536×864,
+1536×720, 1440×864, 1440×568, 1024×720, 1100×720, 390×844 и 320×568: все шесть сцен отрисованы
+живым текстом, `document.documentElement.scrollWidth` совпадает с clientWidth,
+а title→intro зазоры остаются положительными (примерно 3–122px desktop и
+20–28px mobile; About intro→cards и Visit card band проверены визуально без
+painted overlap).
+
 Дополнительные live-метрики:
 
-- [x] `document.documentElement.scrollWidth === viewport width` на всех восьми
-  размерах; console errors/warnings — `[]`.
+- [x] `document.documentElement.scrollWidth === viewport width` на всех
+  проверенных desktop/mobile размерах; console errors/warnings — `[]`.
 - [x] Menu skyline на desktop сохраняет natural ratio 1200:242 (`object-fit:
   contain`), получает только мягкое grayscale/brightness-приглушение для
   читаемости и отделён от footer-note явным gap (IAB: 11.8px на 1920×1080,
@@ -64,12 +74,14 @@ polish: стабильную шапку, мягкие CSS-мосты, восьм
   не зажаты line-clamp.
 - [x] Reduced-motion правила отключают transitions/animations для nav, bridges,
   reveals и carousel.
-- [x] Heading typography pass: baseline/after кадры сохранены в
-  `docs/evidence/headings-before/` и `docs/evidence/headings-after-*.png`;
-  phrase-level spans, Neucha display, Marck Script accents и mobile reset
-  проверены focused/full тестами. Hero/menu/about after-кадры сняты только в
-  Codex In-app Browser на 1920×1080; hero/menu/about mobile кадры — на
-  390×844, дополнительная menu-проверка — на 320×568.
+- [x] Heading typography pass: baseline кадры сохранены в
+  `docs/evidence/headings-before/`, свежие after-кадры — в
+  `docs/evidence/headings-rebuild/` (включая low-height About/Visit), а A/B-кадры Neucha/Pangolin — в
+  `docs/evidence/font-ab/`. Phrase-level spans, Neucha display, Marck Script
+  accents и mobile reset проверены focused/full тестами. Hero/menu/about
+  after-кадры сняты только в Codex In-app Browser на 1920×1080; hero/menu/about
+  mobile кадры — на 390×844, дополнительная menu-проверка — на 320×568;
+  low-height About/Visit кадры — на 1920×864/720/640/568.
 - [x] Намеренный overflow ограничен About coffee-cutout внутри frame и
   внутренним native-scroll Menu; горизонтального overflow страницы нет.
 

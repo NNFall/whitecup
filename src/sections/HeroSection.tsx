@@ -62,17 +62,13 @@ export function HeroSection() {
               </span>{' '}
               <span className="hero-scene__title-line hero-scene__title-line--third hero-scene__last-line">
                 <span className="hero-scene__word hero-scene__word--vibe">вайб в</span>{' '}
+                <br className="hero-scene__mobile-brand-break" aria-hidden="true" />
                 <em className="hero-scene__brand">White Cup</em>
-                <span className="hero-scene__heart" aria-hidden="true">
+                <span className="hero-scene__heart" aria-hidden="true" data-doodle>
                   ♡
                 </span>
               </span>
             </h1>
-            <span
-              className="hero-scene__underline"
-              aria-hidden="true"
-              data-doodle
-            />
             <p className="hero-scene__lede">
               Спешелти кофе, свежие завтраки
               <br />

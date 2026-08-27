@@ -70,7 +70,7 @@ describe('scene continuity polish contract', () => {
 
   it('reserves a visible runway for title, intro and cards on short desktop scenes', () => {
     expect(globalCss).toMatch(
-      /@media \(min-width:\s*1024px\) and \(max-height:\s*800px\) and \(min-aspect-ratio:\s*4 \/ 3\)[\s\S]*\.about-scene \.section-frame__heading\s*\{[^}]*top:\s*9\.5%;/,
+      /@media \(min-width:\s*1024px\) and \(max-height:\s*800px\) and \(min-aspect-ratio:\s*4 \/ 3\)[\s\S]*\.about-scene \.section-frame__heading\s*\{[^}]*top:\s*3%;/,
     )
     expect(globalCss).toMatch(
       /@media \(min-width:\s*1024px\) and \(max-height:\s*800px\) and \(min-aspect-ratio:\s*4 \/ 3\)[\s\S]*\.visit-scene \.section-frame__heading\s*\{[^}]*top:\s*0%;/,

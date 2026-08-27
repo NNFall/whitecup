@@ -53,6 +53,43 @@ describe('early-scene reference convergence', () => {
     )
   })
 
+  it('keeps Hero, Menu, and About headings as explicit live line spans', () => {
+    render(<App />)
+
+    const lineContracts = [
+      ['#hero', 1, '.hero-scene__title-line', [
+        'hero-scene__title-line--first',
+        'hero-scene__title-line--second',
+        'hero-scene__title-line--third',
+      ]],
+      ['#menu', 2, '.menu-scene__title-line', [
+        'menu-scene__title-line--first',
+        'menu-scene__title-line--second',
+      ]],
+      ['#about', 2, '.about-scene__title-line', [
+        'about-scene__title-line--brand',
+        'about-scene__title-line--place',
+        'about-scene__title-line--return',
+      ]],
+    ] as const
+
+    for (const [sceneSelector, level, lineSelector, expectedClasses] of lineContracts) {
+      const scene = document.querySelector<HTMLElement>(sceneSelector)
+      expect(scene).toBeInTheDocument()
+      if (!scene) continue
+
+      const heading = within(scene).getByRole('heading', { level })
+      const lines = heading.querySelectorAll(lineSelector)
+
+      expect(lines).toHaveLength(expectedClasses.length)
+      expectedClasses.forEach((className, index) => {
+        expect(lines[index]).toHaveClass(className)
+        expect(lines[index]).not.toHaveAttribute('aria-hidden', 'true')
+        expect(lines[index].querySelector('img, picture, canvas')).not.toBeInTheDocument()
+      })
+    }
+  })
+
   it('keeps the live Hero title visible and the underline as CSS decoration without moving the CTAs', () => {
     render(<App />)
 
@@ -78,7 +115,7 @@ describe('early-scene reference convergence', () => {
       /ReferenceTitleLayer|title-reference|TitleReferenceExtract|heroUnderlineReferenceExtract/i,
     )
     expect(liveTypographyCss).toMatch(
-      /\.hero-scene h1\s*\{[^}]*font-family:\s*var\(--font-display\);[^}]*font-size:\s*clamp\(3\.6rem,\s*5vw,\s*6rem\);/s,
+      /@media\s*\(min-width:\s*1024px\)[\s\S]*?\.hero-scene h1\s*\{[^}]*font-size:\s*clamp\(4\.75rem,\s*6\.25vw,\s*7\.25rem\);/s,
     )
     expect(liveTypographyCss).toMatch(
       /@media \(min-width:\s*1024px\)[\s\S]*?\.hero-scene h1\s*\{[^}]*width:\s*auto;[^}]*height:\s*auto;[^}]*overflow:\s*visible;[^}]*clip:\s*auto;/s,
@@ -87,14 +124,13 @@ describe('early-scene reference convergence', () => {
       /\.hero-scene__title-line,\s*\.about-scene__title-line,[\s\S]*?transform:\s*none;/s,
     )
 
-    const underline = hero.querySelector('.hero-scene__underline')
-    expect(underline).toBeInstanceOf(HTMLSpanElement)
-    expect(underline).toHaveAttribute('aria-hidden', 'true')
-    expect(underline).toHaveAttribute('data-doodle')
-    expect(underline).not.toHaveAttribute('src')
-    expect(hero.querySelector('img.hero-scene__underline')).not.toBeInTheDocument()
+    const brand = heading.querySelector('.hero-scene__brand')
+    expect(brand).toBeInstanceOf(HTMLElement)
+    expect(brand).toHaveTextContent('White Cup')
+    expect(brand).not.toHaveAttribute('aria-hidden', 'true')
+    expect(hero.querySelector('.hero-scene__underline')).not.toBeInTheDocument()
     expect(liveTypographyCss).toMatch(
-      /\.hero-scene__underline::after\s*\{[^}]*content:\s*'';[^}]*background:\s*var\(--orange-action\);/s,
+      /\.hero-scene__brand::after\s*\{[^}]*content:\s*'';[^}]*background:\s*var\(--orange-action\);/s,
     )
     expect(globalCss).toMatch(
       /\.hero-scene__lede\s*\{[^}]*transform:\s*translate\(0\.26vw,\s*-0\.83dvh\)\s*scale\(1\.281,\s*1\.334\);/,

@@ -26,10 +26,11 @@ from the local FontTools distribution at
 - CSS family: the local subset is exposed as `White Cup Display`; the original
   Neucha family is used only as the upstream attribution/source name.
 - Runtime comparison decision: `White Cup Display` stays on the verified
-  Neucha subset because its narrow, monoline Cyrillic follows the supplied
-  title crops more closely. Pangolin was compared but rejected for runtime
-  headings: its Cyrillic is wider and more playful, which changes the measured
-  line breaks and makes the reference composition less faithful.
+  Neucha subset. In the In-app Browser A/B at 1920×1080 and 390×844 it keeps
+  the reference line proportions and smooth marker stroke, while Pangolin
+  becomes visibly grainier and adds an unwanted fourth Menu line on mobile.
+  Pangolin remains bundled as a comparison candidate, but is not preloaded or
+  used by the runtime heading token.
 - Coverage: Basic Latin, Latin-1, combining marks, basic Cyrillic including
   Russian `Ё/ё`, common punctuation, euro, numero, four navigation arrows,
   minus, and filled dot; unsupported symbols such as the ruble sign and heart
@@ -62,6 +63,10 @@ from the local FontTools distribution at
 - Coverage: Basic Latin, Latin-1, combining marks, basic Cyrillic including
   Russian `Ё/ё`, common punctuation, euro, ruble, numero, four navigation
   arrows, minus, and a filled dot.
+- Runtime decision: rejected for large Russian display strings after a local
+  1920px/390px A/B pass against the Neucha subset. Pangolin is visibly more
+  grainy and causes an extra Menu line on mobile; short English/script accents
+  continue to use `White Cup Hand` (Marck Script).
 - Packaging: static regular face; display-font hinting was removed from the web
   subset to reduce transfer size.
 
