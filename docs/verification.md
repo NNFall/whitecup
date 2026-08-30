@@ -144,12 +144,25 @@ Supporting frames в `docs/evidence/layered-reconstruction/` остаются л
 
 ## Публикация
 
-- [ ] Commit and push to GitHub are pending final staging; remote SHA is not
-  release evidence yet.
-- [ ] Production deploy to `/root/whitecup`, nginx verification and compression
-  headers are pending.
-- [ ] Public smoke and public IAB verification are pending; current evidence is
-  local-only and must not be presented as the deployed site.
-- [ ] Remote SHA check with `git ls-remote origin refs/heads/master` is pending.
+- [x] Code release commit `543356228d6921779d50fc91c742d34c102c4346` pushed to
+  `origin/master`; the remote SHA matched. A later evidence/ops follow-up commit
+  may update documentation only and does not alter the runtime bundle; its SHA
+  is intentionally not recorded here.
+- [x] Dist atomically deployed to `/root/whitecup`; the recoverable previous
+  release is `/root/whitecup-prev-20260830175953`. The reproducible nginx
+  fragment is `ops/nginx/whitecup.conf`.
+- [x] VPS `nginx -t` passed, the service is active, and reload passed. Public JS
+  and CSS return `Content-Encoding: gzip`, `Vary: Accept-Encoding`, immutable
+  caching and `nosniff`; HTML is `no-store`, and runtime media responds 200.
+- [x] Public smoke passed: `/site/whitecup` redirects 308 to the trailing slash;
+  `/site/whitecup/` returns 200 and serves the new
+  `index-C4XKDxmQ.js` / `index-eX-9paHg.css` bundles.
+- [x] Public IAB passed: desktop hero at 1920×1080 has document client/scroll
+  width `1905/1905`, one `h1`, a 64px header and the exact new bundles; the 320px
+  menu has client/scroll `305/305`, footer width `305`, 8 dots, 44×44 controls
+  and console `[]`.
+- [x] Public screenshots saved as release evidence:
+  `public-desktop-hero-1920x1080.png`, `public-mobile-menu-footer-320x568.png`,
+  `public-mobile-nav-open-390x844.png`.
 
 Локальный сервер для повторной проверки: `http://127.0.0.1:4175/`.

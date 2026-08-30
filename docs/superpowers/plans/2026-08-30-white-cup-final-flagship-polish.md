@@ -39,12 +39,12 @@
 - [x] Add a failing contract for correct production base and root local development.
 - [x] Configure Vite by command/mode so ordinary production builds target `/site/whitecup/`.
 - [x] Run an ordinary `npm.cmd run build` and inspect emitted URLs.
-- [ ] During deployment, inspect nginx, enable scoped JS/CSS compression if safe, run `nginx -t`, and verify headers.
+- [x] During deployment, inspect nginx, enable scoped JS/CSS compression if safe, run `nginx -t`, and verify headers.
 
 ## Task 5 — Independent review and release
 
 - [x] Run fresh full tests, production build and `git diff --check`.
 - [x] Request independent code and visual review; fix confirmed blockers.
 - [x] Capture final In-app Browser evidence at 1920×1080, 1920×568, 390×844 and 320×568; reset viewport override.
-- [ ] Stage only intended files, refresh outgoing local commit dates, commit, push `HEAD:master`, verify remote SHA.
-- [ ] Atomically deploy `/root/whitecup`, verify public URL, assets, console, layout and compression.
+- [x] Stage only intended files, refresh outgoing local commit dates, commit, push `HEAD:master`, verify remote SHA (`543356228d6921779d50fc91c742d34c102c4346`).
+- [x] Atomically deploy `/root/whitecup`, verify public URL, assets, console, layout and compression; retain the previous release for recovery.
