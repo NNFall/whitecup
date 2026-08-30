@@ -81,6 +81,24 @@ describe('MenuCarousel looping contract', () => {
     expect(dots[0]).toHaveAttribute('aria-current', 'true')
   })
 
+  it('lets vertical arrows remain page-navigation keys without changing the carousel index', () => {
+    render(<MenuCarousel items={siteData.menuItems} />)
+
+    const region = screen.getByRole('region', { name: /избранное меню white cup/i })
+    const viewport = within(region).getByTestId('menu-carousel-viewport')
+    const dots = within(region).getAllByRole('button', { name: /перейти к/i })
+
+    for (const key of ['ArrowUp', 'ArrowDown']) {
+      const event = new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key })
+      act(() => {
+        viewport.dispatchEvent(event)
+      })
+
+      expect(event.defaultPrevented).toBe(false)
+      expect(dots[0]).toHaveAttribute('aria-current', 'true')
+    }
+  })
+
   it('recenters an outer-copy snap into the middle copy after scrollend', () => {
     render(<MenuCarousel items={siteData.menuItems} />)
 

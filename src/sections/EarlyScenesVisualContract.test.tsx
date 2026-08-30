@@ -130,7 +130,7 @@ describe('early-scene reference convergence', () => {
     expect(brand).not.toHaveAttribute('aria-hidden', 'true')
     expect(hero.querySelector('.hero-scene__underline')).not.toBeInTheDocument()
     expect(liveTypographyCss).toMatch(
-      /\.hero-scene__brand::after\s*\{[^}]*content:\s*'';[^}]*background:\s*var\(--orange-action\);/s,
+      /\.hero-scene__brand::after\s*\{[^}]*content:\s*'';[^}]*background:\s*var\(--orange-display\);/s,
     )
     expect(globalCss).toMatch(
       /\.hero-scene__lede\s*\{[^}]*transform:\s*translate\(0\.26vw,\s*-0\.83dvh\)\s*scale\(1\.281,\s*1\.334\);/,

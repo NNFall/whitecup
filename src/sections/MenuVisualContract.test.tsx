@@ -87,8 +87,13 @@ describe('Menu reference visual contract', () => {
       name: /открыть полное меню в яндекс картах/i,
     })
     expect(fullMenuLink).toHaveAttribute('aria-describedby', 'menu-provenance-note')
-    expect(fullMenuLink).toHaveTextContent('листайте')
-    expect(fullMenuLink).toHaveAccessibleName(/листайте.*открыть полное меню в яндекс картах/i)
+    expect(fullMenuLink).toHaveTextContent('открыть полное меню')
+    expect(fullMenuLink).not.toHaveTextContent('листайте')
+    expect(fullMenuLink).toHaveAccessibleName('Открыть полное меню в Яндекс Картах')
+    expect(menu?.querySelector('.menu-carousel__note-instruction')).toHaveTextContent(
+      'Это лишь часть меню — листайте, чтобы увидеть больше!',
+    )
+    expect(menu?.querySelector('.menu-carousel__note-divider')).toHaveAttribute('aria-hidden', 'true')
     const noteCopy = menu?.querySelector('.menu-carousel__note-copy')
     expect(noteCopy).toBeInTheDocument()
     expect(noteCopy).toHaveTextContent(/листайте, чтобы увидеть больше!/i)

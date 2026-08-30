@@ -191,7 +191,7 @@ export function StickyNav() {
     }
 
     document.addEventListener('keydown', handleKeyDown)
-    dialogRef.current?.querySelector<HTMLElement>('.mobile-nav__panel a[href]')?.focus()
+    dialogRef.current?.querySelector<HTMLElement>(focusableSelector)?.focus()
 
     return () => {
       document.body.style.overflow = previousOverflow
@@ -256,10 +256,21 @@ export function StickyNav() {
           className="mobile-nav__backdrop"
           type="button"
           tabIndex={-1}
-          aria-label="Закрыть меню"
+          aria-label="Закрыть меню по фону"
           onClick={closeMenu}
         />
         <div className="mobile-nav__panel">
+          <button
+            className="mobile-nav__close"
+            type="button"
+            aria-label="Закрыть меню"
+            onClick={closeMenu}
+          >
+            <span className="mobile-nav__close-icon" aria-hidden="true">
+              <span />
+              <span />
+            </span>
+          </button>
           <p className="mobile-nav__kicker">White Cup / Самара</p>
           <nav aria-label="Навигация по странице">
             <ul>

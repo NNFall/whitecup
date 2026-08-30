@@ -10,9 +10,28 @@ import { LocationsSection } from './sections/LocationsSection'
 import { MenuSection } from './sections/MenuSection'
 import { VisitSection } from './sections/VisitSection'
 
+const HASH_NAVIGATION_KEYS = new Set([
+  'ArrowDown',
+  'ArrowLeft',
+  'ArrowRight',
+  'ArrowUp',
+  'End',
+  'Home',
+  'PageDown',
+  'PageUp',
+  ' ',
+])
+
 export default function App() {
   useLayoutEffect(() => {
     let pendingAlignment: number | undefined
+
+    const cancelPendingAlignment = () => {
+      if (pendingAlignment === undefined) return
+
+      window.clearTimeout(pendingAlignment)
+      pendingAlignment = undefined
+    }
 
     const alignHashTarget = () => {
       const id = decodeURIComponent(window.location.hash.slice(1))
@@ -33,11 +52,8 @@ export default function App() {
     }
 
     const alignAfterLayoutSettles = () => {
+      cancelPendingAlignment()
       alignHashTarget()
-
-      if (pendingAlignment !== undefined) {
-        window.clearTimeout(pendingAlignment)
-      }
 
       /* Reference scenes keep their artboards in flow, but responsive image
        * selection can settle after the first layout pass. Re-align only the
@@ -49,14 +65,32 @@ export default function App() {
       }, 1_200)
     }
 
+    const handleNavigationIntent = () => {
+      cancelPendingAlignment()
+    }
+
+    const handleNavigationKey = (event: KeyboardEvent) => {
+      if (HASH_NAVIGATION_KEYS.has(event.key)) {
+        cancelPendingAlignment()
+      }
+    }
+
+    const intentOptions: AddEventListenerOptions = { capture: true, passive: true }
+
     alignAfterLayoutSettles()
     window.addEventListener('hashchange', alignAfterLayoutSettles)
+    window.addEventListener('wheel', handleNavigationIntent, intentOptions)
+    window.addEventListener('touchstart', handleNavigationIntent, intentOptions)
+    window.addEventListener('pointerdown', handleNavigationIntent, intentOptions)
+    window.addEventListener('keydown', handleNavigationKey, true)
 
     return () => {
       window.removeEventListener('hashchange', alignAfterLayoutSettles)
-      if (pendingAlignment !== undefined) {
-        window.clearTimeout(pendingAlignment)
-      }
+      window.removeEventListener('wheel', handleNavigationIntent, intentOptions)
+      window.removeEventListener('touchstart', handleNavigationIntent, intentOptions)
+      window.removeEventListener('pointerdown', handleNavigationIntent, intentOptions)
+      window.removeEventListener('keydown', handleNavigationKey, true)
+      cancelPendingAlignment()
     }
   }, [])
 

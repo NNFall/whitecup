@@ -7,6 +7,7 @@ import locationsSource from '../sections/LocationsSection.tsx?raw'
 import menuSource from '../sections/MenuSection.tsx?raw'
 import mainSource from '../main.tsx?raw'
 import sectionFrameSource from '../components/SectionFrame.tsx?raw'
+import globalCss from './global.css?raw'
 import tokensCss from './tokens.css?raw'
 import visitSource from '../sections/VisitSection.tsx?raw'
 
@@ -166,6 +167,49 @@ describe('live typography contracts', () => {
     )
   })
 
+  it('separates the exact display accent from the darker action accent', () => {
+    expect(tokensCss).toMatch(/--orange-display:\s*#df3a06;/)
+    expect(tokensCss).toMatch(/--orange-action:\s*#c93608;/)
+
+    const displayAccentRules = [
+      '.menu-scene__accent',
+      '.visit-scene__accent',
+      '.events-scene__accent',
+      '.menu-scene__accent::after',
+      '.visit-scene__accent::after',
+      '.events-scene__accent::after',
+      '.locations-scene__title-accent::after',
+    ]
+
+    for (const selector of displayAccentRules) {
+      expect(cssRuleHasDeclaration(globalCss, selector, /(?:color|background):\s*var\(--orange-display\);/)).toBe(
+        true,
+      )
+    }
+
+    expect(cssRuleHasDeclaration(globalCss, '.hero-scene__accent', /color:\s*var\(--orange\);/)).toBe(true)
+    expect(cssRuleHasDeclaration(globalCss, '.about-scene__accent', /color:\s*var\(--orange\);/)).toBe(true)
+    expect(cssRuleHasDeclaration(globalCss, '.about-scene__return::after', /background:\s*var\(--orange\);/)).toBe(
+      true,
+    )
+    expect(cssRuleHasDeclaration(globalCss, '.about-scene__city::after', /background:\s*var\(--orange\);/)).toBe(
+      true,
+    )
+    expect(cssRuleHasDeclaration(globalCss, '.locations-scene__title-accent', /color:/)).toBe(false)
+
+    expect(liveTypographyCss).toMatch(
+      /\.hero-scene__brand::after\s*\{[^}]*background:\s*var\(--orange-display\);/s,
+    )
+
+    for (const selector of [
+      '.visit-scene__intro-accent::after',
+      '.events-scene__intro-brand::after',
+      '.locations-scene__intro-accent::after',
+    ]) {
+      expect(cssRuleHasDeclaration(globalCss, selector, /background:\s*var\(--orange-action\);/)).toBe(true)
+    }
+  })
+
   it('gives every phrase a bounded desktop rhythm and removes transforms on mobile', () => {
     expect(liveTypographyCss).toMatch(
       /\.hero-scene__brand,\s*\.about-scene__title-line--brand,\s*\.about-scene__word--return\s*\{[^}]*font-family:\s*var\(--font-script\);[^}]*font-style:\s*normal;/s,
@@ -217,7 +261,7 @@ describe('live typography contracts', () => {
     expect(heroSource).toMatch(/className="hero-scene__brand"/)
     expect(heroSource).not.toMatch(/hero-scene__underline/)
     expect(liveTypographyCss).toMatch(
-      /\.hero-scene__brand::after\s*\{[^}]*content:\s*'';[^}]*background:\s*var\(--orange-action\);/s,
+      /\.hero-scene__brand::after\s*\{[^}]*content:\s*'';[^}]*background:\s*var\(--orange-display\);/s,
     )
     expect(heroSource).not.toMatch(/hero-title-reference|hero-underline-reference/)
   })

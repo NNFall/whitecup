@@ -93,7 +93,7 @@
   height: clamp(0.14rem, 0.18vw, 0.22rem);
   border-radius: 50%;
   content: '';
-  background: var(--orange-action);
+  background: var(--orange-display);
   transform: rotate(-2deg);
   transform-origin: left center;
 }

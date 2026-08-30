@@ -153,13 +153,15 @@ describe('stable White Cup navigation polish', () => {
     fireEvent.click(trigger)
 
     const dialog = screen.getByRole('dialog', { name: /меню сайта/i })
+    const closeButton = within(dialog).getByRole('button', { name: 'Закрыть меню' })
     const links = within(dialog).getAllByRole('link')
     expect(dialog).toBeVisible()
-    expect(document.activeElement).toBe(links[0])
+    expect(closeButton).toHaveClass('mobile-nav__close')
+    expect(document.activeElement).toBe(closeButton)
 
     links.at(-1)?.focus()
     fireEvent.keyDown(document, { key: 'Tab' })
-    expect(document.activeElement).toBe(links[0])
+    expect(document.activeElement).toBe(closeButton)
 
     act(() => {
       fireEvent.keyDown(document, { key: 'Escape' })
@@ -167,5 +169,22 @@ describe('stable White Cup navigation polish', () => {
 
     expect(trigger).toHaveAttribute('aria-expanded', 'false')
     expect(document.activeElement).toBe(trigger)
+  })
+
+  it('gives the mobile dialog a clear 44px close target', () => {
+    const close = declarationsFor('.mobile-nav__close')
+
+    expect(close).toMatch(/width:\s*2\.75rem;/)
+    expect(close).toMatch(/min-width:\s*2\.75rem;/)
+    expect(close).toMatch(/height:\s*2\.75rem;/)
+    expect(close).toMatch(/min-height:\s*2\.75rem;/)
+    expect(navigationCss).toMatch(/\.mobile-nav__close-icon\s+span:first-child\s*\{[^}]*rotate\(45deg\)/)
+    expect(navigationCss).toMatch(/\.mobile-nav__close-icon\s+span:last-child\s*\{[^}]*rotate\(-45deg\)/)
+  })
+
+  it('removes close-button motion when reduced motion is requested', () => {
+    expect(navigationCss).toMatch(
+      /@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]*\.mobile-nav__close[\s\S]*transition:\s*none\s*!important;[\s\S]*transform:\s*none\s*!important;/,
+    )
   })
 })

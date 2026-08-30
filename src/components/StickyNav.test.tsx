@@ -162,19 +162,34 @@ describe('StickyNav', () => {
     fireEvent.click(trigger)
 
     const dialog = screen.getByRole('dialog', { name: /меню сайта/i })
+    const closeButton = within(dialog).getByRole('button', { name: 'Закрыть меню' })
     const links = within(dialog).getAllByRole('link')
     expect(trigger).toHaveAttribute('aria-expanded', 'true')
     expect(dialog).toBeVisible()
     expect(document.body.style.overflow).toBe('hidden')
-    expect(document.activeElement).toBe(links[0])
+    expect(closeButton).toHaveClass('mobile-nav__close')
+    expect(closeButton).toBeVisible()
+    expect(closeButton).not.toHaveAttribute('tabindex', '-1')
+    expect(document.activeElement).toBe(closeButton)
 
     links.at(-1)?.focus()
     fireEvent.keyDown(document, { key: 'Tab' })
-    expect(document.activeElement).toBe(links[0])
+    expect(document.activeElement).toBe(closeButton)
 
-    links[0].focus()
+    closeButton.focus()
     fireEvent.keyDown(document, { key: 'Tab', shiftKey: true })
     expect(document.activeElement).toBe(links.at(-1))
+
+    fireEvent.click(closeButton)
+    expect(dialog).toHaveAttribute('hidden')
+    expect(trigger).toHaveAttribute('aria-expanded', 'false')
+    expect(document.body.style.overflow).toBe('')
+    expect(document.activeElement).toBe(trigger)
+
+    fireEvent.click(trigger)
+    const reopenedDialog = screen.getByRole('dialog', { name: /меню сайта/i })
+    const reopenedCloseButton = within(reopenedDialog).getByRole('button', { name: 'Закрыть меню' })
+    expect(document.activeElement).toBe(reopenedCloseButton)
 
     fireEvent.keyDown(document, { key: 'Escape' })
 

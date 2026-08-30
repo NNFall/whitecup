@@ -319,13 +319,13 @@ export function MenuCarousel({ items, fullMenuUrl, provenanceDescriptionId }: Me
   useEffect(() => () => clearPendingFallbackTimer(), [clearPendingFallbackTimer])
 
   const handleViewportKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+    if (event.key === 'ArrowRight') {
       event.preventDefault()
       moveBy(1)
       return
     }
 
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+    if (event.key === 'ArrowLeft') {
       event.preventDefault()
       moveBy(-1)
     }
@@ -460,22 +460,24 @@ export function MenuCarousel({ items, fullMenuUrl, provenanceDescriptionId }: Me
       <p className="menu-carousel__note">
         <span className="menu-carousel__note-mark" aria-hidden="true" />
         <span className="menu-carousel__note-copy">
-          Это лишь часть меню —{' '}
+          <span className="menu-carousel__note-instruction">
+            Это лишь часть меню — <span className="menu-carousel__scroll-word">листайте</span>, чтобы увидеть больше!
+          </span>
           {fullMenuUrl ? (
-            <a
-              className="menu-carousel__menu-link"
-              href={fullMenuUrl}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Листайте: открыть полное меню в Яндекс Картах"
-              aria-describedby={provenanceDescriptionId}
-            >
-              листайте
-            </a>
-          ) : (
-            <span className="menu-carousel__scroll-word">листайте</span>
-          )}
-          {', чтобы увидеть больше!'}
+            <>
+              <span className="menu-carousel__note-divider" aria-hidden="true">·</span>
+              <a
+                className="menu-carousel__menu-link"
+                href={fullMenuUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Открыть полное меню в Яндекс Картах"
+                aria-describedby={provenanceDescriptionId}
+              >
+                открыть полное меню
+              </a>
+            </>
+          ) : null}
         </span>
       </p>
     </div>

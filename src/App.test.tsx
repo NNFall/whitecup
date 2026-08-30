@@ -56,6 +56,30 @@ describe('App hash navigation', () => {
     vi.useRealTimers()
   })
 
+  it.each([
+    ['wheel', () => window.dispatchEvent(new WheelEvent('wheel', { bubbles: true }))],
+    ['touch', () => window.dispatchEvent(new Event('touchstart', { bubbles: true }))],
+    ['pointer', () => window.dispatchEvent(new Event('pointerdown', { bubbles: true }))],
+    ['navigation key', () => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'PageDown', bubbles: true }))],
+  ])('cancels a pending hash re-alignment after %s input', (_label, dispatchIntent) => {
+    vi.useFakeTimers()
+    window.history.replaceState(null, '', '/#locations')
+
+    try {
+      render(<App />)
+      const initialCalls = scrollIntoView.mock.calls.length
+
+      act(() => {
+        dispatchIntent()
+        vi.advanceTimersByTime(1_250)
+      })
+
+      expect(scrollIntoView).toHaveBeenCalledTimes(initialCalls)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
   it('threads the six scenes through inert paper-route bridges in story order', () => {
     render(<App />)
 

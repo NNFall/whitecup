@@ -37,6 +37,29 @@ describe('MenuCarousel', () => {
     ).toHaveLength(siteData.menuItems.length - 1)
   })
 
+  it('separates the scroll instruction from the external full-menu action', () => {
+    render(
+      <MenuCarousel
+        items={legacyFiveItems}
+        fullMenuUrl="https://yandex.ru/maps/example/menu"
+        provenanceDescriptionId="menu-provenance-note"
+      />,
+    )
+
+    const region = screen.getByRole('region', { name: /избранное меню white cup/i })
+    const note = within(region).getByText(/это лишь часть меню/i).closest('.menu-carousel__note')
+    const instruction = note?.querySelector('.menu-carousel__note-instruction')
+    const link = within(note as HTMLElement).getByRole('link', {
+      name: /открыть полное меню в яндекс картах/i,
+    })
+
+    expect(instruction).toHaveTextContent('листайте, чтобы увидеть больше!')
+    expect(link).toHaveTextContent('открыть полное меню')
+    expect(link).not.toHaveTextContent('листайте')
+    expect(link).toHaveAttribute('aria-describedby', 'menu-provenance-note')
+    expect(note?.querySelector('.menu-carousel__note-divider')).toHaveAttribute('aria-hidden', 'true')
+  })
+
   it('uses the viewport native scroll offset for the next card', () => {
     render(<MenuCarousel items={legacyFiveItems} />)
 
