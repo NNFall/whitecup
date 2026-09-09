@@ -1,0 +1,47 @@
+# White Cup — Самара
+
+Единый адаптивный лендинг кофейни White Cup: шесть сцепленных сцен — hero, меню, «о месте», форматы визита, события и адреса — с бумажной фактурой, petrol/navy-типографикой, оранжевым акцентом и живыми интерьерными фотографиями.
+
+## Запуск
+
+Требуется Node.js 20+.
+
+```powershell
+npm install
+npm run dev
+```
+
+Vite закреплён на `127.0.0.1:4175` (`strictPort: true`), поэтому локальная ссылка для проверки — [http://127.0.0.1:4175/](http://127.0.0.1:4175/). Для production-проверки:
+
+```powershell
+npm test -- --run
+npm run build
+npm run preview
+```
+
+Результаты полного release-gate и in-app Browser evidence записаны в [docs/verification.md](docs/verification.md).
+
+## Данные и источники
+
+- [VK White Cup](https://vk.ru/white_cup) — оставлен как внешний CTA и источник для будущего обновления; содержимое группы в доступной браузерной среде не удалось проверить, поэтому VK-only факты не используются.
+- [Yandex Maps — карточка White Cup](https://yandex.ru/maps/org/white_cup/19381755919/) и [короткая ссылка на карту](https://yandex.ru/maps/-/CTwRZTKj) — адреса, маршрут и публичная галерея.
+- [GitHub NNFall/whitecup](https://github.com/NNFall/whitecup) — репозиторий проекта.
+- Локальные визуальные референсы пользователя: `C:\Users\User\Downloads\3679ac8b-1f0d-40be-b73d-d5246178ba35.png` и пять файлов `ChatGPT Image ... (1–5).png` из той же папки. Они не копируются в репозиторий без необходимости.
+
+Документальные кадры в `public/media/` — только визуально проверенные публичные WebP из галереи Yandex Maps, с описанием источника и роли в `src/data/media.ts`. Нормальный hero собирается отдельными слоями: ImageGen reference-edit clean backdrop, bagel/plate, latte, reference logo, doodles, route, skyline и transparent underline extract; ни один полный screenshot не является runtime-сценой. About также использует отдельный alpha-слой выпечки с полной узорной тарелкой. Эти слои явно являются decorative reference-art, а не фотографией, картой или документальным видом. Полная обработка и решение по Remove Background Local записаны в [docs/reference/white-cup-asset-provenance.md](docs/reference/white-cup-asset-provenance.md).
+
+## Фактические оговорки
+
+- Основной адрес в данных: `Красноармейская, 15`, во дворе Музея Модерна; в карточке Яндекс может показываться дом 17 — пояснение выведено рядом с маршрутом.
+- Вторая точка: `Куйбышева, 128/1`, пространство «Цех»; график отмечен как требующий уточнения перед визитом.
+- Подтверждённый диапазон цены отображается только у капучино (`270–320 ₽`). Для остальных позиций лендинг предлагает открыть актуальное меню, а не угадывает стоимость или наличие.
+- Встроенная карта — лёгкая локальная схема с внешним переходом в Яндекс Карты, а не точный live-embed.
+
+Остальные намеренные визуальные отклонения от статичных референсов собраны в [docs/visual-deviations.md](docs/visual-deviations.md).
+
+## Структура
+
+- `src/data/` — факты сайта и provenance медиа.
+- `src/components/` — навигация, reveal, carousel, фото, карта и финальный CTA/footer.
+- `src/sections/` — шесть сюжетных сцен лендинга.
+- `public/media/` — локальные оптимизированные ассеты.
