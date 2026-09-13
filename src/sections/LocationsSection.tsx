@@ -1,196 +1,93 @@
-import { OrganicPhoto } from '../components/OrganicPhoto'
 import { Reveal } from '../components/Reveal'
-import { SceneLayer } from '../components/SceneLayer'
 import { SectionFrame } from '../components/SectionFrame'
-import { StaticMapCard } from '../components/StaticMapCard'
-import {
-  documentarySceneMedia,
-  locationsCardIconMedia,
-  locationsSceneLayerManifest,
-} from '../data/media'
-import { siteData, type Location } from '../data/site'
-
-type LocationCardIconName = keyof typeof locationsCardIconMedia
-
-function LocationCardIcon({ name }: { name: LocationCardIconName }) {
-  const asset = locationsCardIconMedia[name]
-  const actionClass =
-    name === 'arrow' || name === 'chat' ? ' location-card__action-icon' : ''
-
-  return (
-    <img
-      className={`location-card__icon location-card__icon--${name}${actionClass}`}
-      src={asset.src}
-      alt=""
-      aria-hidden="true"
-      data-media-kind={asset.provenanceKind}
-      draggable={false}
-      loading="lazy"
-      decoding="async"
-    />
-  )
-}
-
-function getDisplayAddress(location: Location) {
-  return location.id === 'tsekh'
-    ? `Станкозавод, ${location.address}`
-    : location.address
-}
-
-function LocationHeading({ location }: { location: Location }) {
-  if (location.id === 'tsekh') {
-    return (
-      <>
-        <span>Станкозавод,</span>{' '}
-        <span>{location.address}</span>
-      </>
-    )
-  }
-
-  return <>{location.address}</>
-}
+import { siteData } from '../data/site'
 
 export function LocationsSection() {
-  const documentaryPhoto = documentarySceneMedia.locations[0]
-
   return (
     <SectionFrame
       id="locations"
+      kicker="03 / ДО ВСТРЕЧИ"
       title={
-        <span className="locations-scene__title" data-scene-layer="title">
-          Как нас{' '}
-          <span className="locations-scene__word locations-scene__word--find locations-scene__title-accent">
-            найти
-          </span>
-        </span>
+        <>
+          <span>Два адреса.</span>
+          <br />
+          <span>Один White Cup.</span>
+        </>
       }
-      className="locations-scene"
-      data-scene-layout="independent"
+      className="locations-story"
     >
-      <div
-        className="locations-scene__paper"
-        data-scene-layer="paper"
-        data-scene-paper="true"
-        aria-hidden="true"
-      />
+      <div className="locations-story__body">
+        <Reveal className="locations-story__intro">
+          <p>
+            Две точки White Cup в центре Самары — выбирайте ту, что ближе к вашему маршруту.
+          </p>
+          <a
+            className="button-link locations-story__phone"
+            href={siteData.phoneHref}
+            aria-label={`Позвонить в White Cup, ${siteData.phone}`}
+          >
+            <span>Позвонить</span>
+            <strong>{siteData.phone}</strong>
+            <span className="locations-story__cta-circle" aria-hidden="true">
+              ↗
+            </span>
+          </a>
+        </Reveal>
 
-      <Reveal className="locations-scene__intro" data-scene-layer="copy">
-        <p>
-          Мы в <span className="locations-scene__intro-accent">самом сердце Самары</span>.
-          <br className="locations-scene__desktop-break" /> Две уютные кофейни с ароматным кофе,
-          <br className="locations-scene__desktop-break" /> свежими завтраками и тёплой атмосферой
-          <br className="locations-scene__desktop-break" /> каждый день.
-        </p>
-      </Reveal>
-
-      <div className="locations-scene__map-layer" data-scene-layer="map">
-        <StaticMapCard
-          className="locations-scene__map"
-          layer={locationsSceneLayerManifest.map}
-          labels={[
-            {
-              id: 'modern-museum',
-              label: 'Красноармейская, 15',
-              hint: 'в Яндекс — 17',
-            },
-            {
-              id: 'tsekh',
-              label: 'Станкозавод, Куйбышева, 128/1',
-            },
-          ]}
-        />
-      </div>
-
-      <div className="locations-scene__photo" data-scene-layer="photo">
-        <OrganicPhoto
-          media={documentaryPhoto}
-          className="locations-scene__documentary"
-          aspectRatio="16 / 9"
-          sizes="(max-width: 1023px) calc(100vw - 2rem), 50vw"
-        />
-      </div>
-
-      <SceneLayer
-        {...locationsSceneLayerManifest.decoration}
-        className="locations-scene__doodles"
-        data-scene-layer="doodles"
-        loading="lazy"
-        decoding="async"
-      />
-
-      <div className="locations-scene__cards" data-scene-layer="cards">
-        {siteData.locations.map((location, index) => {
-          const displayAddress = getDisplayAddress(location)
-
-          return (
+        <div className="locations-story__cards">
+          {siteData.locations.map((location, index) => (
             <Reveal
-              className="locations-card-reveal"
-              delay={index * 90}
+              className={`locations-story__card-wrap locations-story__card-wrap--${index + 1}`}
+              delay={index * 100}
               key={location.id}
             >
               <article
-                className="location-card"
+                className="locations-story__card"
                 data-location-card={location.id}
-                aria-labelledby={`location-${location.id}-title`}
+                aria-labelledby={`location-story-${location.id}-title`}
               >
-                <LocationCardIcon name="pin" />
-                <LocationCardIcon name="clock" />
-                <LocationCardIcon name="phone" />
-
-                <div className="location-card__address">
-                  <h3 id={`location-${location.id}-title`}>
-                    <LocationHeading location={location} />
-                  </h3>
-                  <address>
-                    <p>{location.context}</p>
-                  </address>
+                <div className="locations-story__card-topline">
+                  <span className="locations-story__card-number" aria-hidden="true">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <span className="locations-story__card-place">White Cup</span>
                 </div>
 
-                <div className="location-card__details">
-                  <p className="location-card__hours">
-                    <span className="location-card__meta-label">Часы работы</span>
-                    <strong>{location.hours}</strong>
-                  </p>
-                  <a
-                    className="location-card__phone"
-                    href={siteData.phoneHref}
-                    aria-label={`Позвонить в White Cup, ${displayAddress}`}
-                  >
-                    {siteData.phone}
-                  </a>
-                </div>
+                <h3 id={`location-story-${location.id}-title`}>{location.address}</h3>
+                <p className="locations-story__context">{location.context}</p>
 
-                <div className="location-card__actions" data-scene-layer="actions">
+                <p className="locations-story__hours">
+                  Актуальные часы —{' '}
                   <a
-                    className="location-card__action location-card__action--route"
                     href={location.routeUrl}
                     target="_blank"
                     rel="noreferrer"
-                    aria-label={`Построить маршрут до White Cup, ${displayAddress}, откроется в новой вкладке`}
+                    aria-label={`Актуальные часы White Cup, ${location.address}, в картах, откроется в новой вкладке`}
                   >
-                    Построить маршрут
-                    <LocationCardIcon name="arrow" />
+                    в картах
                   </a>
-                  <a
-                    className="location-card__action location-card__action--contact"
-                    href={siteData.phoneHref}
-                    aria-label={`Связаться с White Cup, ${displayAddress}`}
-                  >
-                    Связаться
-                    <LocationCardIcon name="chat" />
-                  </a>
-                </div>
+                </p>
 
                 {location.entranceNote ? (
-                  <p className="location-card__note">{location.entranceNote}</p>
+                  <p className="locations-story__note">{location.entranceNote}</p>
                 ) : null}
-                {location.hoursNote ? (
-                  <p className="location-card__note">{location.hoursNote}</p>
-                ) : null}
+
+                <a
+                  className="locations-story__route"
+                  href={location.routeUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`Построить маршрут до White Cup, ${location.address}, откроется в новой вкладке`}
+                >
+                  <span>Построить маршрут</span>
+                  <span className="locations-story__cta-circle" aria-hidden="true">
+                    ↗
+                  </span>
+                </a>
               </article>
             </Reveal>
-          )
-        })}
+          ))}
+        </div>
       </div>
     </SectionFrame>
   )

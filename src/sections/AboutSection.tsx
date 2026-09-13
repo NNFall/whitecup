@@ -1,95 +1,106 @@
+import { OrganicPhoto } from '../components/OrganicPhoto'
 import { Reveal } from '../components/Reveal'
-import { SceneLayer } from '../components/SceneLayer'
 import { SectionFrame } from '../components/SectionFrame'
-import {
-  aboutSceneLayerManifest,
-  type AboutBenefitMediaId,
-} from '../data/media'
+import { mediaAssets } from '../data/media'
 import { siteData } from '../data/site'
 
+const atmosphereScenarios = [
+  {
+    title: 'Кофе перед прогулкой',
+    description: 'Чашка кофе — и можно идти дальше.',
+  },
+  {
+    title: 'Встреча без спешки',
+    description: 'Разговор, ради которого хочется остаться.',
+  },
+  {
+    title: 'Время для себя',
+    description: 'Немного времени только для себя.',
+  },
+] as const
+
 export function AboutSection() {
-  const [pastryLayer, coffeeLayer] = aboutSceneLayerManifest.foregrounds
+  // The landscape image keeps the main documentary frame crisp at desktop
+  // widths; the portrait interiors work as the smaller, varied details.
+  const mainPhoto = mediaAssets['interior-05']
+  const sidePhotos = [mediaAssets['interior-03'], mediaAssets['interior-04']]
 
   return (
     <SectionFrame
       id="about"
+      kicker="02 / МЕСТО ДЛЯ ПАУЗЫ"
       title={
         <>
-          <span className="about-scene__title-line about-scene__title-line--brand">
-            О White Cup —
-          </span>{' '}
-          <span className="about-scene__title-line about-scene__title-line--place">
-            место, в которое
-          </span>
-          {' '}
-          <span className="about-scene__title-line about-scene__title-line--return">
-            <span className="about-scene__word about-scene__word--want about-scene__accent">
-              хочется
-            </span>{' '}
-            <span className="about-scene__word about-scene__word--return about-scene__return">
-              возвращаться
-            </span>
-          </span>
+          <span>В центре города.</span>
+          <br />
+          <span>В своём ритме.</span>
         </>
       }
-      className="about-scene"
+      className="about-story"
     >
-      <SceneLayer
-        {...aboutSceneLayerManifest.backdrop}
-        className="about-scene__backdrop"
-        loading="lazy"
-        decoding="async"
-      />
-      <SceneLayer
-        {...aboutSceneLayerManifest.decoration}
-        className="about-scene__doodles"
-        loading="lazy"
-        decoding="async"
-      />
+      <span id="visit" className="story-anchor anchor-alias" aria-hidden="true" />
+      <span id="events" className="story-anchor anchor-alias" aria-hidden="true" />
 
-      <Reveal className="about-scene__intro">
-        <p>
-          Мы обожаем спешелти-кофе и готовим его с вниманием к каждой детали. Наши завтраки подаём весь день — от хрустящих вафель до сытных боулов и ароматной выпечки.
-        </p>
-        <p>
-          White Cup — это уютная кофейня{' '}
-          <span className="about-scene__city">в самом сердце Самары</span>, где легко переключиться с городского ритма на своё время.
-        </p>
-      </Reveal>
+      <div className="about-story__body">
+        <Reveal className="about-story__aside">
+          <p className="about-story__lead">
+            За кофе после прогулки. За длинным разговором. Или просто за временем для себя.
+          </p>
+          <a
+            className="about-story__vk-link"
+            href={siteData.vkUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Больше жизни — в VK
+            <span aria-hidden="true">↗</span>
+          </a>
+          <span className="about-story__script" aria-hidden="true">
+            своё время
+          </span>
+        </Reveal>
 
-      <ul className="benefits-list" aria-label="Что есть в White Cup">
-        {siteData.benefits.map((benefit) => {
-          const illustration =
-            aboutSceneLayerManifest.benefits[benefit.id as AboutBenefitMediaId]
+        <div className="about-story__gallery" aria-label="Интерьеры White Cup">
+          <Reveal className="about-story__figure about-story__figure--main">
+            <OrganicPhoto
+              media={mainPhoto}
+              aspectRatio="1.65 / 1"
+              sizes="(max-width: 720px) calc(100vw - 2.5rem), 54vw"
+            />
+          </Reveal>
 
-          return (
-            <li key={benefit.id} className="benefit-item">
-              <SceneLayer
-                {...illustration}
-                className="benefit-item__illustration"
-                data-about-benefit-image={benefit.id}
-                loading="lazy"
-                decoding="async"
-              />
-              <h3>{benefit.title}</h3>
-              <p>{benefit.description}</p>
-            </li>
-          )
-        })}
-      </ul>
+          <div className="about-story__gallery-side">
+            {sidePhotos.map((photo, index) => (
+              <Reveal
+                className={`about-story__figure about-story__figure--side about-story__figure--side-${index + 1}`}
+                delay={(index + 1) * 90}
+                key={photo.id}
+              >
+                <OrganicPhoto
+                  media={photo}
+                  aspectRatio="1.45 / 1"
+                  sizes="(max-width: 720px) calc(100vw - 2.5rem), 22vw"
+                />
+              </Reveal>
+            ))}
+          </div>
+        </div>
 
-      <SceneLayer
-        {...pastryLayer}
-        className="about-scene__pastry"
-        loading="lazy"
-        decoding="async"
-      />
-      <SceneLayer
-        {...coffeeLayer}
-        className="about-scene__coffee"
-        loading="lazy"
-        decoding="async"
-      />
+        <Reveal className="about-story__scenarios">
+          <p className="about-story__scenarios-label">Три простых повода заглянуть</p>
+          <ol>
+            {atmosphereScenarios.map((scenario, index) => (
+              <li key={scenario.title}>
+                <span className="about-story__scenario-number" aria-hidden="true">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <h3>{scenario.title}</h3>
+                <p>{scenario.description}</p>
+              </li>
+            ))}
+          </ol>
+        </Reveal>
+      </div>
     </SectionFrame>
   )
 }

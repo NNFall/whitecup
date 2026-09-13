@@ -77,7 +77,7 @@ export function HeroSection() {
               в центре <span className="hero-scene__lede-accent">Самары.</span>
             </p>
             <div className="hero-scene__actions" role="group" aria-label="Основные действия">
-              <a className="button-link button-link--primary" href={siteData.menuUrl} target="_blank" rel="noreferrer">
+              <a className="button-link button-link--primary" href="#menu">
                 Посмотреть меню <span aria-hidden="true">→</span>
               </a>
               <a className="button-link button-link--quiet" href="#locations">

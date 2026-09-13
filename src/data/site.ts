@@ -2,8 +2,6 @@ export interface MenuItem {
   id: string
   name: string
   description: string
-  price?: string
-  imageId?: string
 }
 
 export interface Location {
@@ -11,53 +9,14 @@ export interface Location {
   name: string
   address: string
   context: string
-  hours: string
-  hoursNote?: string
-  mapAddress?: string
   entranceNote?: string
   routeUrl: string
 }
 
-export interface Benefit {
-  id: string
-  title: string
-  description: string
-}
+export const yandexCardUrl = 'https://yandex.ru/maps/org/white_cup/19381755919/'
 
-export interface VisitScenario {
-  id: string
-  title: string
-  description: string
-}
-
-export interface EventCard {
-  id: string
-  title: string
-  description: string
-}
-
-export interface SiteData {
-  brandName: string
-  tagline: string
-  phone: string
-  phoneHref: string
-  yandexOrgId: string
-  yandexCardUrl: string
-  menuUrl: string
-  galleryUrl: string
-  vkUrl: string
-  secondaryHoursNote: string
-  locations: Location[]
-  menuItems: MenuItem[]
-  benefits: Benefit[]
-  visitScenarios: VisitScenario[]
-  events: EventCard[]
-}
-
-const yandexCardUrl = 'https://yandex.ru/maps/org/white_cup/19381755919/'
-const secondaryHoursNote = 'Уточняйте актуальный график перед визитом'
-
-export const siteData: SiteData = {
+// Public contact cards checked on 2026-09-14. See docs/redesign-2026-09-14.md.
+export const siteData = {
   brandName: 'White Cup',
   tagline: 'Завтраки, кофе и свой вайб в White Cup',
   phone: '+7 (937) 235-57-15',
@@ -67,131 +26,30 @@ export const siteData: SiteData = {
   menuUrl: `${yandexCardUrl}menu/`,
   galleryUrl: `${yandexCardUrl}gallery/`,
   vkUrl: 'https://vk.ru/white_cup',
-  secondaryHoursNote,
   locations: [
     {
       id: 'modern-museum',
-      name: 'Красноармейская, 15',
-      address: 'Красноармейская, 15',
+      name: 'Красноармейская, 17',
+      address: 'Красноармейская, 17',
       context: 'во дворе Музея Модерна',
-      hours: '08:00–23:00',
-      mapAddress: 'Красноармейская, 17',
-      entranceNote:
-        'Вход через двор Музея Модерна. В карточке Яндекс может отображаться дом 17.',
       routeUrl: yandexCardUrl,
     },
     {
       id: 'tsekh',
-      name: 'Куйбышева, 128/1',
-      address: 'Куйбышева, 128/1',
+      name: 'Куйбышева, 128А',
+      address: 'Куйбышева, 128А',
       context: 'Станкозавод, пространство «Цех»',
-      hours: '10:00–21:00',
-      hoursNote: secondaryHoursNote,
-      routeUrl: 'https://yandex.ru/maps/?text=Самара%2C%20Куйбышева%2C%20128%2F1',
+      routeUrl: 'https://yandex.ru/maps/org/white_cup/193710716150/',
     },
-  ],
+  ] as Location[],
   menuItems: [
-    {
-      id: 'cappuccino',
-      name: 'Капучино',
-      description: 'Нежная молочная пенка и насыщенный эспрессо — идеальное начало дня.',
-      price: '270–320 ₽',
-    },
-    {
-      id: 'bagel',
-      name: 'Бейгл с лососем',
-      description: 'Сытный бейгл с лососем, крем-чизом и свежей зеленью.',
-    },
-    {
-      id: 'waffle',
-      name: 'Вафля с ягодами',
-      description: 'Хрустящая вафля с сезонными ягодами и ванильным кремом.',
-    },
-    {
-      id: 'syrniki',
-      name: 'Сырники',
-      description: 'Нежные сырники со сметаной и ягодным соусом.',
-    },
-    {
-      id: 'cheesecake',
-      name: 'Малиновый чизкейк',
-      description: 'Нежный чизкейк с малиной и фисташкой.',
-    },
-    {
-      id: 'oatmeal',
-      name: 'Овсянка с ягодами',
-      description: 'Тёплая овсянка с ягодами, орехами и мёдом.',
-    },
-    {
-      id: 'shakshuka',
-      name: 'Шакшука',
-      description: 'Запечённые яйца с томатами, зеленью и тёплым хлебом.',
-    },
-    {
-      id: 'croissant',
-      name: 'Круассан с джемом',
-      description: 'Слоёный круассан с апельсиновым джемом и ягодами.',
-    },
-  ],
-  benefits: [
-    {
-      id: 'specialty-coffee',
-      title: 'Спешелти-кофе',
-      description: 'Только отборные зёрна и бережная обжарка',
-    },
-    {
-      id: 'all-day-breakfast',
-      title: 'Завтраки весь день',
-      description: 'Любимые блюда в любое время',
-    },
-    {
-      id: 'cozy-atmosphere',
-      title: 'Уютная атмосфера',
-      description: 'Тёплый интерьер и дружелюбная команда',
-    },
-    {
-      id: 'samara-centre',
-      title: 'Центр Самары',
-      description: 'В самом сердце города, рядом с культурной жизнью',
-    },
-  ],
-  visitScenarios: [
-    {
-      id: 'morning-coffee',
-      title: 'Утро с кофе',
-      description:
-        'Ароматный кофе с собой, свежая выпечка и бодрое начало дня. Быстро, вкусно и рядом с вашими планами.',
-    },
-    {
-      id: 'meeting-in-centre',
-      title: 'Встреча в центре',
-      description:
-        'Удобное расположение, комфортная атмосфера и вкусные блюда — идеальные условия для деловых и дружеских встреч.',
-    },
-    {
-      id: 'quiet-pause',
-      title: 'Спокойная пауза',
-      description:
-        'Мягкий свет, уютные места и любимый вкус — для чтения, работы или просто чтобы остановиться и выдохнуть.',
-    },
-  ],
-  events: [
-    {
-      id: 'breakfasts',
-      title: 'Завтраки с друзьями',
-      description: 'Вкусные завтраки, душевные разговоры и отличное начало дня.',
-    },
-    {
-      id: 'meetings',
-      title: 'Рабочие встречи',
-      description: 'Уютная атмосфера и всё необходимое для продуктивных встреч.',
-    },
-    {
-      id: 'warm-events',
-      title: 'Камерные события',
-      description: 'Идеальное место для небольших праздников, мастер-классов и встреч.',
-    },
-  ],
+    { id: 'cappuccino', name: 'Капучино', description: 'Эспрессо и нежная молочная пенка.' },
+    { id: 'bagel', name: 'Бейгл с лососем', description: 'Лосось, крем-чиз и свежая зелень.' },
+    { id: 'waffle', name: 'Вафля с ягодами', description: 'Хрустящая вафля, ягоды и ванильный крем.' },
+    { id: 'syrniki', name: 'Сырники', description: 'Со сметаной и ягодным соусом.' },
+    { id: 'cheesecake', name: 'Малиновый чизкейк', description: 'Нежный чизкейк с малиной и фисташкой.' },
+    { id: 'oatmeal', name: 'Овсянка с ягодами', description: 'Тёплая овсянка, ягоды, орехи и мёд.' },
+    { id: 'shakshuka', name: 'Шакшука', description: 'Яйца с томатами, зеленью и тёплым хлебом.' },
+    { id: 'croissant', name: 'Круассан с джемом', description: 'Слоёный круассан с джемом и ягодами.' },
+  ] as MenuItem[],
 }
-
-export { secondaryHoursNote, yandexCardUrl }

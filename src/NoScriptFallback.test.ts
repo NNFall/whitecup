@@ -13,8 +13,8 @@ describe('meaningful no-JavaScript fallback', () => {
     expect(noScriptMarkup).toMatch(
       /<a\b[^>]*href=["']tel:\+79372355715["'][^>]*>\s*\+7 \(937\) 235-57-15\s*<\/a>/i,
     )
-    expect(noScriptMarkup).toContain('Красноармейская, 15')
-    expect(noScriptMarkup).toContain('Куйбышева, 128/1')
+    expect(noScriptMarkup).toContain('Красноармейская, 17')
+    expect(noScriptMarkup).toContain('Куйбышева, 128А')
     expect(noScriptMarkup).toMatch(/href=["'][^"']*yandex\.ru\/maps[^"']*["']/i)
     expect(noScriptMarkup).toMatch(/href=["']https:\/\/vk\.ru\/white_cup["']/i)
     expect(noScriptMarkup).toMatch(/href=["'][^"']*\/menu\/[^"']*["']/i)
