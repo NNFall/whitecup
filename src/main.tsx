@@ -12,6 +12,10 @@ import './styles/scene-bridge-polish.css'
 import './styles/scene-layout-polish.css'
 import './styles/scene-frame-polish.css'
 import './styles/live-typography.css'
+import './styles/element-motion.css'
+import './styles/motion-menu.css'
+import './styles/motion-story.css'
+import './styles/motion-contact.css'
 import App from './App'
 
 const rootElement = document.getElementById('root')

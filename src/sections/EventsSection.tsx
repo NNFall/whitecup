@@ -1,5 +1,4 @@
 import { OrganicPhoto } from '../components/OrganicPhoto'
-import { Reveal } from '../components/Reveal'
 import { SceneLayer } from '../components/SceneLayer'
 import { SectionFrame } from '../components/SectionFrame'
 import {
@@ -18,10 +17,18 @@ export function EventsSection() {
       id="events"
       title={
         <span className="events-scene__title" data-scene-layer="title">
-          <span className="events-scene__title-line events-scene__title-line--first">
+          <span
+            className="events-scene__title-line events-scene__title-line--first"
+            data-motion="rise"
+            data-motion-step={0}
+          >
             Завтраки, встречи
           </span>{' '}
-          <span className="events-scene__title-line events-scene__title-line--second">
+          <span
+            className="events-scene__title-line events-scene__title-line--second"
+            data-motion="rise"
+            data-motion-step={1}
+          >
             <span className="events-scene__word events-scene__word--warm">и тёплые</span>{' '}
             <span className="events-scene__word events-scene__word--events events-scene__accent">
               события
@@ -39,8 +46,8 @@ export function EventsSection() {
         aria-hidden="true"
       />
 
-      <Reveal className="events-scene__intro" data-scene-layer="copy">
-        <p>
+      <div className="events-scene__intro" data-scene-layer="copy">
+        <p data-motion="rise" data-motion-step={2}>
           Начните день с вкусного завтрака в компании друзей,
           <br className="events-scene__desktop-break" />
           {' '}
@@ -52,9 +59,14 @@ export function EventsSection() {
           {' '}
           <span className="events-scene__intro-brand">White Cup</span>.
         </p>
-      </Reveal>
+      </div>
 
-      <div className="events-scene__photo" data-scene-layer="photo">
+      <div
+        className="events-scene__photo"
+        data-scene-layer="photo"
+        data-motion="soft"
+        data-motion-step={2}
+      >
         <OrganicPhoto
           media={documentaryPhoto}
           className="events-scene__documentary"
@@ -67,18 +79,24 @@ export function EventsSection() {
         <SceneLayer
           {...eventsSceneLayerManifest.chalkboard}
           className="events-scene__chalkboard"
+          data-motion="art"
+          data-motion-step={2}
           loading="lazy"
           decoding="async"
         />
         <SceneLayer
           {...cakeLayer}
           className="events-scene__cake"
+          data-motion="art"
+          data-motion-step={4}
           loading="lazy"
           decoding="async"
         />
         <SceneLayer
           {...coffeeLayer}
           className="events-scene__coffee"
+          data-motion="art"
+          data-motion-step={5}
           loading="lazy"
           decoding="async"
         />
@@ -88,6 +106,8 @@ export function EventsSection() {
         {...eventsSceneLayerManifest.decoration}
         className="events-scene__doodles"
         data-scene-layer="doodles"
+        data-motion="draw"
+        data-motion-step={3}
         loading="lazy"
         decoding="async"
       />
@@ -100,11 +120,12 @@ export function EventsSection() {
         {siteData.events.map((event, index) => {
           const cardLayer = eventsSceneLayerManifest.cards[event.id as EventsCardMediaId]
           const isAnnouncementsCard = event.id === 'warm-events'
+          const step = index % 3
 
           return (
-            <Reveal key={event.id} className="events-card-reveal" delay={index * 80}>
+            <div key={event.id} className="events-card-reveal">
               <article className="events-card" data-events-card={event.id}>
-                <div className="events-card__media">
+                <div className="events-card__media" data-motion="art" data-motion-step={step}>
                   <SceneLayer
                     {...cardLayer}
                     className="events-card__image"
@@ -113,7 +134,7 @@ export function EventsSection() {
                     decoding="async"
                   />
                 </div>
-                <div className="events-card__copy">
+                <div className="events-card__copy" data-motion="rise" data-motion-step={step + 2}>
                   <h3>
                     {isAnnouncementsCard ? (
                       <a
@@ -132,7 +153,7 @@ export function EventsSection() {
                   <p>{event.description}</p>
                 </div>
               </article>
-            </Reveal>
+            </div>
           )
         })}
       </div>

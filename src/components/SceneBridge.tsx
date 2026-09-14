@@ -38,11 +38,13 @@ export function SceneBridge({ from, to }: SceneBridgeProps) {
         data-media-kind={bridgeMediaKind}
         data-provenance={bridgeProvenance}
       >
-        <span className="scene-bridge__label">{label}</span>
+        <span className="scene-bridge__label" data-motion="soft">{label}</span>
       </span>
       <span
         aria-hidden="true"
         className="scene-bridge__marker"
+        data-motion="draw"
+        data-motion-step="1"
         data-bridge-layer="marker"
         data-media-kind={bridgeMediaKind}
         data-provenance={bridgeProvenance}

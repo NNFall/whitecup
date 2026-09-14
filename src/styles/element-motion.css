@@ -1,0 +1,133 @@
+/* Motion belongs to the existing pieces of the collage. No new positioning
+ * context or persistent transform is left behind when an entrance finishes. */
+.site-shell {
+  --motion-ease: cubic-bezier(0.2, 0.75, 0.25, 1);
+  --motion-rise: 18px;
+  --motion-art-rise: 22px;
+  --motion-art-turn: -0.8deg;
+}
+
+[data-motion-step='1'] { --motion-delay: 70ms; }
+[data-motion-step='2'] { --motion-delay: 140ms; }
+[data-motion-step='3'] { --motion-delay: 210ms; }
+[data-motion-step='4'] { --motion-delay: 280ms; }
+[data-motion-step='5'] { --motion-delay: 350ms; }
+
+/* These used to animate on page load even when far below the viewport. */
+.scene-bridge__paper,
+.scene-bridge__marker {
+  animation: none;
+}
+
+[data-motion][data-motion-state='pending'] {
+  opacity: 0;
+}
+
+[data-motion][data-motion-state='visible'] {
+  animation-duration: 650ms;
+  animation-timing-function: var(--motion-ease);
+  animation-delay: var(--motion-delay, 0ms);
+  animation-iteration-count: 1;
+  animation-fill-mode: backwards;
+}
+
+[data-motion='rise'][data-motion-state='visible'] {
+  animation-name: element-rise;
+}
+
+[data-motion='soft'][data-motion-state='visible'] {
+  animation-name: element-soft;
+  animation-duration: 520ms;
+}
+
+[data-motion='art'][data-motion-state='visible'] {
+  animation-name: element-art;
+  animation-duration: 850ms;
+}
+
+[data-motion='draw'][data-motion-state='visible'] {
+  animation-name: element-draw;
+  animation-duration: 850ms;
+}
+
+/* Only the first keyframe is specified: the destination is the original
+ * opacity, crop and transform, including translucent decorative layers. */
+@keyframes element-rise {
+  from { opacity: 0; translate: 0 var(--motion-rise); }
+}
+
+@keyframes element-soft {
+  from { opacity: 0; }
+}
+
+@keyframes element-art {
+  from {
+    opacity: 0;
+    translate: 0 var(--motion-art-rise);
+    rotate: var(--motion-art-turn);
+    scale: 0.975;
+  }
+}
+
+@keyframes element-draw {
+  from { opacity: 0; clip-path: inset(0 100% 0 0); }
+}
+
+@keyframes element-ink-stroke {
+  from { opacity: 0; scale: 0 1; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-scene__title-line[data-motion-state='visible'] .hero-scene__brand::after {
+    animation: element-ink-stroke 650ms var(--motion-ease) 280ms backwards;
+  }
+
+  .site-nav__desktop a[aria-current='location']::after {
+    animation: element-ink-stroke 280ms var(--motion-ease) backwards;
+    transform-origin: left center;
+  }
+}
+
+@media (max-width: 1023px) {
+  .site-shell {
+    --motion-rise: 10px;
+    --motion-art-rise: 12px;
+    --motion-art-turn: -0.45deg;
+  }
+
+  [data-motion][data-motion-state='visible'] {
+    animation-duration: 560ms;
+    animation-delay: min(var(--motion-delay, 0ms), 140ms);
+  }
+
+  /* Artwork touching a mobile crop enters without moving its cut edge. */
+  .hero-bagel[data-motion-state='visible'],
+  .hero-coffee[data-motion-state='visible'],
+  .events-scene__props [data-motion-state='visible'],
+  .locations-scene__map-image[data-motion-state='visible'],
+  .locations-scene__doodles[data-motion-state='visible'] {
+    animation-name: element-soft;
+  }
+}
+
+/* Keyboard users never have to wait for an entrance to reach an action. */
+[data-motion][data-motion-state='instant'],
+[data-motion]:focus-within {
+  animation: none;
+}
+
+[data-motion][data-motion-state='pending']:focus-within {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce), print {
+  [data-motion],
+  [data-motion]::before,
+  [data-motion]::after {
+    animation: none !important;
+  }
+
+  [data-motion][data-motion-state='pending'] {
+    opacity: 1;
+  }
+}

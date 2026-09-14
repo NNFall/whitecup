@@ -31,7 +31,7 @@ export function SectionFrame({
     >
       <div className="section-frame__inner">
         <div className="section-frame__heading">
-          {kicker ? <p className="scene-kicker">{kicker}</p> : null}
+          {kicker ? <p className="scene-kicker" data-motion="soft">{kicker}</p> : null}
           <h2 id={titleId}>{title}</h2>
         </div>
         {children}

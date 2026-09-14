@@ -1,0 +1,60 @@
+/* Keep the map and its semantic address cards visually connected. */
+.locations-scene__map-label,
+.locations-scene__map-label small {
+  transition: color 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .locations-scene:has(.location-card[data-location-card='modern-museum']:hover)
+    .locations-scene__map-label[data-map-location='modern-museum'],
+  .locations-scene:has(.location-card[data-location-card='tsekh']:hover)
+    .locations-scene__map-label[data-map-location='tsekh'] {
+    color: var(--orange-action);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .location-card__action-icon,
+  .site-footer .button-link > span[aria-hidden='true'],
+  .site-footer__links a > span[aria-hidden='true'] {
+    transition: translate 180ms ease;
+  }
+
+  .location-card__action--route:hover .location-card__action-icon,
+  .site-footer .button-link:hover > span[aria-hidden='true'],
+  .site-footer__links a:hover > span[aria-hidden='true'] {
+    translate: 3px 0;
+  }
+}
+
+.locations-scene:has(.location-card[data-location-card='modern-museum']:focus-within)
+  .locations-scene__map-label[data-map-location='modern-museum'],
+.locations-scene:has(.location-card[data-location-card='tsekh']:focus-within)
+  .locations-scene__map-label[data-map-location='tsekh'] {
+  color: var(--orange-action);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .location-card__action-icon,
+  .site-footer .button-link > span[aria-hidden='true'],
+  .site-footer__links a > span[aria-hidden='true'] {
+    transition: translate 180ms ease;
+  }
+
+  .location-card__action--route:focus-visible .location-card__action-icon,
+  .site-footer .button-link:focus-visible > span[aria-hidden='true'],
+  .site-footer__links a:focus-visible > span[aria-hidden='true'] {
+    translate: 3px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .locations-scene__map-label,
+  .locations-scene__map-label small,
+  .location-card__action-icon,
+  .site-footer .button-link > span[aria-hidden='true'],
+  .site-footer__links a > span[aria-hidden='true'] {
+    transition: none;
+    translate: none;
+  }
+}

@@ -1,5 +1,4 @@
 import { OrganicPhoto } from '../components/OrganicPhoto'
-import { Reveal } from '../components/Reveal'
 import { SceneLayer } from '../components/SceneLayer'
 import { SectionFrame } from '../components/SectionFrame'
 import { StaticMapCard } from '../components/StaticMapCard'
@@ -16,6 +15,7 @@ function LocationCardIcon({ name }: { name: LocationCardIconName }) {
   const asset = locationsCardIconMedia[name]
   const actionClass =
     name === 'arrow' || name === 'chat' ? ' location-card__action-icon' : ''
+  const motionKind = name === 'pin' || name === 'clock' || name === 'phone' ? 'art' : undefined
 
   return (
     <img
@@ -24,6 +24,8 @@ function LocationCardIcon({ name }: { name: LocationCardIconName }) {
       alt=""
       aria-hidden="true"
       data-media-kind={asset.provenanceKind}
+      data-motion={motionKind}
+      data-motion-step={motionKind ? 0 : undefined}
       draggable={false}
       loading="lazy"
       decoding="async"
@@ -59,7 +61,12 @@ export function LocationsSection() {
     <SectionFrame
       id="locations"
       title={
-        <span className="locations-scene__title" data-scene-layer="title">
+        <span
+          className="locations-scene__title"
+          data-scene-layer="title"
+          data-motion="rise"
+          data-motion-step={0}
+        >
           Как нас{' '}
           <span className="locations-scene__word locations-scene__word--find locations-scene__title-accent">
             найти
@@ -76,14 +83,14 @@ export function LocationsSection() {
         aria-hidden="true"
       />
 
-      <Reveal className="locations-scene__intro" data-scene-layer="copy">
-        <p>
+      <div className="locations-scene__intro" data-scene-layer="copy">
+        <p data-motion="rise" data-motion-step={1}>
           Мы в <span className="locations-scene__intro-accent">самом сердце Самары</span>.
           <br className="locations-scene__desktop-break" /> Две уютные кофейни с ароматным кофе,
           <br className="locations-scene__desktop-break" /> свежими завтраками и тёплой атмосферой
           <br className="locations-scene__desktop-break" /> каждый день.
         </p>
-      </Reveal>
+      </div>
 
       <div className="locations-scene__map-layer" data-scene-layer="map">
         <StaticMapCard
@@ -104,7 +111,12 @@ export function LocationsSection() {
         />
       </div>
 
-      <div className="locations-scene__photo" data-scene-layer="photo">
+      <div
+        className="locations-scene__photo"
+        data-scene-layer="photo"
+        data-motion="soft"
+        data-motion-step={2}
+      >
         <OrganicPhoto
           media={documentaryPhoto}
           className="locations-scene__documentary"
@@ -117,6 +129,8 @@ export function LocationsSection() {
         {...locationsSceneLayerManifest.decoration}
         className="locations-scene__doodles"
         data-scene-layer="doodles"
+        data-motion="art"
+        data-motion-step={5}
         loading="lazy"
         decoding="async"
       />
@@ -126,11 +140,7 @@ export function LocationsSection() {
           const displayAddress = getDisplayAddress(location)
 
           return (
-            <Reveal
-              className="locations-card-reveal"
-              delay={index * 90}
-              key={location.id}
-            >
+            <div className="locations-card-reveal" key={location.id}>
               <article
                 className="location-card"
                 data-location-card={location.id}
@@ -140,7 +150,7 @@ export function LocationsSection() {
                 <LocationCardIcon name="clock" />
                 <LocationCardIcon name="phone" />
 
-                <div className="location-card__address">
+                <div className="location-card__address" data-motion="rise" data-motion-step={index}>
                   <h3 id={`location-${location.id}-title`}>
                     <LocationHeading location={location} />
                   </h3>
@@ -149,7 +159,11 @@ export function LocationsSection() {
                   </address>
                 </div>
 
-                <div className="location-card__details">
+                <div
+                  className="location-card__details"
+                  data-motion="soft"
+                  data-motion-step={index + 2}
+                >
                   <p className="location-card__hours">
                     <span className="location-card__meta-label">Часы работы</span>
                     <strong>
@@ -172,7 +186,12 @@ export function LocationsSection() {
                   </a>
                 </div>
 
-                <div className="location-card__actions" data-scene-layer="actions">
+                <div
+                  className="location-card__actions"
+                  data-scene-layer="actions"
+                  data-motion="rise"
+                  data-motion-step={index + 4}
+                >
                   <a
                     className="location-card__action location-card__action--route"
                     href={location.routeUrl}
@@ -194,10 +213,16 @@ export function LocationsSection() {
                 </div>
 
                 {location.entranceNote ? (
-                  <p className="location-card__note">{location.entranceNote}</p>
+                  <p
+                    className="location-card__note"
+                    data-motion="soft"
+                    data-motion-step={5}
+                  >
+                    {location.entranceNote}
+                  </p>
                 ) : null}
               </article>
-            </Reveal>
+            </div>
           )
         })}
       </div>

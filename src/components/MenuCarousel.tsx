@@ -92,6 +92,7 @@ function MenuCard({
   const cardId = clone ? `menu-card-${item.id}-${copy}` : `menu-card-${item.id}`
   const descriptionId = `${cardId}-description`
   const factsId = `${cardId}-facts`
+  const motionStep = index % 3
 
   return (
     <li
@@ -112,7 +113,12 @@ function MenuCard({
         aria-labelledby={cardId}
         aria-describedby={`${descriptionId} ${factsId}`}
       >
-        <div className="menu-card__art">
+        <div
+          className="menu-card__art"
+          data-motion="art"
+          data-motion-step={motionStep}
+          data-motion-sync={`menu-${item.id}-art`}
+        >
           <img
             src={media.src}
             srcSet={media.srcSet}
@@ -127,7 +133,12 @@ function MenuCard({
           {item.id === 'cheesecake' ? <span className="menu-card__season">Сезон</span> : null}
           <span className="menu-card__favorite" aria-hidden="true" />
         </div>
-        <div className="menu-card__body">
+        <div
+          className="menu-card__body"
+          data-motion="rise"
+          data-motion-step={motionStep + 2}
+          data-motion-sync={`menu-${item.id}-body`}
+        >
           <h3 id={cardId}>{item.name}</h3>
           <p className="menu-card__description" id={descriptionId}>{item.description}</p>
           <span className="menu-card__facts" id={factsId}>
@@ -379,7 +390,7 @@ export function MenuCarousel({ items, fullMenuUrl, provenanceDescriptionId }: Me
 
   return (
     <div className="menu-carousel" role="region" aria-roledescription="carousel" aria-label="Избранное меню White Cup">
-      <div className="menu-carousel__toolbar">
+      <div className="menu-carousel__toolbar" data-motion="soft" data-motion-step={3}>
         <p className="menu-carousel__hint">Популярное и сезонное</p>
         <div className="menu-carousel__controls" role="group" aria-label="Навигация по меню">
           <button
@@ -438,7 +449,7 @@ export function MenuCarousel({ items, fullMenuUrl, provenanceDescriptionId }: Me
         </div>
       </div>
 
-      <div className="menu-carousel__footer">
+      <div className="menu-carousel__footer" data-motion="soft" data-motion-step={4}>
         <div className="menu-carousel__dots" role="group" aria-label="Выбор позиции меню">
           {items.map((item, index) => (
             <button
@@ -457,7 +468,7 @@ export function MenuCarousel({ items, fullMenuUrl, provenanceDescriptionId }: Me
           {String(activeIndex + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}
         </p>
       </div>
-      <p className="menu-carousel__note">
+      <p className="menu-carousel__note" data-motion="soft" data-motion-step={5}>
         <span className="menu-carousel__note-mark" aria-hidden="true" />
         <span className="menu-carousel__note-copy">
           <span className="menu-carousel__note-instruction">

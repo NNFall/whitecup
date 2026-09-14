@@ -1,0 +1,71 @@
+/* Small tactile responses for the existing paper collage.  Entrance motion
+ * lives in element-motion.css; this layer only reacts to deliberate input. */
+
+.about-scene .benefit-item__illustration {
+  transition:
+    transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+    rotate 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.visit-scene .visit-card__corner,
+.visit-scene .visit-card__icon {
+  transform-origin: center;
+  transition: rotate 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.events-scene .events-card__title-link {
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in srgb, var(--orange-action) 46%, transparent);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.16em;
+  transition: text-decoration-color 220ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .about-scene .benefit-item:hover .benefit-item__illustration {
+    rotate: -0.8deg;
+  }
+
+  .visit-scene .visit-card:hover .visit-card__corner,
+  .visit-scene .visit-card:hover .visit-card__icon {
+    rotate: 2.5deg;
+  }
+
+  .events-scene .events-card__title-link:hover {
+    text-decoration-color: var(--orange-action);
+  }
+}
+
+.about-scene .benefit-item:focus-within .benefit-item__illustration {
+  rotate: -0.8deg;
+}
+
+.visit-scene .visit-card:focus-within .visit-card__corner,
+.visit-scene .visit-card:focus-within .visit-card__icon {
+  rotate: 2.5deg;
+}
+
+.events-scene .events-card__title-link:focus-visible {
+  text-decoration-color: var(--orange-action);
+}
+
+@media (prefers-reduced-motion: reduce), print {
+  .about-scene .benefit-item__illustration,
+  .visit-scene .visit-card__corner,
+  .visit-scene .visit-card__icon,
+  .events-scene .events-card__title-link {
+    transition: none;
+  }
+
+  .about-scene .benefit-item:hover .benefit-item__illustration,
+  .about-scene .benefit-item:focus-within .benefit-item__illustration {
+    rotate: none;
+  }
+
+  .visit-scene .visit-card:hover .visit-card__corner,
+  .visit-scene .visit-card:hover .visit-card__icon,
+  .visit-scene .visit-card:focus-within .visit-card__corner,
+  .visit-scene .visit-card:focus-within .visit-card__icon {
+    rotate: none;
+  }
+}

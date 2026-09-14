@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 
 import { StickyNav } from './components/StickyNav'
 import { Footer } from './components/Footer'
@@ -9,6 +9,7 @@ import { HeroSection } from './sections/HeroSection'
 import { LocationsSection } from './sections/LocationsSection'
 import { MenuSection } from './sections/MenuSection'
 import { VisitSection } from './sections/VisitSection'
+import { useElementMotion } from './hooks/useElementMotion'
 
 const HASH_NAVIGATION_KEYS = new Set([
   'ArrowDown',
@@ -23,6 +24,9 @@ const HASH_NAVIGATION_KEYS = new Set([
 ])
 
 export default function App() {
+  const shellRef = useRef<HTMLDivElement>(null)
+  useElementMotion(shellRef)
+
   useLayoutEffect(() => {
     let pendingAlignment: number | undefined
 
@@ -100,7 +104,7 @@ export default function App() {
   }, [])
 
   return (
-    <div className="site-shell">
+    <div className="site-shell" ref={shellRef}>
       <StickyNav />
       <main className="app-shell">
         <HeroSection />

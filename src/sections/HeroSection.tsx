@@ -49,18 +49,30 @@ export function HeroSection() {
         <div className="hero-reference-frame__grain" aria-hidden="true" />
 
         <div className="hero-scene__inner">
-          <Reveal className="hero-scene__copy">
+          <div className="hero-scene__copy">
             <h1 id="hero-title" aria-label="Завтраки, кофе и свой вайб в White Cup">
-              <span className="hero-scene__title-line hero-scene__title-line--first">
+              <span
+                className="hero-scene__title-line hero-scene__title-line--first"
+                data-motion="rise"
+                data-motion-step={0}
+              >
                 Завтраки,
               </span>{' '}
-              <span className="hero-scene__title-line hero-scene__title-line--second">
+              <span
+                className="hero-scene__title-line hero-scene__title-line--second"
+                data-motion="rise"
+                data-motion-step={1}
+              >
                 <span className="hero-scene__word hero-scene__word--coffee hero-scene__accent">
                   кофе
                 </span>{' '}
                 <span className="hero-scene__word hero-scene__word--own">и свой</span>
               </span>{' '}
-              <span className="hero-scene__title-line hero-scene__title-line--third hero-scene__last-line">
+              <span
+                className="hero-scene__title-line hero-scene__title-line--third hero-scene__last-line"
+                data-motion="rise"
+                data-motion-step={2}
+              >
                 <span className="hero-scene__word hero-scene__word--vibe">вайб в</span>{' '}
                 <br className="hero-scene__mobile-brand-break" aria-hidden="true" />
                 <em className="hero-scene__brand">White Cup</em>
@@ -69,7 +81,7 @@ export function HeroSection() {
                 </span>
               </span>
             </h1>
-            <p className="hero-scene__lede">
+            <p className="hero-scene__lede" data-motion="rise" data-motion-step={3}>
               Спешелти кофе, свежие завтраки
               <br />
               и уютная атмосфера любимого места
@@ -77,14 +89,26 @@ export function HeroSection() {
               в центре <span className="hero-scene__lede-accent">Самары.</span>
             </p>
             <div className="hero-scene__actions" role="group" aria-label="Основные действия">
-              <a className="button-link button-link--primary" href={siteData.menuUrl} target="_blank" rel="noreferrer">
+              <a
+                className="button-link button-link--primary"
+                href={siteData.menuUrl}
+                target="_blank"
+                rel="noreferrer"
+                data-motion="rise"
+                data-motion-step={4}
+              >
                 Посмотреть меню <span aria-hidden="true">→</span>
               </a>
-              <a className="button-link button-link--quiet" href="#locations">
+              <a
+                className="button-link button-link--quiet"
+                href="#locations"
+                data-motion="rise"
+                data-motion-step={5}
+              >
                 Выбрать локацию <span className="hero-scene__pin" aria-hidden="true" />
               </a>
             </div>
-          </Reveal>
+          </div>
 
           <Reveal className="hero-scene__visual" delay={100}>
             <div
@@ -113,6 +137,8 @@ export function HeroSection() {
           src={bagelLayer.src}
           srcSet={bagelLayer.srcSet}
           sizes={bagelLayer.sizes}
+          data-motion="art"
+          data-motion-step={3}
           decoding="async"
           draggable="false"
           onError={hideBrokenDecorativeLayer}
@@ -125,6 +151,8 @@ export function HeroSection() {
           src={coffeeLayer.src}
           srcSet={coffeeLayer.srcSet}
           sizes={coffeeLayer.sizes}
+          data-motion="art"
+          data-motion-step={4}
           decoding="async"
           draggable="false"
           onError={hideBrokenDecorativeLayer}
@@ -137,6 +165,8 @@ export function HeroSection() {
             asset={doodleLayer.asset}
             layer={doodleLayer.layer}
             src={transparentPixel}
+            data-motion="draw"
+            data-motion-step={2}
             decoding="async"
             draggable="false"
             onError={hideBrokenDecorativeLayer}
@@ -150,6 +180,8 @@ export function HeroSection() {
             asset={routeLayer.asset}
             layer={routeLayer.layer}
             src={transparentPixel}
+            data-motion="draw"
+            data-motion-step={1}
             decoding="async"
             draggable="false"
             onError={hideBrokenDecorativeLayer}

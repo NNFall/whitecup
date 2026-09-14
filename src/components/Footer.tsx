@@ -14,11 +14,19 @@ export function Footer() {
       <div className="site-footer__inner">
         <div className="site-footer__lead">
           <p className="scene-kicker">White Cup / До встречи</p>
-          <h2 id="site-footer-title">Зайдём на кофе?</h2>
-          <p className="site-footer__lede">
+          <h2 id="site-footer-title" data-motion="rise" data-motion-step={0}>
+            Зайдём на кофе?
+          </h2>
+          <p className="site-footer__lede" data-motion="soft" data-motion-step={1}>
             Выберите адрес, откройте актуальное меню — и оставьте немного времени на свой вайб.
           </p>
-          <div className="site-footer__actions" role="group" aria-label="Действия в конце страницы">
+          <div
+            className="site-footer__actions"
+            role="group"
+            aria-label="Действия в конце страницы"
+            data-motion="rise"
+            data-motion-step={2}
+          >
             <a className="button-link button-link--primary" href={siteData.menuUrl} target="_blank" rel="noreferrer">
               Открыть меню <span aria-hidden="true">↗</span>
             </a>
@@ -29,17 +37,40 @@ export function Footer() {
         </div>
 
         <div className="site-footer__contact">
-          <a className="site-footer__brand" href="#hero" aria-label="White Cup — на главную">
+          <a
+            className="site-footer__brand"
+            href="#hero"
+            aria-label="White Cup — на главную"
+            data-motion="art"
+            data-motion-step={3}
+          >
             <BrandMark />
           </a>
-          <a className="site-footer__phone" href={siteData.phoneHref}>
+          <a
+            className="site-footer__phone"
+            href={siteData.phoneHref}
+            data-motion="rise"
+            data-motion-step={4}
+          >
             {siteData.phone}
           </a>
           <nav className="site-footer__links" aria-label="Ссылки White Cup">
-            <a href={siteData.vkUrl} target="_blank" rel="noreferrer">
+            <a
+              href={siteData.vkUrl}
+              target="_blank"
+              rel="noreferrer"
+              data-motion="soft"
+              data-motion-step={5}
+            >
               Группа White Cup во VK <span aria-hidden="true">↗</span>
             </a>
-            <a href={siteData.yandexCardUrl} target="_blank" rel="noreferrer">
+            <a
+              href={siteData.yandexCardUrl}
+              target="_blank"
+              rel="noreferrer"
+              data-motion="soft"
+              data-motion-step={5}
+            >
               White Cup в Яндекс Картах <span aria-hidden="true">↗</span>
             </a>
           </nav>

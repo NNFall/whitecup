@@ -18,6 +18,10 @@ const expectedCssImportOrder = [
   './styles/scene-layout-polish.css',
   './styles/scene-frame-polish.css',
   './styles/live-typography.css',
+  './styles/element-motion.css',
+  './styles/motion-menu.css',
+  './styles/motion-story.css',
+  './styles/motion-contact.css',
 ]
 
 const componentStyleOwners = [

@@ -27,15 +27,19 @@ export function StaticMapCard({ layer, labels, className }: StaticMapCardProps) 
       <SceneLayer
         {...layer}
         className="locations-scene__map-image"
+        data-motion="art"
+        data-motion-step={3}
         loading="lazy"
         decoding="async"
       />
       <div className="locations-scene__map-copy">
         <span className="locations-scene__map-city">САМАРА</span>
-        {labels.map((location) => (
+        {labels.map((location, index) => (
           <span
             className="locations-scene__map-label"
             data-map-location={location.id}
+            data-motion="draw"
+            data-motion-step={index + 4}
             key={location.id}
           >
             <strong>{location.label}</strong>

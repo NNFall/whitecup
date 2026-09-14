@@ -1,0 +1,67 @@
+/* Small, interaction-only details for the existing menu composition. The
+   entrance states live in element-motion.css; these rules never move the
+   carousel, its track, or its loop copies. */
+
+@media (hover: hover) and (pointer: fine) {
+  .menu-carousel .menu-card__art img {
+    /* Keep the authored scale() in global.css and add the dish lift through
+       the independent transform component. */
+    translate: 0 0;
+    transition: transform 360ms cubic-bezier(0.16, 1, 0.3, 1),
+      translate 220ms cubic-bezier(0.2, 0.75, 0.25, 1);
+  }
+
+  .menu-carousel .menu-card:hover .menu-card__art img,
+  .menu-carousel .menu-card:focus-within .menu-card__art img {
+    translate: 0 -4px;
+  }
+
+  .menu-carousel .menu-carousel__control > span {
+    display: inline-block;
+    translate: 0 0;
+    transition: translate 180ms ease;
+  }
+
+  .menu-carousel .menu-carousel__control:first-child:hover:not(:disabled) > span,
+  .menu-carousel .menu-carousel__control:first-child:focus-within > span {
+    translate: -3px 0;
+  }
+
+  .menu-carousel .menu-carousel__control:last-child:hover:not(:disabled) > span,
+  .menu-carousel .menu-carousel__control:last-child:focus-within > span {
+    translate: 3px 0;
+  }
+
+  .menu-carousel .menu-carousel__menu-link {
+    transition: text-decoration-thickness 180ms ease, text-underline-offset 180ms ease;
+  }
+
+  .menu-carousel .menu-carousel__menu-link:hover,
+  .menu-carousel .menu-carousel__menu-link:focus-within {
+    text-decoration-thickness: 0.16rem;
+    text-underline-offset: 0.22rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-carousel .menu-card__art img,
+  .menu-carousel .menu-carousel__control > span,
+  .menu-carousel .menu-carousel__menu-link {
+    transition: none;
+  }
+
+  .menu-carousel .menu-card:hover .menu-card__art img,
+  .menu-carousel .menu-card:focus-within .menu-card__art img,
+  .menu-carousel .menu-carousel__control:first-child:hover > span,
+  .menu-carousel .menu-carousel__control:first-child:focus-within > span,
+  .menu-carousel .menu-carousel__control:last-child:hover > span,
+  .menu-carousel .menu-carousel__control:last-child:focus-within > span {
+    translate: none;
+  }
+
+  .menu-carousel .menu-carousel__menu-link:hover,
+  .menu-carousel .menu-carousel__menu-link:focus-within {
+    text-decoration-thickness: 0.11rem;
+    text-underline-offset: 0.28rem;
+  }
+}
