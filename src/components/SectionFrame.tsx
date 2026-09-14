@@ -8,7 +8,8 @@ export interface SectionFrameProps extends Omit<HTMLAttributes<HTMLElement>, 'ti
 }
 
 /**
- * A section with an accessible heading and consistent page gutters.
+ * Shared paper scene wrapper. Keeping the heading relationship here means
+ * every non-hero scene remains navigable when the page is read as landmarks.
  */
 export function SectionFrame({
   id,
@@ -28,10 +29,10 @@ export function SectionFrame({
       aria-labelledby={titleId}
       data-scene={id}
     >
-      <div className="section-inner section-frame__inner">
+      <div className="section-frame__inner">
         <div className="section-frame__heading">
-          {kicker ? <p className="eyebrow scene-kicker">{kicker}</p> : null}
-          <h2 id={titleId} className="section-title">{title}</h2>
+          {kicker ? <p className="scene-kicker">{kicker}</p> : null}
+          <h2 id={titleId}>{title}</h2>
         </div>
         {children}
       </div>

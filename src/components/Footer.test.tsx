@@ -5,42 +5,23 @@ import { siteData } from '../data/site'
 import { Footer } from './Footer'
 
 describe('Footer', () => {
-  it('keeps one clear menu CTA and the final contact links discoverable', () => {
+  it('keeps the final CTA and contact links discoverable', () => {
     render(<Footer />)
 
     const footer = screen.getByRole('contentinfo', { name: /зайдём на кофе/i })
-    const menuLink = within(footer).getByRole('link', { name: /открыть меню/i })
 
-    expect(menuLink).toHaveAttribute('href', siteData.menuUrl)
-    expect(menuLink).toHaveAttribute('target', '_blank')
-    expect(within(footer).getByRole('link', { name: /\+7 \(937\) 235-57-15/i })).toHaveAttribute(
-      'href',
-      siteData.phoneHref,
-    )
-    expect(within(footer).getByRole('link', { name: /white cup во vk/i })).toHaveAttribute(
-      'href',
-      siteData.vkUrl,
-    )
+    expect(within(footer).getByRole('link', { name: /открыть меню/i })).toHaveAttribute('href', siteData.menuUrl)
+    expect(within(footer).getByRole('link', { name: /как нас найти/i })).toHaveAttribute('href', '#locations')
+    expect(within(footer).getByRole('link', { name: /\+7 \(937\) 235-57-15/i })).toHaveAttribute('href', siteData.phoneHref)
   })
 
-  it('retains real map and home links alongside the provenance note', () => {
+  it('labels the public VK and Yandex source links', () => {
     render(<Footer />)
 
     const footer = screen.getByRole('contentinfo')
 
-    expect(within(footer).getByRole('link', { name: /яндекс карты/i })).toHaveAttribute(
-      'href',
-      siteData.yandexCardUrl,
-    )
-    expect(within(footer).getByRole('link', { name: /адреса кофеен/i })).toHaveAttribute(
-      'href',
-      '#locations',
-    )
-    expect(within(footer).getByRole('link', { name: /white cup — на главную/i })).toHaveAttribute(
-      'href',
-      '#hero',
-    )
-    expect(within(footer).getByText('Фото кофейни — из публичной галереи Яндекс Карт.')).toBeInTheDocument()
-    expect(within(footer).queryByRole('form')).not.toBeInTheDocument()
+    expect(within(footer).getByRole('link', { name: /группа white cup во vk/i })).toHaveAttribute('href', siteData.vkUrl)
+    expect(within(footer).getByRole('link', { name: /white cup в яндекс картах/i })).toHaveAttribute('href', siteData.yandexCardUrl)
+    expect(within(footer).getByText(/публичная галерея яндекс карт/i)).toBeInTheDocument()
   })
 })

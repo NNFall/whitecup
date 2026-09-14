@@ -1,24 +1,49 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type RefObject } from 'react'
 
 import { BrandMark } from './BrandMark'
 
-export const sceneIds = ['hero', 'menu', 'about', 'locations', 'contact'] as const
-
-export type SceneId = (typeof sceneIds)[number]
-
 interface NavItem {
-  href: `#${Exclude<SceneId, 'hero'>}`
+  href: `#${SceneId}`
   label: string
 }
 
-const navItems: readonly NavItem[] = [
+export const sceneIds = [
+  'hero',
+  'menu',
+  'about',
+  'visit',
+  'events',
+  'locations',
+  'contact',
+] as const
+
+export type SceneId = (typeof sceneIds)[number]
+export type NavProfile = 'reference' | 'compact'
+
+const navProfileByScene: Record<SceneId, NavProfile> = {
+  hero: 'reference',
+  menu: 'compact',
+  about: 'compact',
+  visit: 'compact',
+  events: 'compact',
+  locations: 'compact',
+  contact: 'compact',
+}
+
+const navItems: NavItem[] = [
   { href: '#menu', label: 'Меню' },
-  { href: '#about', label: 'Атмосфера' },
-  { href: '#locations', label: 'Адреса' },
+  { href: '#locations', label: 'Локации' },
+  { href: '#about', label: 'О нас' },
+  { href: '#events', label: 'Мероприятия' },
   { href: '#contact', label: 'Контакты' },
 ]
 
 const focusableSelector = '.mobile-nav__panel a[href], .mobile-nav__panel button:not([disabled])'
+const desktopBreakpoint = 1024
+
+export function getNavProfile(scene: SceneId): NavProfile {
+  return navProfileByScene[scene]
+}
 
 function sceneFromHash(hash: string): SceneId | undefined {
   const candidate = hash.replace(/^#/, '')
@@ -38,56 +63,68 @@ function sceneFromViewport(): SceneId | undefined {
     return 'contact'
   }
 
-  const anchor = window.innerHeight * 0.34
+  const anchor = window.innerHeight * 0.32
   const scenes = sceneIds
     .map((id) => document.getElementById(id))
     .filter((scene): scene is HTMLElement => scene !== null)
 
-  const sceneAtAnchor = scenes.find((scene) => {
-    const rect = scene.getBoundingClientRect()
-    return rect.top <= anchor && rect.bottom > anchor
-  })
-
-  if (sceneAtAnchor) {
-    return sceneAtAnchor.id as SceneId
-  }
-
-  return scenes
-    .filter((scene) => scene.getBoundingClientRect().top <= anchor)
-    .at(-1)?.id as SceneId | undefined
+  return (
+    scenes.find((scene) => {
+      const rect = scene.getBoundingClientRect()
+      return rect.top <= anchor && rect.bottom > anchor
+    })?.id as SceneId | undefined
+  )
 }
 
 function currentScene(): SceneId {
   return sceneFromHash(window.location.hash) ?? sceneFromViewport() ?? 'hero'
 }
 
-interface NavigationLinksProps {
+interface DesktopNavigationProps {
   activeScene: SceneId
-  onLinkClick?: () => void
+  profile: NavProfile
+  brandRef: RefObject<HTMLAnchorElement | null>
 }
 
-function NavigationLinks({ activeScene, onLinkClick }: NavigationLinksProps) {
+function DesktopNavigation({ activeScene, profile, brandRef }: DesktopNavigationProps) {
   const currentFor = (href: NavItem['href']) =>
     href === `#${activeScene}` ? ('location' as const) : undefined
 
   return (
-    <ul>
-      {navItems.map((item) => (
-        <li key={item.href}>
-          <a href={item.href} aria-current={currentFor(item.href)} onClick={onLinkClick}>
-            {item.label}
-          </a>
-        </li>
-      ))}
-    </ul>
+    <div className="site-nav__desktop-shell" data-nav-profile={profile}>
+      <a
+        ref={brandRef}
+        className="site-nav__desktop-brand"
+        href="#hero"
+        aria-current={activeScene === 'hero' ? 'location' : undefined}
+        aria-label="White Cup — на главную"
+      >
+        <BrandMark variant="badge" />
+      </a>
+
+      <nav className="site-nav__desktop" aria-label="Основная навигация">
+        <ul>
+          {navItems.map((item) => (
+            <li key={item.href}>
+              <a href={item.href} aria-current={currentFor(item.href)}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
   )
 }
 
 export function StickyNav() {
   const [isOpen, setIsOpen] = useState(false)
   const [activeScene, setActiveScene] = useState<SceneId>(() => currentScene())
+  const [isScrolled, setIsScrolled] = useState(() => window.scrollY > 24)
   const triggerRef = useRef<HTMLButtonElement>(null)
+  const desktopBrandRef = useRef<HTMLAnchorElement>(null)
   const dialogRef = useRef<HTMLDivElement>(null)
+  const profile = activeScene === 'hero' && !isScrolled ? getNavProfile(activeScene) : 'compact'
 
   const closeMenu = useCallback(() => {
     setIsOpen(false)
@@ -96,6 +133,7 @@ export function StickyNav() {
 
   useEffect(() => {
     const updateFromViewport = () => {
+      setIsScrolled(window.scrollY > 24)
       const scene = sceneFromViewport()
       if (scene) {
         setActiveScene(scene)
@@ -103,25 +141,30 @@ export function StickyNav() {
     }
 
     const updateFromHash = () => {
+      setIsScrolled(window.scrollY > 24)
       setActiveScene(sceneFromHash(window.location.hash) ?? sceneFromViewport() ?? 'hero')
     }
 
-    const handleResize = () => {
+    const updateFromResize = () => {
+      if (isOpen && window.innerWidth >= desktopBreakpoint) {
+        closeMenu()
+        desktopBrandRef.current?.focus()
+      }
+
       updateFromViewport()
-      if (window.innerWidth >= 768) setIsOpen(false)
     }
 
     updateFromHash()
     window.addEventListener('scroll', updateFromViewport, { passive: true })
-    window.addEventListener('resize', handleResize)
+    window.addEventListener('resize', updateFromResize)
     window.addEventListener('hashchange', updateFromHash)
 
     return () => {
       window.removeEventListener('scroll', updateFromViewport)
-      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('resize', updateFromResize)
       window.removeEventListener('hashchange', updateFromHash)
     }
-  }, [])
+  }, [closeMenu, isOpen])
 
   useEffect(() => {
     if (!isOpen) {
@@ -142,10 +185,7 @@ export function StickyNav() {
         return
       }
 
-      const focusable = Array.from(
-        dialogRef.current.querySelectorAll<HTMLElement>(focusableSelector),
-      )
-
+      const focusable = Array.from(dialogRef.current.querySelectorAll<HTMLElement>(focusableSelector))
       if (focusable.length === 0) {
         event.preventDefault()
         return
@@ -176,26 +216,17 @@ export function StickyNav() {
     closeMenu()
   }
 
+  const currentFor = (href: NavItem['href']) =>
+    href === `#${activeScene}` ? ('location' as const) : undefined
+
   return (
-    <header className="site-nav" data-active-scene={activeScene} data-menu-open={isOpen}>
-      <div className="site-nav__desktop-shell">
-        <a
-          className="site-nav__desktop-brand"
-          href="#hero"
-          aria-current={activeScene === 'hero' ? 'location' : undefined}
-          aria-label="White Cup — на главную"
-        >
-          <BrandMark variant="badge" />
-        </a>
-
-        <nav className="site-nav__desktop" aria-label="Основная навигация">
-          <NavigationLinks activeScene={activeScene} />
-        </nav>
-
-        <a className="button-link button-link--primary site-nav__desktop-action" href="#locations">
-          Зайти на кофе
-        </a>
-      </div>
+    <header
+      className="site-nav"
+      data-active-scene={activeScene}
+      data-menu-open={isOpen}
+      data-nav-profile={profile}
+    >
+      <DesktopNavigation activeScene={activeScene} profile={profile} brandRef={desktopBrandRef} />
 
       <div className="site-nav__mobile">
         <a
@@ -255,14 +286,22 @@ export function StickyNav() {
           </button>
           <p className="mobile-nav__kicker">White Cup / Самара</p>
           <nav aria-label="Навигация по странице">
-            <NavigationLinks activeScene={activeScene} onLinkClick={handleMobileLinkClick} />
+            <ul>
+              {navItems.map((item) => (
+                <li key={item.href}>
+                  <a
+                    href={item.href}
+                    aria-current={currentFor(item.href)}
+                    onClick={handleMobileLinkClick}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </nav>
-          <a
-            className="button-link button-link--primary mobile-nav__action"
-            href="#locations"
-            onClick={handleMobileLinkClick}
-          >
-            Зайти на кофе
+          <a className="mobile-nav__action" href="#locations" onClick={handleMobileLinkClick}>
+            Найти White Cup
           </a>
         </div>
       </div>

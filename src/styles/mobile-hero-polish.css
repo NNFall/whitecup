@@ -1,0 +1,23 @@
+@media (max-width: 720px) {
+  .hero-scene__inner {
+    z-index: auto;
+  }
+
+  .hero-scene__copy {
+    z-index: 7;
+  }
+
+  .hero-scene__actions {
+    position: relative;
+    z-index: 6;
+  }
+
+  .hero-scene__actions .button-link--quiet {
+    background-color: var(--paper-light);
+  }
+
+  .hero-backdrop {
+    top: clamp(29rem, calc(-1.8rem + 154vw), 40rem);
+    pointer-events: none;
+  }
+}

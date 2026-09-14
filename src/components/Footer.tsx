@@ -2,24 +2,30 @@ import { siteData } from '../data/site'
 
 import { BrandMark } from './BrandMark'
 
+/**
+ * A small, explicit hand-off at the end of the long-form story. It keeps the
+ * useful actions available after a visitor has read the page and labels the
+ * public source links so they are discoverable without relying on icon-only
+ * affordances.
+ */
 export function Footer() {
   return (
     <footer id="contact" className="site-footer" aria-labelledby="site-footer-title">
       <div className="site-footer__inner">
         <div className="site-footer__lead">
-          <p className="site-footer__kicker">White Cup / До встречи</p>
+          <p className="scene-kicker">White Cup / До встречи</p>
           <h2 id="site-footer-title">Зайдём на кофе?</h2>
           <p className="site-footer__lede">
-            Выберите адрес, откройте актуальное меню — и увидимся в White Cup.
+            Выберите адрес, откройте актуальное меню — и оставьте немного времени на свой вайб.
           </p>
-          <a
-            className="button-link button-link--primary site-footer__menu-link"
-            href={siteData.menuUrl}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Открыть меню <span aria-hidden="true">↗</span>
-          </a>
+          <div className="site-footer__actions" role="group" aria-label="Действия в конце страницы">
+            <a className="button-link button-link--primary" href={siteData.menuUrl} target="_blank" rel="noreferrer">
+              Открыть меню <span aria-hidden="true">↗</span>
+            </a>
+            <a className="button-link button-link--quiet" href="#locations">
+              Как нас найти <span aria-hidden="true">↓</span>
+            </a>
+          </div>
         </div>
 
         <div className="site-footer__contact">
@@ -31,18 +37,17 @@ export function Footer() {
           </a>
           <nav className="site-footer__links" aria-label="Ссылки White Cup">
             <a href={siteData.vkUrl} target="_blank" rel="noreferrer">
-              White Cup во VK <span aria-hidden="true">↗</span>
+              Группа White Cup во VK <span aria-hidden="true">↗</span>
             </a>
             <a href={siteData.yandexCardUrl} target="_blank" rel="noreferrer">
-              Яндекс Карты <span aria-hidden="true">↗</span>
+              White Cup в Яндекс Картах <span aria-hidden="true">↗</span>
             </a>
-            <a href="#locations">Адреса кофеен <span aria-hidden="true">↓</span></a>
           </nav>
         </div>
       </div>
 
       <div className="site-footer__meta">
-        <p>Фото кофейни — из публичной галереи Яндекс Карт.</p>
+        <p>Фото: публичная галерея Яндекс Карт. Меню, наличие и график лучше уточнить перед визитом.</p>
         <p>White Cup · Самара</p>
       </div>
     </footer>
